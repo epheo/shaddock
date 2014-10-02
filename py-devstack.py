@@ -5,6 +5,8 @@ from fabric.state import env
 import docker
 import os                                                                 
 
+
+
 def build():
     path = os.getcwd()
 
@@ -56,8 +58,8 @@ def setup(host_name):
 
 def test(host_name):
     with cd('test'):
-        run("./keystone_test.sh %s" % (host_name))
-        run("./glance_test.sh %s" % (host_name))
+        run("%s/keystone_test.sh %s" % (path, host_name))
+        run("%s/glance_test.sh %s" % (path, host_name))
 
 
 
@@ -73,6 +75,6 @@ def docker_deploy():
 
 if __name__ == '__main__':
     host_name = 'node1'
-    env.hosts = ['localhost']
+    hosts = ['localhost']
     build()
     install()
