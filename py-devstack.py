@@ -6,17 +6,11 @@ import docker
 import os                                                                 
 
 
-
 def build():
-    path = os.getcwd()
+    tags = ['epheo/openstack-base', 'epheo/os-mysql', 'epheo/os-rabbitmq', 'epheo/os-keystone', 'epheo/os-glance', 'epheo/os-nova', 'epheo/os-horizon']
 
-    run("sudo docker build -t epheo/openstack-base %s/base/" % path)
-    run("sudo docker build -t epheo/os-mysql %s/mysql/" % path)
-    run("sudo docker build -t epheo/os-rabbitmq %s/rabbitmq/" % path)
-    run("sudo docker build -t epheo/os-keystone %s/keystone/" % path)
-    run("sudo docker build -t epheo/os-glance %s/glance/" % path)
-    run("sudo docker build -t epheo/os-nova %s/nova/" % path)
-    run("sudo docker build -t epheo/os-horizon %s/horizon/" % path)
+
+    docker_api.build(path=path, tag=tag)
 
 def install(host_name):
 
@@ -61,12 +55,11 @@ def test(host_name):
         run("%s/keystone_test.sh %s" % (path, host_name))
         run("%s/glance_test.sh %s" % (path, host_name))
 
+class build(path, tag):
 
 
 def docker_deploy():
-    docker_api = docker.Client(base_url='unix://var/run/docker.sock',
-                 		   version='1.12',
-                 		   timeout=10)
+    
     docker_api.pull('epheo/os-nova', tag='latest')
     osnova = docker_api.create_container('epheo/os-nova', 
                                             volumes='/var/log/openstack/nova:/var/log/supervisor',
@@ -74,7 +67,14 @@ def docker_deploy():
     docker_api.start(es, port_bindings={8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)})
 
 if __name__ == '__main__':
+    path = os.getcwd()
+
+    
+
+    docker_api = docker.Client(base_url='unix://var/run/docker.sock',
+                           version='1.12',
+                           timeout=10)
     host_name = 'node1'
     hosts = ['localhost']
-    build()
+    build(path, tag)
     install()
