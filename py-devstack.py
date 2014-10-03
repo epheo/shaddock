@@ -4,6 +4,7 @@
 import docker
 import os
 import socket
+import sys
 
 class Model(object):
     keystone_pass       = 'password'
@@ -149,10 +150,18 @@ class Controller(object):
                 confs           = service_info.get('confs')
                 volumes         = service_info.get('volumes')
 
-                controller.build_service_container(name, tag, path)
-                controller.create_service_container(name, tag, volumes)
-                controller.start_service_container(name, port_bindings, confs)
-
+                if action=='build':
+                    controller.build_service_container(name, tag, path)
+                else:
+                    pass
+                if action=='create':
+                    controller.create_service_container(name, tag, volumes)
+                else:
+                    pass
+                if action=='start':
+                    controller.start_service_container(name, port_bindings, confs)
+                else:
+                    pass
             else:
                 self.view.service_not_found(name)
 
@@ -162,23 +171,19 @@ class Controller(object):
         for line in docker_api.build(path, tag):
             print(line)
 
-
     def create_service_container(self, name, tag, volumes):
         action='creating'
         self.view.service_information(action, name, tag, volumes)
         id_image = docker_api.create_container(tag, volumes, name)
-
 
     def start_service_container(self, name, port_bindings, confs):
         action='starting'
         self.view.service_information(action, name, port_bindings, confs)
         id_container = docker_api.start(name, port_bindings)
 
-
-
 if __name__ == '__main__':
     docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
     controller = Controller()
 
-    action='build'
+    action = str(sys.argv[1])
     controller.exec_service_list(action)

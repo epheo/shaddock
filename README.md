@@ -30,9 +30,7 @@ Run OpenStack Environment
 > python py-devstack.py start
 
 
-SupervisorD ensure all the different process are running?
-
-This script will start the containers and inject all the necessary information. It will also create default tenants & users as well as run some basic tests. To change passwords etc, update the fabfile.py
+This script will start the containers (and inject all the necessary information?). It will also create default tenants & users as well as run some basic tests. To change passwords etc.
 
 > **TODO:**
 > - HiPache for the high availability
