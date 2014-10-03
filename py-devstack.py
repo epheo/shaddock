@@ -30,7 +30,7 @@ class Model(object):
             'path': '%s/base/' % (path),
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/base': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/py-devstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'mysql': {
@@ -39,7 +39,7 @@ class Model(object):
             'ports': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/mysql': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/py-devstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'rabbitmq': {
@@ -48,7 +48,7 @@ class Model(object):
             'ports': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/rabbitmq': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/py-devstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'glance': {
@@ -64,7 +64,7 @@ class Model(object):
                       'GLANCE_DBPASS': glance_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/glance': { 'bind': '/var/log/supervisor', 'ro': False } },
+            'binds': {'/var/log/py-devstack/glance': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'horizon': {
@@ -73,7 +73,7 @@ class Model(object):
             'ports': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/horizon': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/py-devstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'keystone': {
@@ -88,7 +88,7 @@ class Model(object):
                       'KEYSTONE_DBPASS': keystone_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/keystone': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/py-devstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}}
             },
 
         'nova': {
@@ -106,7 +106,7 @@ class Model(object):
                       'ADMIN_PASS': admin_password
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/nova': { 'bind': '/var/log/supervisor', 'ro': False } },
+            'binds': {'/var/log/py-devstack/nova': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': True
             },
 
@@ -115,7 +115,7 @@ class Model(object):
             'path': '%s/novacompute/' % (path),
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/supervisor' : { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } } }
+            'binds': {'/var/log/py-devstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
         }
 
     }
@@ -170,7 +170,7 @@ class Controller(object):
                 else:
                     pass
                 if action=='start':
-                    controller.start_service_container(name, port_bindings, binds)
+                    controller.start_service_container(name, binds, port_bindings)
                 else:
                     pass
             else:
@@ -187,10 +187,10 @@ class Controller(object):
         self.view.service_information(action, tag, environment, volumes, name)
         id_image = docker_api.create_container(tag, environment, volumes, name)
 
-    def start_service_container(self, name, port_bindings, binds):
+    def start_service_container(self, name, binds, port_bindings):
         action='starting'
         self.view.service_information(action, name, port_bindings)
-        id_container = docker_api.start(name, port_bindings, binds)
+        id_container = docker_api.start(name, binds, port_bindings)
 
 if __name__ == '__main__':
     action = str(sys.argv[1])
