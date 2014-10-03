@@ -34,7 +34,7 @@ class Model(object):
             'tag': '%s/osmysql' % (user), 
             'path': '%s/mysql/' % (path),
             'ports': {3306: ('0.0.0.0', 3306)},
-            'confs': {'MYSQL_PASS=%s' % (mysql_pass)},
+            'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': {'/var/log/openstack/rabbitmq:/var/log/supervisor'}
             },
 
@@ -42,7 +42,7 @@ class Model(object):
             'tag': '%s/osrabbitmq' % (user), 
             'path': '%s/rabbitmq/' % (path),
             'ports': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
-            'confs': {'RABBITMQ_PASSWORD=%s' % (rabbitmq_password) },
+            'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': {'/var/log/openstack/rabbitmq:/var/log/supervisor'}
             },
 
@@ -50,13 +50,13 @@ class Model(object):
             'tag': '%s/osglance' % (user), 
             'path': '%s/glance/' % (path),
             'ports': {9292: ('0.0.0.0', 9292)},
-            'confs': {'HOST_NAME=%s' % (host_name), 
-                      'MYSQL_DB=%s' % (mysql_host), 
-                      'MYSQL_USER=%s' % (mysql_user), 
-                      'MYSQL_PASSWORD=%s' % (mysql_pass), 
-                      'RABBITMQ_HOST=%s' % (rabbitmq_host), 
-                      'RABBITMQ_PASSWORD=%s' % (rabbitmq_password), 
-                      'GLANCE_DBPASS=%s' % (glance_pass)
+            'confs': {'HOST_NAME': host_name, 
+                      'MYSQL_DB': mysql_host, 
+                      'MYSQL_USER': mysql_user, 
+                      'MYSQL_PASSWORD': mysql_pass, 
+                      'RABBITMQ_HOST': rabbitmq_host, 
+                      'RABBITMQ_PASSWORD': rabbitmq_password, 
+                      'GLANCE_DBPASS': glance_pass
                      },
             'volumes': {'/var/log/openstack/glance:/var/log/supervisor'}
             },
@@ -65,7 +65,7 @@ class Model(object):
             'tag': '%s/oshorizon' % (user), 
             'path': '%s/horizon/' % (path),
             'ports': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
-            'confs': {'HOST_NAME=%s' % (host_name) },
+            'confs': {'HOST_NAME': host_name },
             'volumes': {'/var/log/openstack/horizon:/var/log/supervisor', '/var/log/openstack/apache2:/var/log/apache2'}
             },
 
@@ -73,12 +73,12 @@ class Model(object):
             'tag': '%s/oskeystone' % (user), 
             'path': '%s/keystone/' % (path),
             'ports': {35357: ('0.0.0.0', 35357), 5000: ('0.0.0.0', 5000)},
-            'confs': {'HOST_NAME=%s' % (host_name), 
-                      'MYSQL_DB=%s' % (mysql_host), 
-                      'MYSQL_USER=%s' % (mysql_user), 
-                      'MYSQL_PASSWORD=%s' % (mysql_pass), 
-                      'ADMIN_TOKEN=%s' % (admin_token), 
-                      'KEYSTONE_DBPASS=%s' % (keystone_pass)
+            'confs': {'HOST_NAME': host_name, 
+                      'MYSQL_DB': mysql_host, 
+                      'MYSQL_USER': mysql_user, 
+                      'MYSQL_PASSWORD': mysql_pass, 
+                      'ADMIN_TOKEN': admin_token, 
+                      'KEYSTONE_DBPASS': keystone_pass
                      },
             'volumes': {'/var/log/openstack/keystone:/var/log/supervisor'}
             },
@@ -87,15 +87,15 @@ class Model(object):
             'tag': '%s/osnova' % (user), 
             'path': '%s/nova/' % (path),
             'ports': {8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)},
-            'confs': {'HOST_NAME=%s' % (host_name), 
-                      'HOST_IP=%s' % (host_ip), 
-                      'MYSQL_DB=%s' % (mysql_host), 
-                      'MYSQL_USER=%s' % (mysql_user), 
-                      'MYSQL_PASSWORD=%s' % (mysql_pass), 
-                      'RABBITMQ_HOST=%s' % (rabbitmq_host), 
-                      'RABBITMQ_PASSWORD=%s' % (rabbitmq_password), 
-                      'NOVA_DBPASS=%s' % (nova_pass), 
-                      'ADMIN_PASS=%s' % (admin_password)
+            'confs': {'HOST_NAME': host_name, 
+                      'HOST_IP': host_ip, 
+                      'MYSQL_DB': mysql_host, 
+                      'MYSQL_USER': mysql_user, 
+                      'MYSQL_PASSWORD': mysql_pass, 
+                      'RABBITMQ_HOST': rabbitmq_host, 
+                      'RABBITMQ_PASSWORD': rabbitmq_password, 
+                      'NOVA_DBPASS': nova_pass, 
+                      'ADMIN_PASS': admin_password
                      },
             'volumes': {'/var/log/openstack/nova:/var/log/supervisor'},
             'privileged': True
@@ -147,7 +147,7 @@ class Controller(object):
                 tag             = service_info.get('tag')
                 path            = service_info.get('path')
                 port_bindings   = service_info.get('ports')
-                confs           = service_info.get('confs')
+                environment     = service_info.get('confs')
                 volumes         = service_info.get('volumes')
 
                 if action=='build':
@@ -155,11 +155,11 @@ class Controller(object):
                 else:
                     pass
                 if action=='create':
-                    controller.create_service_container(name, tag, volumes)
+                    controller.create_service_container(name, tag, volumes, environment)
                 else:
                     pass
                 if action=='start':
-                    controller.start_service_container(name, port_bindings, confs)
+                    controller.start_service_container(name, port_bindings)
                 else:
                     pass
             else:
@@ -171,14 +171,14 @@ class Controller(object):
         for line in docker_api.build(path, tag):
             print(line)
 
-    def create_service_container(self, name, tag, volumes):
+    def create_service_container(self, name, tag, volumes, environment):
         action='creating'
-        self.view.service_information(action, name, tag, volumes)
-        id_image = docker_api.create_container(tag, volumes, name)
+        self.view.service_information(action, tag, environment, volumes, name)
+        id_image = docker_api.create_container(tag, environment, volumes, name)
 
-    def start_service_container(self, name, port_bindings, confs):
+    def start_service_container(self, name, port_bindings):
         action='starting'
-        self.view.service_information(action, name, port_bindings, confs)
+        self.view.service_information(action, name, port_bindings)
         id_container = docker_api.start(name, port_bindings)
 
 if __name__ == '__main__':
