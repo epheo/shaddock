@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python27
 # -*- coding: utf-8 -*-
 #from fabric.api import *
 import docker
@@ -118,7 +118,7 @@ class View(object):
         print('')
 
     def service_information(self, action, name, *argv):
-        print('%s service %s with aruments:' % (action, name) )
+        print('%s service %s with arguments:' % (action, name) )
         for arg in argv:
             print arg
         print('')
@@ -131,7 +131,7 @@ class View(object):
 class Controller(object):
 
     def __init__(self):
-        docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
+        
         self.model = Model()
         self.view = View()
 
@@ -144,13 +144,12 @@ class Controller(object):
             if service_info is not None:
 
                 name            = service.title()
-                tag             = service_info.get('tag', 0)
-                path            = service_info.get('path', 0)
-                port_bindings   = service_info.get('ports', 0)
-                confs           = service_info.get('confs', 0)
-                volumes         = service_info.get('volumes', 0)
+                tag             = service_info.get('tag')
+                path            = service_info.get('path')
+                port_bindings   = service_info.get('ports')
+                confs           = service_info.get('confs')
+                volumes         = service_info.get('volumes')
 
-                controller.build_service_container(name, tag, path)
                 controller.build_service_container(name, tag, path)
                 controller.create_service_container(name, tag, volumes)
                 controller.start_service_container(name, port_bindings, confs)
@@ -179,6 +178,7 @@ class Controller(object):
 
 
 if __name__ == '__main__':
+    docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
     controller = Controller()
 
     action='build'
