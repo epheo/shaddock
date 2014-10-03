@@ -28,6 +28,9 @@ class Model(object):
         'base': {
             'tag': '%s/osbase' % (user), 
             'path': '%s/base/' % (path),
+            'confs': {'HOST_NAME': host_name },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/base': { 'bind': '/var/log/supervisor', 'ro': False } }
             },
 
         'mysql': {
@@ -110,7 +113,7 @@ class Model(object):
         'novacompute': {
             'tag': '%s/osnovacompute' % (user), 
             'path': '%s/novacompute/' % (path),
-            'confs': {''},
+            'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
             'binds': { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } }
         }
