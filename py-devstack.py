@@ -35,16 +35,16 @@ class Model(object):
             'path': '%s/mysql/' % (path),
             'ports': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
-            'volumes': {'/var/log/openstack/rabbitmq:/var/log/supervisor'}
-            },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/mysql': { 'bind': '/var/log/supervisor', 'ro': False } },            },
 
         'rabbitmq': {
             'tag': '%s/osrabbitmq' % (user), 
             'path': '%s/rabbitmq/' % (path),
             'ports': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
-            'volumes': {'/var/log/openstack/rabbitmq:/var/log/supervisor'}
-            },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/rabbitmq': { 'bind': '/var/log/supervisor', 'ro': False } },
 
         'glance': {
             'tag': '%s/osglance' % (user), 
@@ -58,7 +58,8 @@ class Model(object):
                       'RABBITMQ_PASSWORD': rabbitmq_password, 
                       'GLANCE_DBPASS': glance_pass
                      },
-            'volumes': {'/var/log/openstack/glance:/var/log/supervisor'}
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/glance': { 'bind': '/var/log/supervisor', 'ro': False } },
             },
 
         'horizon': {
@@ -66,8 +67,8 @@ class Model(object):
             'path': '%s/horizon/' % (path),
             'ports': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
-            'volumes': {'/var/log/openstack/horizon:/var/log/supervisor', '/var/log/openstack/apache2:/var/log/apache2'}
-            },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/horizon': { 'bind': '/var/log/supervisor', 'ro': False } },            },
 
         'keystone': {
             'tag': '%s/oskeystone' % (user), 
@@ -80,8 +81,8 @@ class Model(object):
                       'ADMIN_TOKEN': admin_token, 
                       'KEYSTONE_DBPASS': keystone_pass
                      },
-            'volumes': {'/var/log/openstack/keystone:/var/log/supervisor'}
-            },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/keystone': { 'bind': '/var/log/supervisor', 'ro': False } },            },
 
         'nova': {
             'tag': '%s/osnova' % (user), 
@@ -97,7 +98,8 @@ class Model(object):
                       'NOVA_DBPASS': nova_pass, 
                       'ADMIN_PASS': admin_password
                      },
-            'volumes': {'/var/log/openstack/nova:/var/log/supervisor'},
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/nova': { 'bind': '/var/log/supervisor', 'ro': False } },
             'privileged': True
             },
 
@@ -105,8 +107,8 @@ class Model(object):
             'tag': '%s/osnovacompute' % (user), 
             'path': '%s/novacompute/' % (path),
             'confs': {''},
-            'volumes': {'/var/log/openstack/novacompute:/var/log/supervisor'}
-            },
+            'volumes': ['/var/log/supervisor'],
+            'binds': { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } },            },
 
     }
 
@@ -159,7 +161,7 @@ class Controller(object):
                 else:
                     pass
                 if action=='start':
-                    controller.start_service_container(name, port_bindings)
+                    controller.start_service_container(name, port_bindings, binds)
                 else:
                     pass
             else:
@@ -176,10 +178,10 @@ class Controller(object):
         self.view.service_information(action, tag, environment, volumes, name)
         id_image = docker_api.create_container(tag, environment, volumes, name)
 
-    def start_service_container(self, name, port_bindings):
+    def start_service_container(self, name, port_bindings, binds):
         action='starting'
         self.view.service_information(action, name, port_bindings)
-        id_container = docker_api.start(name, port_bindings)
+        id_container = docker_api.start(name, port_bindings, binds)
 
 if __name__ == '__main__':
     action = str(sys.argv[1])
