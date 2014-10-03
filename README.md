@@ -10,16 +10,17 @@ For now, configuration sh scripts are based on github.com/Nirmata/openstack and 
 Instances are not yet launched with rights config
 
 > **Requirements:**
+> - Python2.7
 > - Docker
 > - Docker-py
 
 Build contain er images
 ----------------------
-> python py-devstack.py build
+> sudo python py-devstack.py build
  
 Create container images
 -----------------------
-> python py-devstack.py create
+> sudo python py-devstack.py create
 
 
 Run OpenStack Environment
