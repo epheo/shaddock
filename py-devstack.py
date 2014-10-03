@@ -182,8 +182,7 @@ class Controller(object):
         id_container = docker_api.start(name, port_bindings)
 
 if __name__ == '__main__':
+    action = str(sys.argv[1])
     docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
     controller = Controller()
-
-    action = str(sys.argv[1])
     controller.exec_service_list(action)

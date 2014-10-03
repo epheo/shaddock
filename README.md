@@ -29,10 +29,23 @@ Run OpenStack Environment
 -------------------------
 > python py-devstack.py start
 
+Configure Environments
+----------------------
 
-This script will start the containers (and inject all the necessary information?). It will also create default tenants & users as well as run some basic tests. To change passwords etc.
+> ./create_default_user.sh
+> keystone/create_user.sh keystone ${HOST_NAME}
+> keystone/register_service.sh keystone ${HOST_NAME}
+> glance/create_user.sh glance ${HOST_NAME}
+> glance/register_service.sh glance ${HOST_NAME}
+> nova/create_user.sh nova ${HOST_NAME}
+> nova/register_service.sh nova ${HOST_NAME}
+> ./keystone_test.sh ${HOST_NAME}
+> ./glance_test.sh ${HOST_NAME}
 
-> **TODO:**
+
+
+TODO:
+-----
 > - HiPache for the high availability
 > - Open containers in Tmux windows
 > - Add proxy node
