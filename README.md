@@ -1,36 +1,39 @@
 py-devstack
 ===========
 
-Python Docker OpenStack Developpement Containers
+OpenStack developpement environement deployed in Docker containers by Python APIs
 
 #### In developpement, Non-functional
 
 Dockerfiles to create images for core OpenStack services
 
-For now, all the Dokerfiles and scripts are based on github.com/Nirmata/openstack 
-
-> **TODO:**
-> - All services deployed from sources on a Python Docker base image (python:2-onbuild)
-> - Deployment of the services with Fabric and Docker Python API.
-> - HiPache for the high availability
-
-
-Requirements
-------------
-Python-fabric: https://github.com/fabric/fabric
-Open-ssh: http://openssh.com/
-Docker Python API: https://github.com/docker/docker-py
+For now, configuration sh scripts are based on github.com/Nirmata/openstack 
 
 
 Build container images
 ----------------------
-$ fab localhost buil
+> python py-devstack.py build
 
 
-Run OpenStack
--------------
-$ fab localhost run
+Create container images
+-----------------------
+> python py-devstack.py create
+
+
+Run OpenStack Environment
+-------------------------
+> python py-devstack.py start
+
 
 SupervisorD ensure all the different process are running?
+
 This script will start the containers and inject all the necessary information. It will also create default tenants & users as well as run some basic tests. To change passwords etc, update the fabfile.py
 
+> **TODO:**
+> - HiPache for the high availability
+> - Open containers in Tmux windows
+> - Add proxy node
+> - Add os ctl node
+> - Change SH scripts by OS Python API call
+> - Modif Dockerfiles > git sources (python:2-onbuild) ?
+> - Pull images option from my repo
