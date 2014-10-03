@@ -36,7 +36,8 @@ class Model(object):
             'ports': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
-            'binds': { '/var/log/openstack/mysql': { 'bind': '/var/log/supervisor', 'ro': False } },            },
+            'binds': { '/var/log/openstack/mysql': { 'bind': '/var/log/supervisor', 'ro': False } }
+            },
 
         'rabbitmq': {
             'tag': '%s/osrabbitmq' % (user), 
@@ -44,7 +45,8 @@ class Model(object):
             'ports': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
-            'binds': { '/var/log/openstack/rabbitmq': { 'bind': '/var/log/supervisor', 'ro': False } },
+            'binds': { '/var/log/openstack/rabbitmq': { 'bind': '/var/log/supervisor', 'ro': False } }
+            },
 
         'glance': {
             'tag': '%s/osglance' % (user), 
@@ -68,7 +70,8 @@ class Model(object):
             'ports': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': { '/var/log/openstack/horizon': { 'bind': '/var/log/supervisor', 'ro': False } },            },
+            'binds': { '/var/log/openstack/horizon': { 'bind': '/var/log/supervisor', 'ro': False } }
+            },
 
         'keystone': {
             'tag': '%s/oskeystone' % (user), 
@@ -82,7 +85,8 @@ class Model(object):
                       'KEYSTONE_DBPASS': keystone_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': { '/var/log/openstack/keystone': { 'bind': '/var/log/supervisor', 'ro': False } },            },
+            'binds': { '/var/log/openstack/keystone': { 'bind': '/var/log/supervisor', 'ro': False } }
+            },
 
         'nova': {
             'tag': '%s/osnova' % (user), 
@@ -108,7 +112,8 @@ class Model(object):
             'path': '%s/novacompute/' % (path),
             'confs': {''},
             'volumes': ['/var/log/supervisor'],
-            'binds': { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } },            },
+            'binds': { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } }
+        }
 
     }
 
@@ -123,7 +128,7 @@ class View(object):
     def service_information(self, action, name, *argv):
         print('%s service %s with arguments:' % (action, name) )
         for arg in argv:
-            print arg
+            print(arg)
         print('')
 
 
@@ -151,6 +156,7 @@ class Controller(object):
                 port_bindings   = service_info.get('ports')
                 environment     = service_info.get('confs')
                 volumes         = service_info.get('volumes')
+                binds           = service_info.get('binds')
 
                 if action=='build':
                     controller.build_service_container(name, tag, path)
