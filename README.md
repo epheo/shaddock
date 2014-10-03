@@ -9,6 +9,11 @@ Dockerfiles to create images for core OpenStack services
 
 For now, configuration sh scripts are based on github.com/Nirmata/openstack 
 
+> **Requirements:**
+> - Docker
+> - Docker-py
+
+
 
 Build container images
 ----------------------
