@@ -1,4 +1,4 @@
-FROM epheo/openstack-base:latest
+FROM py-devstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Install rabbitmq
