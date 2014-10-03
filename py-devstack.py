@@ -115,7 +115,7 @@ class Model(object):
             'path': '%s/novacompute/' % (path),
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': '/var/log/supervisor' : { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } }
+            'binds': {'/var/log/supervisor' : { '/var/log/openstack/novacompute': { 'bind': '/var/log/supervisor', 'ro': False } } }
         }
 
     }
