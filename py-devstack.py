@@ -170,7 +170,7 @@ class Controller(object):
                 else:
                     pass
                 if action=='start':
-                    controller.start_service_container(name, binds, port_bindings)
+                    controller.start_service_container(tag, binds, port_bindings)
                 else:
                     pass
             else:
@@ -187,10 +187,10 @@ class Controller(object):
         self.view.service_information(action, tag, environment, volumes, name)
         id_image = docker_api.create_container(tag, environment, volumes, name)
 
-    def start_service_container(self, name, binds, port_bindings):
+    def start_service_container(self, tag, binds, port_bindings):
         action='starting'
-        self.view.service_information(action, name, port_bindings)
-        id_container = docker_api.start(name, binds, port_bindings)
+        self.view.service_information(action, tag, port_bindings)
+        id_container = docker_api.start(tag, binds, port_bindings)
 
 if __name__ == '__main__':
     action = str(sys.argv[1])
