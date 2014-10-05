@@ -1,13 +1,12 @@
 py-devstack
 ===========
 
-OpenStack developpement environement deployed in Docker containers by Python APIs
+Py-Devstack provides OpenStack developpement environement deployed in Docker containers by Python APIs
 
-Dockerfiles to create images for core OpenStack services
+You can use the provideds Dockerfiles to create images for core OpenStack services or use py-devstack to deploy the environement.
 
 For now, configuration sh scripts are based on github.com/Nirmata/openstack and will be replaced by directs API calls
 
-Instances are not yet launched with rights config
 
 > **Requirements:**
 > - Python2.7

@@ -170,9 +170,12 @@ class Controller(object):
                 if action=='build':
                     controller.build_service_container(name, tag, path)
                 elif action=='create':
-                    listid.append(controller.create_service_container(name, tag, volumes, environment))
+                    controller.create_service_container(name, tag, volumes, environment)
                 elif action=='start':
-                    listid.pop(controller.start_service_container(tag, binds, port_bindings))
+                    controller.start_service_container(id_container, binds, port_bindings)
+                elif action=='run':
+                    id_container = controller.create_service_container(name, tag, volumes, environment)
+                    controller.start_service_container(id_container, binds, port_bindings)
                 else:
                     self.view.command_not_found(action)
 
@@ -199,10 +202,10 @@ class Controller(object):
         id_container = docker_api.create_container(tag, environment, volumes, name)
         return id_container
 
-    def start_service_container(self, tag, binds, port_bindings):
+    def start_service_container(self, id_container, binds, port_bindings):
         action='starting'
-        self.view.service_information(action, tag, port_bindings)
-        docker_api.start(tag, binds, port_bindings)
+        self.view.service_information(action, id_container, port_bindings)
+        docker_api.start(id_container, binds, port_bindings)
 
 if __name__ == '__main__':
     action = str(sys.argv[1])
