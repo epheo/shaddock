@@ -3,11 +3,10 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Repo and packages
 RUN apt-get update
-RUN apt-get -y upgrade
 
 
 #Install Supervisor OpenSSH vim
-RUN apt-get install -y openssh-server supervisor vim python-pip mysql-client mysql-common python-mysqldb
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server supervisor vim python-pip mysql-client mysql-common python-mysqldb
 
 # #Setup sshd
 # RUN mkdir -p /var/run/sshd && echo 'root:root' |chpasswd

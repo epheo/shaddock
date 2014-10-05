@@ -1,4 +1,4 @@
-FROM py-devstack/osbase:latest
+FROM pydevstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Keystone packages

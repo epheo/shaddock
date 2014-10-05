@@ -1,6 +1,6 @@
 #!/usr/bin/env python27
 # -*- coding: utf-8 -*-
-#from fabric.api import *
+
 import docker
 import os
 import socket
@@ -14,8 +14,8 @@ class Model(object):
     rabbitmq_password   = 'password'
     mysql_pass          = 'password'
     mysql_user          = 'admin'
-    user                = 'py-devstack'
 
+    user                = 'pydevstack'
     path                = os.getcwd()
     host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
     host_name           = host_ip
@@ -136,7 +136,11 @@ class View(object):
 
 
     def service_not_found(self, name):
-        print('That service "%s" does not exist' % name)
+        print('The service "%s" does not exist' % name)
+
+    def command_not_found(self, name):
+        print('The command "%s" does not exist' % action)
+        print('Available commands are: build, create or start')
 
 
 class Controller(object):
@@ -148,6 +152,8 @@ class Controller(object):
     def exec_service_list(self, action):
         service_list = self.model.services.keys()
         self.view.service_list(service_list)
+
+        listid = []
 
         for service in service_list:
             service_info = self.model.services.get(service, None)
@@ -163,18 +169,23 @@ class Controller(object):
 
                 if action=='build':
                     controller.build_service_container(name, tag, path)
+                elif action=='create':
+                    listid.append(controller.create_service_container(name, tag, volumes, environment))
+                elif action=='start':
+                    listid.pop(controller.start_service_container(tag, binds, port_bindings))
                 else:
-                    pass
-                if action=='create':
-                    controller.create_service_container(name, tag, volumes, environment)
-                else:
-                    pass
-                if action=='start':
-                    controller.start_service_container(tag, binds, port_bindings)
-                else:
-                    pass
+                    self.view.command_not_found(action)
+
             else:
                 self.view.service_not_found(name)
+
+#    def look_for_existing_images():
+#        if images in docker_api.containers(all=True):
+#        images !exist
+
+#    def look_for_existing_containers():
+#        containers exist
+#        containers !exist
 
     def build_service_container(self, name, tag, path):
         action='building'
@@ -185,12 +196,13 @@ class Controller(object):
     def create_service_container(self, name, tag, volumes, environment):
         action='creating'
         self.view.service_information(action, tag, environment, volumes, name)
-        id_image = docker_api.create_container(tag, environment, volumes, name)
+        id_container = docker_api.create_container(tag, environment, volumes, name)
+        return id_container
 
     def start_service_container(self, tag, binds, port_bindings):
         action='starting'
         self.view.service_information(action, tag, port_bindings)
-        id_container = docker_api.start(tag, binds, port_bindings)
+        docker_api.start(tag, binds, port_bindings)
 
 if __name__ == '__main__':
     action = str(sys.argv[1])
