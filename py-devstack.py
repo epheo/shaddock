@@ -36,7 +36,8 @@ class Model(object):
         'mysql': {
             'tag': '%s/osmysql' % (user), 
             'path': '%s/mysql/' % (path),
-            'ports': {3306: ('0.0.0.0', 3306)},
+            'ports': [3306],
+            'port_bindings': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
             'binds': {'/var/log/py-devstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}}
@@ -45,7 +46,8 @@ class Model(object):
         'rabbitmq': {
             'tag': '%s/osrabbitmq' % (user), 
             'path': '%s/rabbitmq/' % (path),
-            'ports': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
+            'ports': [5672,15672],
+            'port_bindings': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
             'binds': {'/var/log/py-devstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}}
@@ -54,7 +56,8 @@ class Model(object):
         'glance': {
             'tag': '%s/osglance' % (user), 
             'path': '%s/glance/' % (path),
-            'ports': {9292: ('0.0.0.0', 9292)},
+            'ports': [9292],
+            'port_bindings': {9292: ('0.0.0.0', 9292)},
             'confs': {'HOST_NAME': host_name, 
                       'MYSQL_DB': mysql_host, 
                       'MYSQL_USER': mysql_user, 
@@ -70,7 +73,8 @@ class Model(object):
         'horizon': {
             'tag': '%s/oshorizon' % (user), 
             'path': '%s/horizon/' % (path),
-            'ports': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
+            'ports': [80,11211],
+            'port_bindings': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
             'binds': {'/var/log/py-devstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}}
@@ -79,7 +83,8 @@ class Model(object):
         'keystone': {
             'tag': '%s/oskeystone' % (user), 
             'path': '%s/keystone/' % (path),
-            'ports': {35357: ('0.0.0.0', 35357), 5000: ('0.0.0.0', 5000)},
+            'ports': [35357,5000],
+            'port_bindings': {35357: ('0.0.0.0', 35357), 5000: ('0.0.0.0', 5000)},
             'confs': {'HOST_NAME': host_name, 
                       'MYSQL_DB': mysql_host, 
                       'MYSQL_USER': mysql_user, 
@@ -94,7 +99,8 @@ class Model(object):
         'nova': {
             'tag': '%s/osnova' % (user), 
             'path': '%s/nova/' % (path),
-            'ports': {8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)},
+            'ports': [9774,8775],
+            'port_bindings': {8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)},
             'confs': {'HOST_NAME': host_name, 
                       'HOST_IP': host_ip, 
                       'MYSQL_DB': mysql_host, 
@@ -110,13 +116,13 @@ class Model(object):
             'privileged': True
             },
 
-        'novacompute': {
-            'tag': '%s/osnovacompute' % (user), 
-            'path': '%s/novacompute/' % (path),
-            'confs': {'HOST_NAME': host_name },
-            'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
-        }
+#        'novacompute': {
+#            'tag': '%s/osnovacompute' % (user), 
+#            'path': '%s/novacompute/' % (path),
+#            'confs': {'HOST_NAME': host_name },
+#            'volumes': ['/var/log/supervisor'],
+#            'binds': {'/var/log/py-devstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
+#        }
 
     }
 
@@ -162,7 +168,8 @@ class Controller(object):
                 name            = service.title()
                 tag             = service_info.get('tag')
                 path            = service_info.get('path')
-                port_bindings   = service_info.get('ports')
+                ports           = service_info.get('ports')
+                port_bindings   = service_info.get('port_bindings')
                 environment     = service_info.get('confs')
                 volumes         = service_info.get('volumes')
                 binds           = service_info.get('binds')
@@ -170,11 +177,11 @@ class Controller(object):
                 if action=='build':
                     controller.build_service_container(name, tag, path)
                 elif action=='create':
-                    controller.create_service_container(name, tag, volumes, environment)
+                    controller.create_service_container(name, tag, volumes, ports, environment)
                 elif action=='start':
                     controller.start_service_container(id_container, binds, port_bindings)
                 elif action=='run':
-                    id_container = controller.create_service_container(name, tag, volumes, environment)
+                    id_container = controller.create_service_container(name, tag, volumes, ports, environment)
                     controller.start_service_container(id_container, binds, port_bindings)
                 else:
                     self.view.command_not_found(action)
@@ -202,7 +209,7 @@ class Controller(object):
         user='root'
         hostname=name
         self.view.service_information(action, tag, environment, volumes, name)
-        id_container = docker_api.create_container(tag, command, hostname, user, environment, volumes, name)
+        id_container = docker_api.create_container(tag, command, hostname, user, ports, environment, volumes, name)
         return id_container
 
     def start_service_container(self, id_container, binds, port_bindings):
