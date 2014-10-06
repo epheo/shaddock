@@ -198,8 +198,11 @@ class Controller(object):
 
     def create_service_container(self, name, tag, volumes, environment):
         action='creating'
+        command='/run.sh'
+        user='root'
+        hostname=name
         self.view.service_information(action, tag, environment, volumes, name)
-        id_container = docker_api.create_container(tag, environment, volumes, name)
+        id_container = docker_api.create_container(tag, command, hostname, user, environment, volumes, name)
         return id_container
 
     def start_service_container(self, id_container, binds, port_bindings):
