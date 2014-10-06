@@ -203,7 +203,7 @@ class Controller(object):
         for line in docker_api.build(path, tag):
             print(line)
 
-    def create_service_container(self, name, tag, volumes, environment):
+    def create_service_container(self, name, tag, volumes, ports, environment):
         action='creating'
         command='/run.sh'
         user='root'
