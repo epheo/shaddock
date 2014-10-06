@@ -36,7 +36,7 @@ class Model(object):
         'mysql': {
             'tag': '%s/osmysql' % (user), 
             'path': '%s/mysql/' % (path),
-            'ports': [3306],
+            'ports': [(3306, 'tcp')],
             'port_bindings': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
@@ -46,7 +46,7 @@ class Model(object):
         'rabbitmq': {
             'tag': '%s/osrabbitmq' % (user), 
             'path': '%s/rabbitmq/' % (path),
-            'ports': [5672,15672],
+            'ports': [(5672, 'tcp'),(15672, 'tcp')],
             'port_bindings': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
@@ -56,7 +56,7 @@ class Model(object):
         'glance': {
             'tag': '%s/osglance' % (user), 
             'path': '%s/glance/' % (path),
-            'ports': [9292],
+            'ports': [(9292, 'tcp')],
             'port_bindings': {9292: ('0.0.0.0', 9292)},
             'confs': {'HOST_NAME': host_name, 
                       'MYSQL_DB': mysql_host, 
@@ -73,7 +73,7 @@ class Model(object):
         'horizon': {
             'tag': '%s/oshorizon' % (user), 
             'path': '%s/horizon/' % (path),
-            'ports': [80,11211],
+            'ports': [(80, 'tcp'),(11211, 'tcp')],
             'port_bindings': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
@@ -83,7 +83,7 @@ class Model(object):
         'keystone': {
             'tag': '%s/oskeystone' % (user), 
             'path': '%s/keystone/' % (path),
-            'ports': [35357,5000],
+            'ports': [(35357, 'tcp'),(5000, 'tcp')],
             'port_bindings': {35357: ('0.0.0.0', 35357), 5000: ('0.0.0.0', 5000)},
             'confs': {'HOST_NAME': host_name, 
                       'MYSQL_DB': mysql_host, 
@@ -99,7 +99,7 @@ class Model(object):
         'nova': {
             'tag': '%s/osnova' % (user), 
             'path': '%s/nova/' % (path),
-            'ports': [9774,8775],
+            'ports': [(9774, 'tcp'),(8775, 'tcp')],
             'port_bindings': {8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)},
             'confs': {'HOST_NAME': host_name, 
                       'HOST_IP': host_ip, 
@@ -177,12 +177,21 @@ class Controller(object):
                 if action=='build':
                     controller.build_service_container(name, tag, path)
                 elif action=='create':
-                    controller.create_service_container(name, tag, volumes, ports, environment)
+                    if name=='Base':
+                        pass
+                    else:
+                        controller.create_service_container(name, tag, volumes, ports, environment)
                 elif action=='start':
-                    controller.start_service_container(id_container, binds, port_bindings)
+                    if name=='Base':
+                        pass
+                    else:
+                        controller.start_service_container(id_container, binds, port_bindings)
                 elif action=='run':
-                    id_container = controller.create_service_container(name, tag, volumes, ports, environment)
-                    controller.start_service_container(id_container, binds, port_bindings)
+                    if name=='Base':
+                        pass
+                    else:
+                        id_container = controller.create_service_container(name, tag, volumes, ports, environment)
+                        controller.start_service_container(id_container, binds, port_bindings)
                 else:
                     self.view.command_not_found(action)
 
@@ -209,14 +218,18 @@ class Controller(object):
         user='root'
         mem_limit='0'
         hostname=name
-        self.view.service_information(action, tag, environment, volumes, name)
-        id_container = docker_api.create_container(tag, command, hostname, user, ports, mem_limit, environment, volumes, name)
+        detach=False
+        stdin_open=False
+        tty=False
+        self.view.service_information(action, tag, command, hostname, user, ports, mem_limit, environment, volumes, name)
+        id_container = docker_api.create_container(tag, command, hostname, user, detach, ports, environment, volumes, name)
         return id_container
 
     def start_service_container(self, id_container, binds, port_bindings):
         action='starting'
+        publish_all_ports=True
         self.view.service_information(action, id_container, port_bindings)
-        docker_api.start(id_container, binds, port_bindings)
+        docker_api.start(id_container, binds, port_bindings, publish_all_ports='True')
 
 if __name__ == '__main__':
     action = str(sys.argv[1])

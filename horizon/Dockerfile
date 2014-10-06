@@ -15,4 +15,5 @@ VOLUME  ["/var/log/horizon"]
 ADD run.sh /run.sh
 RUN chmod 755 ./*.sh
 
+EXPOSE [80,11211]
 CMD ["/run.sh"]
