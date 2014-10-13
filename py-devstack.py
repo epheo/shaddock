@@ -25,13 +25,6 @@ class Model(object):
     mysql_host          = host_name
 
     services = {
-        'base': {
-            'tag': '%s/osbase' % (user), 
-            'path': '%s/base/' % (path),
-            'confs': {'HOST_NAME': host_name },
-            'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
-            },
 
         'mysql': {
             'tag': '%s/osmysql' % (user), 
@@ -124,6 +117,14 @@ class Model(object):
 #            'binds': {'/var/log/py-devstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
 #        }
 
+#        'base': {
+#            'tag': '%s/osbase' % (user), 
+#            'path': '%s/base/' % (path),
+#            'confs': {'HOST_NAME': host_name },
+#            'volumes': ['/var/log/supervisor'],
+#            'binds': {'/var/log/py-devstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
+#            },
+
     }
 
 class View(object):
@@ -159,7 +160,14 @@ class Controller(object):
         service_list = self.model.services.keys()
         self.view.service_list(service_list)
 
-        listid = []
+        if action=='build':
+        #Build of the 'Base' container image before other ones
+            name='osbase'
+            tag = '%s/osbase' % (self.model.user)
+            path = '%s/base/' % (self.model.path)
+            controller.build_service_container(name, tag, path)
+        else:
+            pass
 
         for service in service_list:
             service_info = self.model.services.get(service, None)
@@ -177,21 +185,12 @@ class Controller(object):
                 if action=='build':
                     controller.build_service_container(name, tag, path)
                 elif action=='create':
-                    if name=='Base':
-                        pass
-                    else:
-                        controller.create_service_container(name, tag, volumes, ports, environment)
+                    controller.create_service_container(name, tag, volumes, ports, environment)
                 elif action=='start':
-                    if name=='Base':
-                        pass
-                    else:
-                        controller.start_service_container(id_container, binds, port_bindings)
+                    controller.start_service_container(id_container, binds, port_bindings)
                 elif action=='run':
-                    if name=='Base':
-                        pass
-                    else:
-                        id_container = controller.create_service_container(name, tag, volumes, ports, environment)
-                        controller.start_service_container(id_container, binds, port_bindings)
+                    id_container = controller.create_service_container(name, tag, volumes, ports, environment)
+                    controller.start_service_container(id_container, binds, port_bindings)
                 else:
                     self.view.command_not_found(action)
 
