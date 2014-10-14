@@ -2,6 +2,7 @@ FROM pydevstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 #install nova
+
 RUN apt-get update
 RUN apt-get install -y --force-yes nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 
@@ -15,5 +16,5 @@ ADD run.sh /run.sh
 ADD create_db.sh /create_db.sh
 RUN chmod 755 ./*.sh
 
-EXPOSE [9774,8775]
+EXPOSE ['9774', '8775']
 CMD ["/run.sh"]

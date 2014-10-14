@@ -11,5 +11,5 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD run.sh /run.sh
 RUN chmod 755 ./*.sh
 
-EXPOSE [5672,15672]
+EXPOSE ['5672', '15672']
 CMD ["/run.sh"]

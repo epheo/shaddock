@@ -2,7 +2,7 @@ FROM pydevstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 #install glance
-RUN apt-get update
+#RUN apt-get update
 RUN apt-get install -y --force-yes glance python-glance python-glanceclient
 
 #Setup supervisord
