@@ -240,10 +240,9 @@ class Controller(object):
     def start_service_container(self, id_container, binds, port_bindings, privileged):
         action            = 'starting'
         publish_all_ports = True
-        links             = 'None'
 
-        self.view.service_information(action, id_container, port_bindings)
-        docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
+        self.view.service_information(action, id_container, port_bindings, privileged)
+        docker_api.start(id_container, binds, port_bindings, publish_all_ports, privileged)
 
 if __name__ == '__main__':
 
