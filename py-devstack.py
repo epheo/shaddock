@@ -162,10 +162,10 @@ class Controller(object):
 
         if action=='build':
         #Build of the 'Base' container image before other ones
-            name='osbase'
-            tag = '%s/osbase' % (self.model.user)
-            path = '%s/base/' % (self.model.path)
-            nocache=True
+            name    ='osbase'
+            tag     = '%s/osbase' % (self.model.user)
+            path    = '%s/base/' % (self.model.path)
+            nocache = True
             controller.build_service_container(name, tag, path, nocache)
         else:
             pass
@@ -183,7 +183,7 @@ class Controller(object):
                 volumes         = service_info.get('volumes')
                 binds           = service_info.get('binds')
                 nocache         = False
-                
+
                 if action=='build':
                     controller.build_service_container(name, tag, path, nocache)
                 elif action=='create':
@@ -210,7 +210,7 @@ class Controller(object):
     def build_service_container(self, name, tag, path, nocache):
         action='building'
         self.view.service_information(action, name, tag, path, nocache)
-        for line in docker_api.build(path, tag):
+        for line in docker_api.build(path, tag, nocache):
             print(line)
 
     def create_service_container(self, name, tag, volumes, ports, environment):
