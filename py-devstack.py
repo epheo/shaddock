@@ -208,10 +208,11 @@ class Controller(object):
 #        containers !exist
 
     def build_service_container(self, name, tag, path, nocache):
-        action = 'building'
-        quiet  = False
+        action  = 'building'
+        quiet   = False
+        fileobj = None
         self.view.service_information(action, name, tag, path, nocache)
-        for line in docker_api.build(path, tag, quiet, nocache):
+        for line in docker_api.build(path, tag, quiet, fileobj, nocache):
             print(line)
 
     def create_service_container(self, name, tag, volumes, ports, environment):
