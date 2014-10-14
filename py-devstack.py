@@ -33,7 +33,8 @@ class Model(object):
             'port_bindings': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}}
+            'binds': {'/var/log/py-devstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}},
+            'privileged': False
             },
 
         'rabbitmq': {
@@ -43,7 +44,8 @@ class Model(object):
             'port_bindings': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}}
+            'binds': {'/var/log/py-devstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}},
+            'privileged': False
             },
 
         'glance': {
@@ -60,7 +62,8 @@ class Model(object):
                       'GLANCE_DBPASS': glance_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/glance': {'bind': '/var/log/supervisor', 'ro': False}}
+            'binds': {'/var/log/py-devstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+            'privileged': False
             },
 
         'horizon': {
@@ -70,7 +73,8 @@ class Model(object):
             'port_bindings': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}}
+            'binds': {'/var/log/py-devstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}},
+            'privileged': False
             },
 
         'keystone': {
@@ -86,7 +90,8 @@ class Model(object):
                       'KEYSTONE_DBPASS': keystone_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}}
+            'binds': {'/var/log/py-devstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}},
+            'privileged': False
             },
 
         'nova': {
@@ -186,13 +191,13 @@ class Controller(object):
 
                 if action=='build':
                     controller.build_service_container(name, tag, path, nocache)
-                elif action=='create':
-                    controller.create_service_container(name, tag, volumes, ports, environment)
-                elif action=='start':
-                    controller.start_service_container(id_container, binds, port_bindings)
+#               elif action=='create':
+#                   controller.create_service_container(name, tag, volumes, ports, environment)
+#               elif action=='start':
+#                   controller.start_service_container(id_container, binds, port_bindings)
                 elif action=='run':
                     id_container = controller.create_service_container(name, tag, volumes, ports, environment)
-                    controller.start_service_container(id_container, binds, port_bindings)
+                    controller.start_service_container(id_container, binds, port_bindings, privileged)
                 else:
                     self.view.command_not_found(action)
 
@@ -208,34 +213,41 @@ class Controller(object):
 #        containers !exist
 
     def build_service_container(self, name, tag, path, nocache):
+
         action  = 'building'
         quiet   = False
         fileobj = None
+
         self.view.service_information(action, name, tag, path, nocache)
         for line in docker_api.build(path, tag, quiet, fileobj, nocache):
             print(line)
 
     def create_service_container(self, name, tag, volumes, ports, environment):
-        action='creating'
-        command='/run.sh'
-        user='root'
-        mem_limit='0'
-        hostname=name
-        detach=False
-        stdin_open=False
-        tty=False
+        action      = 'creating'
+        command     = '/run.sh'
+        user        = 'root'
+        mem_limit   = '0'
+        hostname    = name
+        detach      = False
+        stdin_open  = False
+        tty         = False
+
         self.view.service_information(action, tag, command, hostname, user, ports, mem_limit, environment, volumes, name)
         id_container = docker_api.create_container(tag, command, hostname, user, detach, ports, environment, volumes, name)
         return id_container
 
-    def start_service_container(self, id_container, binds, port_bindings):
-        action='starting'
-        publish_all_ports=True
+    def start_service_container(self, id_container, binds, port_bindings, privileged):
+        action            = 'starting'
+        publish_all_ports = True
+        links=None
+
         self.view.service_information(action, id_container, port_bindings)
-        docker_api.start(id_container, binds, port_bindings, publish_all_ports='True')
+        docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
 
 if __name__ == '__main__':
-    action = str(sys.argv[1])
+
+    action     = str(sys.argv[1])
     docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
     controller = Controller()
+
     controller.exec_service_list(action)
