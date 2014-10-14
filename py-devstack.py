@@ -182,9 +182,10 @@ class Controller(object):
                 environment     = service_info.get('confs')
                 volumes         = service_info.get('volumes')
                 binds           = service_info.get('binds')
-
+                nocache         = False
+                
                 if action=='build':
-                    controller.build_service_container(name, tag, path)
+                    controller.build_service_container(name, tag, path, nocache)
                 elif action=='create':
                     controller.create_service_container(name, tag, volumes, ports, environment)
                 elif action=='start':
@@ -206,9 +207,9 @@ class Controller(object):
 #        containers exist
 #        containers !exist
 
-    def build_service_container(self, name, tag, path):
+    def build_service_container(self, name, tag, path, nocache):
         action='building'
-        self.view.service_information(action, name, tag, path)
+        self.view.service_information(action, name, tag, path, nocache)
         for line in docker_api.build(path, tag):
             print(line)
 
