@@ -187,6 +187,7 @@ class Controller(object):
                 environment     = service_info.get('confs')
                 volumes         = service_info.get('volumes')
                 binds           = service_info.get('binds')
+                privileged      = service_info.get('privileged')
                 nocache         = False
 
                 if action=='build':
