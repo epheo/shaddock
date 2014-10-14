@@ -165,7 +165,8 @@ class Controller(object):
             name='osbase'
             tag = '%s/osbase' % (self.model.user)
             path = '%s/base/' % (self.model.path)
-            controller.build_service_container(name, tag, path)
+            nocache=True
+            controller.build_service_container(name, tag, path, nocache)
         else:
             pass
 

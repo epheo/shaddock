@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Repo and packages
-RUN apt-get update  #redo
+RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 
