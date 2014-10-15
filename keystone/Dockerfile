@@ -1,8 +1,10 @@
-FROM pydevstack/osbase:latest
+FROM oscd/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Keystone packages
-#RUN apt-get update
+RUN yum -y install openstack-keystone python-keystoneclient
+
+RUN apt-get update
 RUN apt-get install -y --force-yes keystone python-keystone
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
