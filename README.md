@@ -11,7 +11,11 @@ For now, configuration sh scripts are based on github.com/Nirmata/openstack and 
 > **Requirements:**
 > - Python2.7
 > - Docker
-> - Docker-py
+> - Docker-py (pip install docker-py)
+
+
+> - MySql Connector http://dev.mysql.com/downloads/connector/c/
+> - oursql (pip install oursql)
 
 Build contain er images
 ----------------------

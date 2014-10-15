@@ -160,21 +160,28 @@ class Controller(object):
     def __init__(self):
         self.model = Model()
         self.view = View()
+        self.configuration = Configuration()
+
+        import create_db
 
     def exec_service_list(self, action):
         service_list = self.model.services.keys()
         self.view.service_list(service_list)
 
+#---------- BUILD BASE FIRST ------------#
         if action=='build':
-        #Build of the 'Base' container image before other ones
+
             name    ='osbase'
             tag     = '%s/osbase' % (self.model.user)
             path    = '%s/base/' % (self.model.path)
             nocache = True
+
             controller.build_service_container(name, tag, path, nocache)
+
         else:
             pass
 
+#---------- LOOP FOR EACH SERVICES ----------#
         for service in service_list:
             service_info = self.model.services.get(service, None)
             if service_info is not None:
@@ -199,6 +206,8 @@ class Controller(object):
                 elif action=='run':
                     id_container = controller.create_service_container(name, tag, volumes, ports, environment)
                     controller.start_service_container(id_container, binds, port_bindings, privileged)
+                elif action=='configure':
+                    self.configuration.create_db(name, environment)
                 else:
                     self.view.command_not_found(action)
 
@@ -212,6 +221,8 @@ class Controller(object):
 #    def look_for_existing_containers():
 #        containers exist
 #        containers !exist
+
+#----------- DOCKER API ACTIONS ----------#
 
     def build_service_container(self, name, tag, path, nocache):
 
@@ -240,9 +251,26 @@ class Controller(object):
     def start_service_container(self, id_container, binds, port_bindings, privileged):
         action            = 'starting'
         publish_all_ports = True
-        
+
         self.view.service_information(action, id_container, port_bindings, privileged)
         docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
+
+class Configuration(object):
+
+    def create_db(self, name, environment):
+        import MySQLdb
+
+        print environment
+
+        db = MySQLdb.connect(host,user,passwd,db)
+        cur = db.cursor() 
+
+#        cur.execute("CREATE DATABASE %s;" % (name))
+#        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'localhost' IDENTIFIED BY '${GLANCE_DBPASS}';")
+#        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'${HOST_NAME}' IDENTIFIED BY '${GLANCE_DBPASS}';")
+#        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'%' IDENTIFIED BY '${GLANCE_DBPASS}'")
+
+
 
 if __name__ == '__main__':
 
