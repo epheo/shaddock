@@ -8,38 +8,41 @@ USAGE
 	chmod +x octopenstack.py
 	sudo ./octopenstack.py
 
-**build:**
-""""""""""
+	**build:**
 > sudo ./octopenstack.py build
+
 Build the differents Docker containers and configure them to provide the differents OpenStack services.
 You can find a list of the differents containers and add new ones by editing services.yaml
 All the configuration of your future OpenStack Docker platform is done in configuration.yaml
 
-**run:**
-""""""""
+	**run:**
 > sudo ./octopenstack.py run
+
 This command will create and run the architecture of your plateform and all the network configuration.
 A frontal HAproxy manage all the API calls and can provides HighAvailabilty for them with an second node.
 
 Hypervisors can be addeds and specified as in any other OpenStack plateform by the CLI, Python API or Horizon Dashboard
 
-**init:**
-"""""""""
+	**init:**
 > sudo ./octopenstack.py init
+
 This fonction initialise all the Databases.
 
-**stop:**
-"""""""""
+	**stop:**
+
 > sudo ./octopenstack.py stop
+
 Stop the OpenStack services.
 
-**start:**
-""""""""""
+	**start:**
+
 > sudo ./octopenstack.py start
+
 Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
 in
-**rm:**
-"""""""
+
+	**rm:**
+
 > sudo ./octopenstack.py rm
 Remove the services
 
@@ -49,11 +52,10 @@ CONFIGURATION
 Docker instances are builds by templateds dockerfiles
 You will found the Services Dockerfiles templates in 'dockerfiles/' and their configurations in the services.yaml file.
 
-services.yaml
-"""""""""""""
+	services.yaml
 
-configuration.yaml
-""""""""""""""""""
+	configuration.yaml
+
 All your configurations from 
 
 
