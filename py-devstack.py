@@ -1,4 +1,4 @@
-#!/usr/bin/env python27
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 import docker
@@ -16,13 +16,13 @@ class Model(object):
     mysql_user          = 'admin'
 
     user                = 'pydevstack'
-    path                = os.getcwd()
+    path                = '%s/dockerfiles' % (os.getcwd())
     host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
     host_name           = host_ip
     admin_password      = admin_token
     keystone_host       = host_name
     rabbitmq_host       = host_name
-    mysql_host          = host_name
+    mysql_host          = host_nam
 
     services = {
 
@@ -146,7 +146,6 @@ class View(object):
             print(arg)
         print('')
 
-
     def service_not_found(self, name):
         print('The service "%s" does not exist' % name)
 
@@ -158,11 +157,10 @@ class View(object):
 class Controller(object):
 
     def __init__(self):
-        self.model = Model()
-        self.view = View()
-        self.configuration = Configuration()
+        self.model          = Model()
+        self.view           = View()
+        self.container      = ServiceContainer()
 
-        import create_db
 
     def exec_service_list(self, action):
         service_list = self.model.services.keys()
@@ -176,7 +174,7 @@ class Controller(object):
             path    = '%s/base/' % (self.model.path)
             nocache = True
 
-            controller.build_service_container(name, tag, path, nocache)
+            self.container.build(name, tag, path, nocache)
 
         else:
             pass
@@ -198,16 +196,15 @@ class Controller(object):
                 nocache         = False
 
                 if action=='build':
-                    controller.build_service_container(name, tag, path, nocache)
-#               elif action=='create':
-#                   controller.create_service_container(name, tag, volumes, ports, environment)
-#               elif action=='start':
-#                   controller.start_service_container(id_container, binds, port_bindings)
+                    self.container.build(name, tag, path, nocache)
+
                 elif action=='run':
-                    id_container = controller.create_service_container(name, tag, volumes, ports, environment)
-                    controller.start_service_container(id_container, binds, port_bindings, privileged)
+                    id_container = self.container.create(name, tag, volumes, ports, environment)
+                    self.container.start(id_container, binds, port_bindings, privileged)
+
                 elif action=='configure':
-                    self.configuration.create_db(name, environment)
+                    self.container.create_db(name, environment)
+
                 else:
                     self.view.command_not_found(action)
 
@@ -222,9 +219,13 @@ class Controller(object):
 #        containers exist
 #        containers !exist
 
-#----------- DOCKER API ACTIONS ----------#
 
-    def build_service_container(self, name, tag, path, nocache):
+class ServiceContainer(object):
+
+    def __init__(self):
+        self.view           = View()
+
+    def build(self, name, tag, path, nocache):
 
         action  = 'building'
         quiet   = False
@@ -234,7 +235,7 @@ class Controller(object):
         for line in docker_api.build(path, tag, quiet, fileobj, nocache):
             print(line)
 
-    def create_service_container(self, name, tag, volumes, ports, environment):
+    def create(self, name, tag, volumes, ports, environment):
         action      = 'creating'
         command     = '/run.sh'
         user        = 'root'
@@ -248,29 +249,28 @@ class Controller(object):
         id_container = docker_api.create_container(tag, command, hostname, user, detach, ports, environment, volumes, name)
         return id_container
 
-    def start_service_container(self, id_container, binds, port_bindings, privileged):
+    def start(self, id_container, binds, port_bindings, privileged):
         action            = 'starting'
         publish_all_ports = True
 
         self.view.service_information(action, id_container, port_bindings, privileged)
         docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
-
-class Configuration(object):
+        
 
     def create_db(self, name, environment):
-        import MySQLdb
+#        import MySQLdb
 
         print environment
 
-        db = MySQLdb.connect(host,user,passwd,db)
-        cur = db.cursor() 
+#        db = MySQLdb.connect(host,user,passwd,db)
+#        cur = db.cursor() 
 
 #        cur.execute("CREATE DATABASE %s;" % (name))
 #        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'localhost' IDENTIFIED BY '${GLANCE_DBPASS}';")
 #        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'${HOST_NAME}' IDENTIFIED BY '${GLANCE_DBPASS}';")
 #        cur.execute("GRANT ALL PRIVILEGES ON ${SERVICE}.* TO '${SERVICE}'@'%' IDENTIFIED BY '${GLANCE_DBPASS}'")
 
-
+#    def config_files():
 
 if __name__ == '__main__':
 
