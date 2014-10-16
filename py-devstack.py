@@ -211,14 +211,6 @@ class Controller(object):
             else:
                 self.view.service_not_found(name)
 
-#    def look_for_existing_images():
-#        if images in docker_api.containers(all=True):
-#        images !exist
-
-#    def look_for_existing_containers():
-#        containers exist
-#        containers !exist
-
 
 class ServiceContainer(object):
 
@@ -229,11 +221,32 @@ class ServiceContainer(object):
 
         action  = 'building'
         quiet   = False
-        fileobj = None
+        dockerfile = '%s/Dockerfile' % (path)
+
+        # DockerFile configuration: 
+        # """""""""""""""""""""""""
+        # All the parameters are include in the  services dict (here 
+        # as environment).
+        # They're replaced in the Dockerfile and provided to Docker as
+        # a fileobj
+
+        param_list = environment.keys()
+        for param_key in param_list:
+            param = environment.get(param_key)
+
+            with open(dockerfile, "r") as dockerfile_template:
+                template = dockerfile_template.read()
+
+                print param_key     #TEST
+                print param         #TEST
+                fileobj = template.replace(param_key,param)
+
+        path=None
 
         self.view.service_information(action, name, tag, path, nocache)
         for line in docker_api.build(path, tag, quiet, fileobj, nocache):
             print(line)
+
 
     def create(self, name, tag, volumes, ports, environment):
         action      = 'creating'
@@ -256,6 +269,43 @@ class ServiceContainer(object):
         self.view.service_information(action, id_container, port_bindings, privileged)
         docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
         
+    def get_info(self, tag):
+
+        # Retrieve existing containers informations:
+        # """"""""""""""""""""""""""""""""""""""""""
+        # First retrieve all the instances IDs, 
+        # Get informations for the returned IDs 
+        # And check for a match with a known tag.
+        #
+        # Then get instances informations in the dictionary for 
+        # the matching one.
+        #
+        # Maybe it will be usefull to store returned information
+        # in the 'services' dict?
+
+        containers_list = docker_api.containers()
+
+        for containers in containers_list:
+            c_id = containers.get('Id')
+            container_infos = docker_api.inspect_container(c_id)
+
+            config = container_infos.get('Config')
+            if config.get('Image')==tag:
+                network  = container_infos.get('NetworkSettings')
+
+                ipaddr   = network.get('IPAddress')
+                dockerid = c_id
+                hostname = config.get('Hostname')
+
+
+    def stop(tag):
+        c_id = self.get_info.dockerid(tag)
+        docker_api.stop(c_id)
+
+    def rm(tag):
+        c_id = self.get_info.dockerid(tag)
+        docker_api.stop(c_id)
+        docker_api.remove_container(c_id)
 
     def create_db(self, name, environment):
 #        import MySQLdb
