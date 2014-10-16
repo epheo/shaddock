@@ -1,49 +1,90 @@
-py-devstack
-===========
+OctOpenStack
+============
 
-Py-Devstack provides OpenStack developpement environement deployed in Docker containers by Python APIs
+OctOpenStack provides an OpenStack platform deployed in Docker containers and who provides and manages Docker containers as cloud instances.
 
-You can use the provideds Dockerfiles to create images for core OpenStack services or use py-devstack to deploy the environement.
+USAGE
+------
+	chmod +x octopenstack.py
+	sudo ./octopenstack.py
 
-For now, configuration sh scripts are based on github.com/Nirmata/openstack and will be replaced by directs API calls
+**build:**
+""""""""""
+> sudo ./octopenstack.py build
+Build the differents Docker containers and configure them to provide the differents OpenStack services.
+You can find a list of the differents containers and add new ones by editing services.yaml
+All the configuration of your future OpenStack Docker platform is done in configuration.yaml
+
+**run:**
+""""""""
+> sudo ./octopenstack.py run
+This command will create and run the architecture of your plateform and all the network configuration.
+A frontal HAproxy manage all the API calls and can provides HighAvailabilty for them with an second node.
+
+Hypervisors can be addeds and specified as in any other OpenStack plateform by the CLI, Python API or Horizon Dashboard
+
+**init:**
+"""""""""
+> sudo ./octopenstack.py init
+This fonction initialise all the Databases.
+
+**stop:**
+"""""""""
+> sudo ./octopenstack.py stop
+Stop the OpenStack services.
+
+**start:**
+""""""""""
+> sudo ./octopenstack.py start
+Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
+in
+**rm:**
+"""""""
+> sudo ./octopenstack.py rm
+Remove the services
 
 
-> **Requirements:**
+CONFIGURATION
+-------------
+Docker instances are builds by templateds dockerfiles
+You will found the Services Dockerfiles templates in 'dockerfiles/' and their configurations in the services.yaml file.
+
+services.yaml
+"""""""""""""
+
+configuration.yaml
+""""""""""""""""""
+All your configurations from 
+
+
+REQUIEREMENTS
+-------------
 > - Python2.7
 > - Docker
 > - Docker-py (pip install docker-py)
 
-
 > - MySql Connector http://dev.mysql.com/downloads/connector/c/
 > - oursql (pip install oursql)
 
-Build contain er images
-----------------------
-> sudo python py-devstack.py build
- 
-Create container images
------------------------
-> sudo python py-devstack.py create
 
+INFORMATION
+-----------
+OpenSTack services are deployed in CentOS7 environments.
 
-Run OpenStack Environment
--------------------------
-> python py-devstack.py start
+> MVC architecture model.
 
-Configure Environments
-----------------------
+Logs
+""""
+You can found the differents logs files in /var/log/octopenstack
+	tail -f /var/log/octopenstack/*.log
 
-	./create_default_user.sh
-	keystone/create_user.sh keystone ${HOST_NAME}
-	keystone/register_service.sh keystone ${HOST_NAME}
-	glance/create_user.sh glance ${HOST_NAME}
-	glance/register_service.sh glance ${HOST_NAME}
-	nova/create_user.sh nova ${HOST_NAME}
-	nova/register_service.sh nova ${HOST_NAME}
-	./keystone_test.sh ${HOST_NAME}
-	./glance_test.sh ${HOST_NAME}
+Contributing
+""""""""""""
+I'm really interested by any advice, idea, help, or contribution.
 
-
+License
+"""""""
+Not yet decided.
 
 TODO:
 -----
@@ -54,3 +95,24 @@ TODO:
 > - Change SH scripts by OS Python API call
 > - Modif Dockerfiles > git sources (python:2-onbuild) ?
 > - Pull images option from my repo
+> - Reduce the MySql footprint (run conf in a docker container?)
+> - Replace conf by YAML
+> - 
+> - 
+> - 
+
+DONE:
+> - Add stop and rm Options
+> - Change Name
+> - Re-Organise files
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
