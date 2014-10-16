@@ -63,7 +63,9 @@ REQUIEREMENTS
 -------------
 > - Python2.7
 > - Docker
-> - Docker-py (pip install docker-py)
+
+> - pip install docker-py
+> - pip install PyYaml
 
 > - MySql Connector http://dev.mysql.com/downloads/connector/c/
 > - oursql (pip install oursql)

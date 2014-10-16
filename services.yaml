@@ -1,0 +1,123 @@
+#
+#>>> import yaml
+
+#>>> print yaml.load("""
+#... name: Vorlin Laruknuzum
+#... sex: Male
+#... class: Priest
+#... title: Acolyte
+#... hp: [32, 71]
+#... sp: [1, 13]
+#... gold: 423
+#... inventory:
+#... - a Holy Book of Prayers (Words of Wisdom)
+#... - an Azure Potion of Cure Light Wounds
+#... - a Silver Wand of Wonder
+#... """)
+
+# {'name': 'Vorlin Laruknuzum', 'gold': 423, 'title': 'Acolyte', 'hp': [32, 71],
+#'sp': [1, 13], 'sex': 'Male', 'inventory': ['a Holy Book of Prayers (Words of Wisdom)',
+#'an Azure Potion of Cure Light Wounds', 'a Siver Wand of Wonder'], 'class': 'Priest'}
+
+#>>> print yaml.dump({'name': "The Cloak 'Colluin'", 'depth': 5, 'rarity': 45,
+#... 'weight': 10, 'cost': 50000, 'flags': ['INT', 'WIS', 'SPEED', 'STEALTH']})
+
+#name: The Cloak 'Colluin'
+#rarity: 45
+#flags: [INT, WIS, SPEED, STEALTH]
+#weight: 10
+#cost: 50000
+#depth: 5
+
+services = {
+
+    'mysql': {
+        'tag': '/osmysql',
+        'path': '/mysql/',
+        'ports': [(3306, 'tcp')],
+        'port_bindings': {3306: ('0.0.0.0', 3306)},
+        'confs': {'MYSQL_PASS': mysql_pass },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': False
+        },
+
+    'rabbitmq': {
+        'tag': '/osrabbitmq', 
+        'path': '/rabbitmq/',
+        'ports': [(5672, 'tcp'),(15672, 'tcp')],
+        'port_bindings': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
+        'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': False
+        },
+
+    'glance': {
+        'tag': '/osglance',
+        'path': '/glance/',
+        'ports': [(9292, 'tcp')],
+        'port_bindings': {9292: ('0.0.0.0', 9292)},
+        'confs': {'HOST_NAME': host_name,
+                  'MYSQL_DB': mysql_host,
+                  'MYSQL_USER': mysql_user,
+                  'MYSQL_PASSWORD': mysql_pass,
+                  'RABBITMQ_HOST': rabbitmq_host,
+                  'RABBITMQ_PASSWORD': rabbitmq_password,
+                  'GLANCE_DBPASS': glance_pass
+                 },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': False
+        },
+
+    'horizon': {
+        'tag': '/oshorizon',
+        'path': '/horizon/',
+        'ports': [(80, 'tcp'),(11211, 'tcp')],
+        'port_bindings': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
+        'confs': {'HOST_NAME': host_name },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': False
+        },
+
+    'keystone': {
+        'tag': '/oskeystone',
+        'path': '/keystone/',
+        'ports': [(35357, 'tcp'),(5000, 'tcp')],
+        'port_bindings': {35357: ('0.0.0.0', 35357), 5000: ('0.0.0.0', 5000)},
+        'confs': {'HOST_NAME': host_name,
+                  'MYSQL_DB': mysql_host,
+                  'MYSQL_USER': mysql_user,
+                  'MYSQL_PASSWORD': mysql_pass,
+                  'ADMIN_TOKEN': admin_token,
+                  'KEYSTONE_DBPASS': keystone_pass
+                 },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': False
+        },
+
+    'nova': {
+        'tag': '/osnova',
+        'path': '/nova/',
+        'ports': [(9774, 'tcp'),(8775, 'tcp')],
+        'port_bindings': {8774: ('0.0.0.0', 8774), 8775: ('0.0.0.0', 8775)},
+        'confs': {'HOST_NAME': host_name,
+                  'HOST_IP': host_ip,
+                  'MYSQL_DB': mysql_host,
+                  'MYSQL_USER': mysql_user,
+                  'MYSQL_PASSWORD': mysql_pass,
+                  'RABBITMQ_HOST': rabbitmq_host,
+                  'RABBITMQ_PASSWORD': rabbitmq_password,
+                  'NOVA_DBPASS': nova_pass,
+                  'ADMIN_PASS': admin_password
+                 },
+        'volumes': ['/var/log/supervisor'],
+        'binds': {'/var/log/octopenstack/nova': {'bind': '/var/log/supervisor', 'ro': False}},
+        'privileged': True
+        },
+}
+
+
