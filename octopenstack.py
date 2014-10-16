@@ -15,7 +15,7 @@ class Model(object):
     mysql_pass          = 'password'
     mysql_user          = 'admin'
 
-    user                = 'pydevstack'
+    user                = 'octopenstack'
     path                = '%s/dockerfiles' % (os.getcwd())
     host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
     host_name           = host_ip
@@ -33,7 +33,7 @@ class Model(object):
             'port_bindings': {3306: ('0.0.0.0', 3306)},
             'confs': {'MYSQL_PASS': mysql_pass },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/mysql': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': False
             },
 
@@ -44,7 +44,7 @@ class Model(object):
             'port_bindings': {5672: ('0.0.0.0', 5672), 15672: ('0.0.0.0', 15672)},
             'confs': {'RABBITMQ_PASSWORD': rabbitmq_password },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/rabbitmq': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': False
             },
 
@@ -62,7 +62,7 @@ class Model(object):
                       'GLANCE_DBPASS': glance_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': False
             },
 
@@ -73,7 +73,7 @@ class Model(object):
             'port_bindings': {80: ('0.0.0.0', 80), 11211: ('0.0.0.0', 11211)},
             'confs': {'HOST_NAME': host_name },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/horizon': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': False
             },
 
@@ -90,7 +90,7 @@ class Model(object):
                       'KEYSTONE_DBPASS': keystone_pass
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': False
             },
 
@@ -110,7 +110,7 @@ class Model(object):
                       'ADMIN_PASS': admin_password
                      },
             'volumes': ['/var/log/supervisor'],
-            'binds': {'/var/log/py-devstack/nova': {'bind': '/var/log/supervisor', 'ro': False}},
+            'binds': {'/var/log/octopenstack/nova': {'bind': '/var/log/supervisor', 'ro': False}},
             'privileged': True
             },
 
@@ -119,7 +119,7 @@ class Model(object):
 #            'path': '%s/novacompute/' % (path),
 #            'confs': {'HOST_NAME': host_name },
 #            'volumes': ['/var/log/supervisor'],
-#            'binds': {'/var/log/py-devstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
+#            'binds': {'/var/log/octopenstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
 #        }
 
 #        'base': {
@@ -127,7 +127,7 @@ class Model(object):
 #            'path': '%s/base/' % (path),
 #            'confs': {'HOST_NAME': host_name },
 #            'volumes': ['/var/log/supervisor'],
-#            'binds': {'/var/log/py-devstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
+#            'binds': {'/var/log/octopenstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
 #            },
 
     }
