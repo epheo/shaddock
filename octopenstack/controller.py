@@ -63,8 +63,11 @@ class Controller(object):
                     self.container.start(id_container, binds, port_bindings)
 
                 elif action=='stop':
-                    self.container.stop(tag)
-
+                    try:
+                        self.container.stop(tag)
+                    except:
+                        pass
+                        
                 elif action=='rm':
                     self.container.rm(tag)
                 else:

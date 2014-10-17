@@ -104,6 +104,7 @@ class DockerController(object):
     def stop(self, tag):
         c_id = self.get_info.dockerid(tag)
         docker_api.stop(c_id)
+        print(c_id)
 
     def rm(self, tag):
         c_id = self.get_info.dockerid(tag)
