@@ -3,6 +3,7 @@
 
 import docker
 from octopenstack import view
+
 docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
 
 class DockerController(object):
@@ -48,7 +49,7 @@ class DockerController(object):
 
         self.view.service_information(action, name, tag, path, nocache)
         for line in docker_api.build(path, tag, quiet, fileobj, nocache, rm, stream, timeout, custom_context):
-            print(line)
+            self.view.display_stream(line)
 
 
     def create(self, name, tag, volumes, ports, environment):
@@ -76,17 +77,19 @@ class DockerController(object):
 
         # Retrieve existing containers informations:
         # """"""""""""""""""""""""""""""""""""""""""
-        # First retrieve all the instances IDs, 
-        # Get informations for the returned IDs 
+        # First  retrieve all  the instances IDs, 
+        # Get informations  for  the returned IDs 
         # And check for a match with a known tag.
         #
-        # Then get instances informations in the dictionary for 
-        # the matching one.
+        # Then get instances  informations in the 
+        # dictionary for the matching one.
         #
-        # Maybe it will be usefull to store returned information
-        # in the 'services' dict?
+        # Returned informations are stored in the 
+        # 'launched_containers' dictionary.
 
         containers_list = docker_api.containers()
+
+        launched_containers={}
 
         for containers in containers_list:
             c_id = containers.get('Id')
@@ -96,21 +99,32 @@ class DockerController(object):
             if config.get('Image')==tag:
                 network  = container_infos.get('NetworkSettings')
 
-                ipaddr   = network.get('IPAddress')
-                dockerid = 'c_id'
-                hostname = config.get('Hostname')
+                container_specs={}
+                container_specs['ipaddr']   = network.get('IPAddress')
+                container_specs['dockerid'] = c_id
+                container_specs['hostname'] = config.get('Hostname')
 
+                launched_containers[tag] = container_specs
 
-    def stop(self, tag):
-        c_id = self.get_info.dockerid(tag)
-        docker_api.stop(c_id)
-        print(c_id)
+        return launched_containers
 
-    def rm(self, tag):
-        c_id = self.get_info.dockerid(tag)
+    def stop(self, tag, rm):
+        launched_containers=self.get_info(tag)
+        if bool(launched_containers)==True:
+            containers       = launched_containers.keys()
+            for container in containers:
+                container_infos = launched_containers.get(container)
+                dockerid = container_infos.get('dockerid')
+                print('Stoping container %s ...' % (tag))
+                docker_api.stop(dockerid)
+                if rm==True:
+                    print('Removing container %s ...' % (tag))
+                    docker_api.remove_container(dockerid)
+                else:
+                    pass
+        else:
+            print('Services %s not launched' % (tag))
 
-        docker_api.stop(c_id)
-        docker_api.remove_container(c_id)
 
     def create_db(self, name, environment):
 #        import MySQLdb

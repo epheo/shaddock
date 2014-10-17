@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 class View(object):
 
@@ -21,3 +23,6 @@ class View(object):
     def command_not_found(self, name):
         print('The command "%s" does not exist' % action)
         print('Available commands are: build, create or start')
+
+    def display_stream(self, line):
+        pp.pprint(line)

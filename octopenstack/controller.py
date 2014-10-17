@@ -63,11 +63,12 @@ class Controller(object):
                     self.container.start(id_container, binds, port_bindings)
 
                 elif action=='stop':
-                    self.container.stop(tag)
-
+                    rm = False
+                    self.container.stop(tag, rm)
                         
                 elif action=='rm':
-                    self.container.rm(tag)
+                    rm = True
+                    self.container.stop(tag, rm)
                 else:
                     self.view.command_not_found(action)
 
