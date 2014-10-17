@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from octopenstack import model
+from octopenstack import view
+from octopenstack import docker_controller 
+
 class Controller(object):
-
-    from octopenstack import model
-    from octopenstack import view
-    from octopenstack import docker_controller 
-
 
     def __init__(self):
         self.model          = model.Model()

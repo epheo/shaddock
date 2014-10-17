@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import yaml
+import os
+import socket
+
 class Model(object):
   
-  import yaml
-  import os
-  import socket
+
 
 
   keystone_pass       = 'password'

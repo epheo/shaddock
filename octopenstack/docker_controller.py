@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import docker
+from octopenstack import view
+
 class DockerController(object):
-    import docker
-    docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
 
     def __init__(self):
-        self.view = View()
+        docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
+        self.view = view.View()
 
     def build(self, name, tag, path, nocache, environment):
 
