@@ -92,22 +92,8 @@ Not yet decided.
 - Pull images option from my repo
 - Reduce the MySql footprint (run conf in a docker container?)
 - Replace conf by YAML
-- 
-- 
-- 
 
 **DONE:**
 - Add stop and rm Options
 - Change Name
 - Re-Organise files
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
