@@ -70,7 +70,7 @@ class DockerController(object):
         publish_all_ports = True
 
         self.view.service_information(action, id_container, port_bindings, privileged)
-        docker_api.start(id_container, binds, port_bindings, publish_all_ports, None, privileged)
+        docker_api.start(id_container, binds, port_bindings, publish_all_ports)
         
     def get_info(self, tag):
 
