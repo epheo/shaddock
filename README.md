@@ -58,14 +58,12 @@ All your configurations from
 
 REQUIEREMENTS
 -------------
-> - Python2.7
-> - Docker
-
-> - pip install docker-py
-> - pip install PyYaml
-
-> - MySql Connector http://dev.mysql.com/downloads/connector/c/
-> - oursql (pip install oursql)
+ - Python2.7
+ - Docker
+ - pip install docker-py
+ - pip install PyYaml
+ - MySql Connector http://dev.mysql.com/downloads/connector/c/
+ - oursql (pip install oursql)
 
 
 INFORMATION
@@ -74,46 +72,42 @@ OpenSTack services are deployed in CentOS7 environments.
 
 > MVC architecture model.
 
-Logs
-""""
+**Logs:**
 You can found the differents logs files in /var/log/octopenstack
 	tail -f /var/log/octopenstack/*.log
 
-Contributing
-""""""""""""
+**Contributing:**
 I'm really interested by any advice, idea, help, or contribution.
 
-License
-"""""""
+**License:**
 Not yet decided.
 
-TODO:
------
-> - HiPache for the high availability
-> - Open containers in Tmux windows
-> - Add proxy node
-> - Add os ctl node
-> - Change SH scripts by OS Python API call
-> - Modif Dockerfiles > git sources (python:2-onbuild) ?
-> - Pull images option from my repo
-> - Reduce the MySql footprint (run conf in a docker container?)
-> - Replace conf by YAML
-> - 
-> - 
-> - 
+**TODO:**
+- HiPache for the high availability
+- Open containers in Tmux windows
+- Add proxy node
+- Add os ctl node
+- Change SH scripts by OS Python API call
+- Modif Dockerfiles > git sources (python:2-onbuild) ?
+- Pull images option from my repo
+- Reduce the MySql footprint (run conf in a docker container?)
+- Replace conf by YAML
+- 
+- 
+- 
 
-DONE:
-> - Add stop and rm Options
-> - Change Name
-> - Re-Organise files
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
+**DONE:**
+- Add stop and rm Options
+- Change Name
+- Re-Organise files
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
