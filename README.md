@@ -1,11 +1,9 @@
-![alt text](https://raw.githubusercontent.com/Epheo/py-devstack/CentOS/documentation/images/octopenstack.png)
-OctOpenStack
-============
-
-OctOpenStack provides an OpenStack platform deployed in Docker containers and who provides and manages Docker containers as cloud instances.
-
+![alt text](https://raw.githubusercontent.com/Epheo/py-devstack/CentOS/documentation/images/octopenstack.png "OctOpenStack" )
+OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and who provides and manages Docker containers as cloud instances.
 ----------
 
+OctOpenStack
+============
 Table of Contents
 -----------------
 * [USAGE](#usage)
