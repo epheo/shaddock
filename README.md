@@ -6,27 +6,25 @@ OctOpenStack provides an OpenStack platform deployed in Docker containers and wh
 ----------
 
 Table of Contents
-=================
-
-  * [OctOpenStack](#octopenstack)
-    * [USAGE](#usage)
-      * [build](#build)
-      * [run](#run)
-      * [init](#init)
-      * [stop](#stop)
-      * [start](#start)
-      * [rm](#rm)
-    * [CONFIGURATION](#configuration)
-    * [REQUIEREMENTS](#requierements)
-    * [INFORMATION](#information)
-      * [Logs](#logs)
-      * [Contributing](#contributing)
-      * [License](#license)
-    * [UML Architecture Diagram](#uml-architecture-diagram)
-    * [BackLog](#backlog)
-      * [Todo](#todo)
-      * [Done](#done)
-    * [References](#references)
+-----------------
+* [USAGE](#usage)
+  * [build](#build)
+  * [run](#run)
+  * [init](#init)
+  * [stop](#stop)
+  * [start](#start)
+  * [rm](#rm)
+* [CONFIGURATION](#configuration)
+* [REQUIEREMENTS](#requierements)
+* [INFORMATION](#information)
+  * [Logs](#logs)
+  * [Contributing](#contributing)
+  * [License](#license)
+* [BackLog](#backlog)
+  * [Todo](#todo)
+  * [Done](#done)
+* [References](#references)
+* [UML Architecture Diagram](#uml-architecture-diagram)
 
 
 USAGE
@@ -106,17 +104,6 @@ I'm really interested by any advice, idea, help, or contribution.
 ### License
 Not yet decided.
 
-UML Architecture Diagram
-------------------------
-```sequence
-Nova->MySql: :3306
-Glance->MySql: :3306
-Glance->RabbitMQ: :5672
-Glance->Nova: :8774
-Keystone->MySql: :3306
-Keystone->Nova: :8774
-```
-> **Note:** Incomplete
 
 BackLog
 -------
@@ -139,6 +126,17 @@ BackLog
 
 References
 ----------
-[OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
-[Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)
+- [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
+- [Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)
 
+UML Architecture Diagram
+------------------------
+```sequence
+Nova->MySql: :3306
+Glance->MySql: :3306
+Glance->RabbitMQ: :5672
+Glance->Nova: :8774
+Keystone->MySql: :3306
+Keystone->Nova: :8774
+```
+> **Note:** Incomplete
