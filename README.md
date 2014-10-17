@@ -5,7 +5,8 @@ OctOpenStack provides an OpenStack platform deployed in Docker containers and wh
 
 ----------
 
-[TOC]
+* auto-gen TOC:
+{:toc}
 
 
 USAGE
