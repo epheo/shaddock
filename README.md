@@ -1,3 +1,4 @@
+![alt text](https://raw.githubusercontent.com/Epheo/py-devstack/CentOS/documentation/images/octopenstack.png)
 OctOpenStack
 ============
 
