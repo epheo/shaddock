@@ -107,6 +107,7 @@ class DockerController(object):
 
     def rm(self, tag):
         c_id = self.get_info.dockerid(tag)
+
         docker_api.stop(c_id)
         docker_api.remove_container(c_id)
 

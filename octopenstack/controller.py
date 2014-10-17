@@ -57,10 +57,10 @@ class Controller(object):
                     self.container.create_db(name, environment)
 
                 elif action=='create':
-                    controller.create(name, tag, volumes, ports, environment)
+                    self.container.create(name, tag, volumes, ports, environment)
 
                 elif action=='start':
-                    controller.start(id_container, binds, port_bindings)
+                    self.container.start(id_container, binds, port_bindings)
 
                 elif action=='stop':
                     self.container.stop(tag)
