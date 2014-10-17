@@ -5,8 +5,28 @@ OctOpenStack provides an OpenStack platform deployed in Docker containers and wh
 
 ----------
 
-* auto-gen TOC:
-{:toc}
+Table of Contents
+=================
+
+  * [OctOpenStack](#octopenstack)
+    * [USAGE](#usage)
+      * [build](#build)
+      * [run](#run)
+      * [init](#init)
+      * [stop](#stop)
+      * [start](#start)
+      * [rm](#rm)
+    * [CONFIGURATION](#configuration)
+    * [REQUIEREMENTS](#requierements)
+    * [INFORMATION](#information)
+      * [Logs](#logs)
+      * [Contributing](#contributing)
+      * [License](#license)
+    * [UML Architecture Diagram](#uml-architecture-diagram)
+    * [BackLog](#backlog)
+      * [Todo](#todo)
+      * [Done](#done)
+    * [References](#references)
 
 
 USAGE
