@@ -68,7 +68,8 @@ class DockerController(object):
     def start(self, id_container, binds, port_bindings, privileged):
         action            = 'starting'
         publish_all_ports = True
-
+        links = None
+        
         self.view.service_information(action, id_container, port_bindings, privileged)
         docker_api.start(id_container, binds, port_bindings, publish_all_ports, links, privileged)
         

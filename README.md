@@ -58,19 +58,18 @@ All your configurations from
 
 REQUIEREMENTS
 -------------
- - Python2.7
- - Docker
- - pip install docker-py
- - pip install PyYaml
- - MySql Connector http://dev.mysql.com/downloads/connector/c/
- - oursql (pip install oursql)
+- Python2.7
+- Docker
+- pip install docker-py
+- pip install PyYaml
+- MySql Connector http://dev.mysql.com/downloads/connector/c/
+- oursql (pip install oursql)
 
 
 INFORMATION
 -----------
-OpenSTack services are deployed in CentOS7 environments.
-
-> MVC architecture model.
+- OpenSTack services are deployed in CentOS7 environments.
+- MVC architecture model.
 
 **Logs:**
 You can found the differents logs files in /var/log/octopenstack

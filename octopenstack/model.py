@@ -6,9 +6,6 @@ import os
 import socket
 
 class Model(object):
-  
-
-
 
   keystone_pass       = 'password'
   glance_pass         = 'password'
