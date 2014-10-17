@@ -57,16 +57,16 @@ class Controller(object):
                     self.container.create_db(name, environment)
 
                 elif action=='create':
-                    controller.create_service_container(name, tag, volumes, ports, environment)
+                    controller.create(name, tag, volumes, ports, environment)
 
                 elif action=='start':
-                    controller.start_service_container(id_container, binds, port_bindings)
+                    controller.start(id_container, binds, port_bindings)
 
                 elif action=='stop':
-                    self.container.create_db(tag)
+                    self.container.stop(tag)
 
                 elif action=='rm':
-                    self.container.create_db(tag)
+                    self.container.rm(tag)
                 else:
                     self.view.command_not_found(action)
 
