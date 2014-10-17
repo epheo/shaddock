@@ -1,4 +1,4 @@
-FROM pydevstack/osbase:latest
+FROM ubuntu:14.04
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Install rabbitmq

@@ -117,20 +117,4 @@ class Model(object):
           'privileged': True
           },
 
-#        'novacompute': {
-#            'tag': '%s/osnovacompute' % (user), 
-#            'path': '%s/novacompute/' % (path),
-#            'confs': {'HOST_NAME': host_name },
-#            'volumes': ['/var/log/supervisor'],
-#            'binds': {'/var/log/octopenstack/novacompute': {'bind': '/var/log/supervisor', 'ro': False}}
-#        }
-
-#        'base': {
-#            'tag': '%s/osbase' % (user), 
-#            'path': '%s/base/' % (path),
-#            'confs': {'HOST_NAME': host_name },
-#            'volumes': ['/var/log/supervisor'],
-#            'binds': {'/var/log/octopenstack/base': {'bind': '/var/log/supervisor', 'ro': False}}
-#            },
-
   }

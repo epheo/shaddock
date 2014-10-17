@@ -3,11 +3,12 @@
 
 import docker
 from octopenstack import view
+docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
 
 class DockerController(object):
 
     def __init__(self):
-        docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
+        
         self.view = view.View()
 
     def build(self, name, tag, path, nocache, environment):
@@ -15,6 +16,10 @@ class DockerController(object):
         action = 'building'
         quiet = False
         dockerfile = '%s/Dockerfile' % (path)
+        rm = False
+        stream = False
+        timeout = None
+        custom_context = False
 
         # DockerFile configuration: 
         # """""""""""""""""""""""""
@@ -23,23 +28,27 @@ class DockerController(object):
         # They're replaced in the Dockerfile and provided to Docker as
         # a fileobj
         if not environment == None:
-            param_list = environment.keys()
+#            param_list = environment.keys()
+#            
+#            for param_key in param_list:
+#                param = environment.get(param_key)
+
+#                with open(dockerfile, "r") as dockerfile_template:
+#                    template = dockerfile_template.read()
+
+#                    print(param_key)
+#                    print(param)
+#                    path=None
+#                    fileobj = template.replace(param_key,param)
+#                    print(fileobj)
+            fileobj=None
+        else:
+            fileobj=None
             
-            for param_key in param_list:
-                param = environment.get(param_key)
 
-                with open(dockerfile, "r") as dockerfile_template:
-                    template = dockerfile_template.read()
-
-                    print(param_key)
-                    print(param)
-                    fileobj = template.replace(param_key,param)
-
-            path=None
-
-#        self.view.service_information(action, name, tag, path, nocache)
-#        for line in docker_api.build(path, tag, quiet, fileobj, nocache):
-#            print(line)
+        self.view.service_information(action, name, tag, path, nocache)
+        for line in docker_api.build(path, tag, quiet, fileobj, nocache, rm, stream, timeout, custom_context):
+            print(line)
 
 
     def create(self, name, tag, volumes, ports, environment):

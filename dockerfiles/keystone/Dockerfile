@@ -1,11 +1,10 @@
-FROM oscd/osbase:latest
+FROM octopenstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-install.html
 
-# Keystone packages
+# Install Keystone
 RUN yum -y install openstack-keystone python-keystoneclient
 
-RUN apt-get update
-RUN apt-get install -y --force-yes keystone python-keystone
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 VOLUME  ["/var/log/keystone"]

@@ -1,10 +1,9 @@
-FROM pydevstack/osbase:latest
+FROM octopenstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/nova-controller.html
 
-#install nova
-
-RUN apt-get update
-RUN apt-get install -y --force-yes nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
+# Install Nova
+RUN yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler python-novaclient
 
 #Setup supervisord
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf

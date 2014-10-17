@@ -1,9 +1,9 @@
-FROM pydevstack/osbase:latest
+FROM octopenstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/glance-install.html
 
-#install glance
-#RUN apt-get update
-RUN apt-get install -y --force-yes glance python-glance python-glanceclient
+# Install Glance
+RUN yum -y install openstack-glance python-glanceclient
 
 #Setup supervisord
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
