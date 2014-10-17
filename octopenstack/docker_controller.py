@@ -97,7 +97,7 @@ class DockerController(object):
                 network  = container_infos.get('NetworkSettings')
 
                 ipaddr   = network.get('IPAddress')
-                dockerid = c_id
+                dockerid = 'c_id'
                 hostname = config.get('Hostname')
 
 
