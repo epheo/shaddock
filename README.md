@@ -69,14 +69,17 @@ Remove the services
 
 CONFIGURATION
 -------------
-Docker instances are builds by templateds dockerfiles
-You will found the Services Dockerfiles templates in 'dockerfiles/' and their configurations in the services.yaml file.
 
 	- services.yaml
 	- configuration.yaml
 
-All your configurations from 
+The general architecture of the platform is defined in `services.yaml` 
+All the configurations (passwords, users, etc.) are in `configuration.yaml`
 
+Both are in [YAML](http://www.yaml.org/)
+
+Docker instances are builds by templateds dockerfiles
+You will find the Services Dockerfiles templates in 'dockerfiles/'
 
 REQUIEREMENTS
 -------------
