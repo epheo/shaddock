@@ -6,8 +6,7 @@ OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in 
 
 OctOpenStack
 ============
-Table of Contents
------------------
+
 * [USAGE](#usage)
   * [build](#build)
   * [run](#run)
@@ -30,8 +29,7 @@ Table of Contents
 
 USAGE
 ------
-	chmod +x octopenstack.py
-	sudo ./octopenstack.py
+
 
 ### build
 > sudo ./octopenstack.py build
@@ -82,12 +80,9 @@ All your configurations from
 
 REQUIEREMENTS
 -------------
-- Python2.7
-- Docker
-- pip install docker-py
-- pip install PyYaml
-- MySql Connector http://dev.mysql.com/downloads/connector/c/
-- oursql (pip install oursql)
+- [Docker](https://docs.docker.com/installation/archlinux/)
+- Docker Python API: `pip install docker-py`
+- PyYaml: `pip install PyYaml`
 
 
 INFORMATION
@@ -103,7 +98,7 @@ You can found the differents logs files in /var/log/octopenstack
 I'm really interested by any advice, idea, help, or contribution.
 
 ### License
-Not yet decided.
+OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 
 BackLog
