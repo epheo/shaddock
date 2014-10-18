@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
+pp = pprint.PrettyPrinter()
 
 class View(object):
 
@@ -25,4 +25,5 @@ class View(object):
         print('Available commands are: build, create or start')
 
     def display_stream(self, line):
-        pp.pprint(line)
+        stream = str(line)
+        pp.pprint(stream)

@@ -23,7 +23,7 @@ class Controller(object):
             name    ='osbase'
             tag     = '%s/osbase' % (self.model.user)
             path    = '%s/base/' % (self.model.path)
-            nocache = True
+            nocache = False
             environment = None
             self.container.build(name, tag, path, nocache, environment)
 
