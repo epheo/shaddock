@@ -69,6 +69,10 @@ class Controller(object):
                 elif action=='rm':
                     rm = True
                     self.container.stop(tag, rm)
+
+                elif action=='get-ip':
+                    self.container.getip(tag)
+
                 else:
                     self.view.command_not_found(action)
 

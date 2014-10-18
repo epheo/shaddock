@@ -111,7 +111,7 @@ class DockerController(object):
     def stop(self, tag, rm):
         launched_containers=self.get_info(tag)
         if bool(launched_containers)==True:
-            containers       = launched_containers.keys()
+            containers = launched_containers.keys()
             for container in containers:
                 container_infos = launched_containers.get(container)
                 dockerid = container_infos.get('dockerid')
@@ -122,6 +122,18 @@ class DockerController(object):
                     docker_api.remove_container(dockerid)
                 else:
                     pass
+        else:
+            print('Services %s not launched' % (tag))
+
+    def getip(self, tag):
+        launched_containers=self.get_info(tag)
+        if bool(launched_containers)==True:
+            containers = launched_containers.keys()
+            for container in containers:
+                container_infos = launched_containers.get(container)
+                ipaddr = container_infos.get('ipaddr')
+                print('Container %s on IP: %s' % (tag, ipaddr))
+
         else:
             print('Services %s not launched' % (tag))
 
