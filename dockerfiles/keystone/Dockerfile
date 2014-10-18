@@ -5,7 +5,7 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 # Install Keystone
 RUN yum -y install openstack-keystone python-keystoneclient
 
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/keystone"]
 

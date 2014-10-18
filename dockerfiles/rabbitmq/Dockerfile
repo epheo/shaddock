@@ -5,7 +5,7 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 RUN yum install -y rabbitmq-server
 #RUN rabbitmq-plugins enable rabbitmq_management
 
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 # Add scripts
 ADD run.sh /run.sh

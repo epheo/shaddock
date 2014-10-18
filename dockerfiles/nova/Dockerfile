@@ -6,7 +6,7 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 RUN yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler python-novaclient
 
 #Setup supervisord
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/nova"]
 

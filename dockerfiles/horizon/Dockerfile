@@ -8,7 +8,7 @@ RUN yum -y install memcached python-memcached mod_wsgi openstack-dashboard
 
 
 #Setup supervisord
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/horizon"]
 

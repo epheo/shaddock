@@ -15,9 +15,10 @@ class Model(object):
   mysql_pass          = 'password'
   mysql_user          = 'admin'
   user                = 'octopenstack'
-  path                = '%s/dockerfiles' % (os.getcwd())
 
+  path                = '%s/dockerfiles' % (os.getcwd())
   host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+  host_ip             = '192.168.3.200'
   host_name           = host_ip
   admin_password      = admin_token
   keystone_host       = host_name
@@ -91,7 +92,7 @@ class Model(object):
                    },
           'volumes': ['/var/log/supervisor'],
           'binds': {'/var/log/octopenstack/keystone': {'bind': '/var/log/supervisor', 'ro': False}},
-          'privileged': True
+          'privileged': False
           },
 
       'nova': {

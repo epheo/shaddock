@@ -3,7 +3,7 @@ echo "Setting up horizon"
 
 HOST_NAME=${HOST_NAME:-"localhost"}
 
-service apache2 restart >/dev/null 2>&1
+service httpd restart >/dev/null 2>&1
 service memcached restart >/dev/null 2>&1
 
 
@@ -12,7 +12,7 @@ sed -i -e "s/^OPENSTACK_HOST.*/OPENSTACK_HOST = \"${HOST_NAME}\"/g" /etc/opensta
 
 
 echo "Stopping horizon"
-service apache2 stop >/dev/null 2>&1
+service httpd stop >/dev/null 2>&1
 service memcached stop >/dev/null 2>&1
 
 echo "Starting horizon using supervisord..."
