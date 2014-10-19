@@ -4,8 +4,8 @@
 
 glance:
   ports: 
-    9292:9292
-    4324:4324
+    - 9292
+    - 4324
   volumes: 
     /var/log/supervisor: /var/log/octopenstack/glance
     /var/log/vrervefe: /var/log/octvewacwe/fernce
@@ -22,8 +22,8 @@ glance:
 
 horizon:
   ports:
-    80:80
-    11211:11211 
+    - 80
+    - 11211 
   volumes:
     /var/log/supervisor: /var/log/octopenstack/horizon
   confs:
@@ -33,8 +33,8 @@ horizon:
 
 keystone:
   ports:
-    35357:35357
-    5000:5000
+    - 35357
+    - 5000
   volumes:
     /var/log/supervisor: /var/log/octopenstack/keystone
   confs:
@@ -49,7 +49,7 @@ keystone:
 
 mysql:
   ports:
-    3306:3306
+    - 3306
   volumes:
     /var/log/supervisor: /var/log/octopenstack/mysql
   confs:
@@ -59,8 +59,8 @@ mysql:
 
 nova:
   ports:
-    8774:8774
-    8775:8775
+    - 8774
+    - 8775
   volumes:
     /var/log/supervisor: /var/log/octopenstack/nova
   confs:
@@ -78,8 +78,8 @@ nova:
 
 rabbitmq:
   ports:
-    5672:5672
-    15672:15672
+    - 5672
+    - 15672
   volumes:
     /var/log/supervisor: /var/log/octopenstack/rabbitmq
   confs:
