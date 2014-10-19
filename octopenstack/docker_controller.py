@@ -133,7 +133,7 @@ class DockerController(object):
             for container in containers:
                 container_infos = launched_containers.get(container)
                 ipaddr = container_infos.get('ipaddr')
-                self.view.ip(self, tag, ipaddr)
+                self.view.ip(tag, ipaddr)
 
         else:
             self.view.notlaunched(tag)
