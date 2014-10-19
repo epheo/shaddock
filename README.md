@@ -14,6 +14,7 @@ OctOpenStack
   * [stop](#stop)
   * [start](#start)
   * [rm](#rm)
+  * [ip](#ip)
 * [CONFIGURATION](#configuration)
 * [REQUIEREMENTS](#requierements)
 * [INFORMATION](#information)
