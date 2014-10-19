@@ -29,7 +29,8 @@ OctOpenStack
 
 USAGE
 ------
-
+> sudo ./octopenstack.py command [container]
+Use the command only to interact with all services, you can also specify a container name.
 
 ### build
 > sudo ./octopenstack.py build
@@ -51,16 +52,14 @@ Hypervisors can be addeds and specified as in any other OpenStack plateform by t
 
 This fonction initialise all the Databases.
 
-### stop
+### {stop, start}
 > sudo ./octopenstack.py stop
 
 Stop the OpenStack services.
 
-### start
 > sudo ./octopenstack.py start
 
 Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
-in
 
 ### rm
 > sudo ./octopenstack.py rm

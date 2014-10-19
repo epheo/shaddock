@@ -21,9 +21,24 @@ class View(object):
         print('The service "%s" does not exist' % name)
 
     def command_not_found(self, name):
-        print('The command "%s" does not exist' % action)
+        print('The command "%s" does not exist' % name)
         print('Available commands are: build, create or start')
 
     def display_stream(self, line):
         stream = str(line)
         pp.pprint(stream)
+
+    def usage():
+        print('Commands are: build, run, rm, ip, ')
+
+    def stopping(self, tag):
+        print('Stoping container %s ...' % (tag))
+
+    def removing(self, tag):
+        print('Removing container %s ...' % (tag))
+
+    def notlaunched(self, tag):
+        print('Services %s not launched' % (tag))
+
+    def ip(self, tag, ipaddr):
+        print('Container %s on IP: %s' % (tag, ipaddr))
