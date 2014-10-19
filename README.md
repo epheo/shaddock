@@ -65,6 +65,9 @@ Start OpenStack services if the platform exist, (please prefer 'run' if he doesn
 > sudo ./octopenstack.py rm
 Remove the services
 
+### ip
+> sudo ./octopenstack.py ip
+Display services IP address 
 
 CONFIGURATION
 -------------

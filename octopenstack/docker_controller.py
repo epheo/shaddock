@@ -115,15 +115,15 @@ class DockerController(object):
             for container in containers:
                 container_infos = launched_containers.get(container)
                 dockerid = container_infos.get('dockerid')
-                self.view.stopping(self)
+                self.view.stopping(tag)
                 docker_api.stop(dockerid)
                 if rm==True:
-                    self.view.removing(self, tag)
+                    self.view.removing(tag)
                     docker_api.remove_container(dockerid)
                 else:
                     pass
         else:
-            self.view.notlaunched(self, tag)
+            self.view.notlaunched(tag)
 
     def ip(self, tag):
         launched_containers=self.get_info(tag)
