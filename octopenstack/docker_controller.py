@@ -116,7 +116,8 @@ class DockerController(object):
                 container_infos = launched_containers.get(container)
                 dockerid = container_infos.get('dockerid')
                 self.view.stopping(tag)
-                docker_api.stop(dockerid)
+                timeout=30
+                docker_api.stop(dockerid, timeout)
                 if rm==True:
                     self.view.removing(tag)
                     docker_api.remove_container(dockerid)
