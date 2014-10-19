@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pprint
-pp = pprint.PrettyPrinter()
+import json
 
 class View(object):
 
@@ -25,8 +25,13 @@ class View(object):
         print('Available commands are: build, create or start')
 
     def display_stream(self, line):
-        stream = str(line)
-        pp.pprint(stream)
+        jsonstream =  json.loads(line)
+        stream = jsonstream.get('stream')
+        error = jsonstream.get('error')
+        if not error==None:
+            print(error)
+        if not stream==None:
+            print(stream)
 
     def usage():
         print('Commands are: build, run, rm, ip, ')
