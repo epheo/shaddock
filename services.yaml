@@ -1,0 +1,87 @@
+####################################################
+## OCTOPENSTACK: Services Architecture Definition ##
+####################################################
+
+glance:
+  ports: 
+    - 9292
+    - 4324
+  volumes: 
+    /var/log/supervisor: /var/log/octopenstack/glance
+    /var/log/vrervefe: /var/log/octvewacwe/fernce
+  confs:
+    HOST_NAME: host_name
+    MYSQL_DB: mysql_host
+    MYSQL_USER: mysql_user
+    MYSQL_PASSWORD: mysql_pass
+    RABBITMQ_HOST: rabbitmq_host
+    RABBITMQ_PASSWORD: rabbitmq_password
+    GLANCE_DBPASS: glance_pass
+  privileged: false
+
+
+horizon:
+  ports:
+    - 80
+    - 11211 
+  volumes:
+    /var/log/supervisor: /var/log/octopenstack/horizon
+  confs:
+    HOST_NAME: host_name
+  privileged: false
+
+
+keystone:
+  ports:
+    - 35357
+    - 5000
+  volumes:
+    /var/log/supervisor: /var/log/octopenstack/keystone
+  confs:
+    HOST_NAME: host_name
+    MYSQL_DB: mysql_host
+    MYSQL_USER: mysql_user
+    MYSQL_PASSWORD: mysql_pass
+    ADMIN_TOKEN: admin_token
+    KEYSTONE_DBPASS: keystone_pass
+  privileged: false
+
+
+mysql:
+  ports:
+    - 3306
+  volumes:
+    /var/log/supervisor: /var/log/octopenstack/mysql
+  confs:
+    MYSQL_PASS: mysql_pass
+  privileged: false
+
+
+nova:
+  ports:
+    - 8774
+    - 8775
+  volumes:
+    /var/log/supervisor: /var/log/octopenstack/nova
+  confs:
+    HOST_NAME: host_name
+    HOST_IP: host_ip
+    MYSQL_DB: mysql_host
+    MYSQL_USER: mysql_user
+    MYSQL_PASSWORD: mysql_pass
+    RABBITMQ_HOST: rabbitmq_host
+    RABBITMQ_PASSWORD: rabbitmq_password
+    NOVA_DBPASS: nova_pass
+    ADMIN_PASS: admin_password
+  privileged: true
+
+
+rabbitmq:
+  ports:
+    - 5672
+    - 15672
+  volumes:
+    /var/log/supervisor: /var/log/octopenstack/rabbitmq
+  confs:
+    RABBITMQ_PASSWORD: rabbitmq_password
+  privileged: false

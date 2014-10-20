@@ -1,0 +1,21 @@
+FROM octopenstack/osbase:latest
+MAINTAINER Thibaut Lapierre <root@epheo.eu>
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/nova-controller.html
+
+# Install Nova
+RUN yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler python-novaclient
+
+#Setup supervisord
+ADD supervisord.conf /etc/supervisord.conf
+
+VOLUME  ["/var/log/nova"]
+
+# Add scripts
+ADD run.sh /run.sh
+ADD create_db.sh /create_db.sh
+RUN chmod 755 ./*.sh
+
+EXPOSE 9774
+EXPOSE 8775
+
+CMD ["/run.sh"]
