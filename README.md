@@ -27,18 +27,19 @@ OctOpenStack
 * [References](#references)
 * [UML Architecture Diagram](#uml-architecture-diagram)
 
+> **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on "autoconfig" branch.
 
 USAGE
 ------
 > sudo ./octopenstack.py command [container]
-Use the command only to interact with all services, you can also specify a container name.
+Use command only to interact with all services, you can also specify a container name.
 
 ### build
 > sudo ./octopenstack.py build
 
 Build the differents Docker containers and configure them to provide the differents OpenStack services.
 You can find a list of the differents containers and add new ones by editing services.yaml
-All the configuration of your future OpenStack Docker platform is done in configuration.yaml
+All the configuration of your OpenStack Docker platform is done in configuration.yaml
 
 ### run
 > sudo ./octopenstack.py run
