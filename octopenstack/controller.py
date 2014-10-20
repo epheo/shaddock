@@ -35,7 +35,7 @@ class Controller(object):
             service_info = self.model.services.get(service, None)
             if service_info is not None:
 
-                name            = service.title()
+                name            = service.title().lower()
                 tag             = service_info.get('tag')
                 path            = service_info.get('path')
                 ports           = service_info.get('ports')
