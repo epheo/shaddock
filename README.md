@@ -99,7 +99,7 @@ INFORMATION
 
 ### Logs
 You can found the differents logs files in /var/log/octopenstack
-	tail -f /var/log/octopenstack/*.log
+	> tail -f /var/log/octopenstack/*.log
 
 ### Contributing
 I'm really interested by any advice, idea, help, or contribution.
