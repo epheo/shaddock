@@ -131,4 +131,4 @@ BackLog
 References
 ----------
 - [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
-- [Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)
+- [Docker-py API Documentation](https://github.com/docker/docker-py/blob/master/README.md)
