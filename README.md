@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/Epheo/py-devstack/CentOS/documentation/images/octopenstack.png "OctOpenStack" )
+![alt text](https://raw.githubusercontent.com/Epheo/octopenstack/master/documentation/images/octopenstack.png "OctOpenStack" )
 
 OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and who provides and manages Docker containers as cloud instances.
 
