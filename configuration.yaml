@@ -1,11 +1,19 @@
+#####################################################
+## OCTOPENSTACK: Services Configuration Definition ##
+#####################################################
+
 user: octopenstack
-nocache: True
+## Specify Docker repository to build containers with
+
+nocache: False
+## Pass to True in order to force rebuild of your  
+#  containers without using previous cached builds.
 
 services_config:
-    HOST_NAME: host_name
-    HOST_IP: host_ip
-    RABBITMQ_HOST: rabbitmq_host
-    MYSQL_DB: mysql_host
+    HOST_NAME: your_host_name
+    HOST_IP: your_host_ip
+    RABBITMQ_HOST: your_host_ip
+    MYSQL_DB: your_host_ip
     #For one node installation all the hosts are your IP
     MYSQL_USER: admin
     MYSQL_PASSWORD: password

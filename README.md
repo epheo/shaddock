@@ -83,7 +83,7 @@ All the configurations (passwords, users, etc.) are in `configuration.yaml`
 
 Both are in [YAML](http://www.yaml.org/)
 
-Docker instances are builds by templateds dockerfiles
+Docker instances are (will be :) ) builds by templateds dockerfiles
 You will find the Services Dockerfiles templates in 'dockerfiles/'
 
 REQUIEREMENTS
@@ -103,7 +103,7 @@ You can found the differents logs files in /var/log/octopenstack
 	> tail -f /var/log/octopenstack/*.log
 
 ### Contributing
-I'm really interested by any advice, idea, help, or contribution.
+I'm really interested in any advice, idea, help, or contribution.
 
 ### License
 OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -132,15 +132,3 @@ References
 ----------
 - [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
 - [Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)
-
-UML Architecture Diagram
-------------------------
-```sequence
-Nova->MySql: :3306
-Glance->MySql: :3306
-Glance->RabbitMQ: :5672
-Glance->Nova: :8774
-Keystone->MySql: :3306
-Keystone->Nova: :8774
-```
-> **Note:** Incomplete
