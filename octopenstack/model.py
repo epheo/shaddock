@@ -12,12 +12,12 @@ class Model(object):
         self.make_services_dictionary(self.services)
 
     def make_services_dictionary(self, services):
-        services_dic  = open('services.yaml', "r")
+        services_dic  = open('services.yml', "r")
         services_dic  = services_dic.read()
         services_dic  = yaml.load(services_dic)
         services_keys = services_dic.keys()
 
-        config_dic    = open('configuration.yaml', "r")
+        config_dic    = open('configuration.yml', "r")
         config_dic    = config_dic.read()
         config_dic    = yaml.load(config_dic)
         configuration = config_dic.get('services_config')
