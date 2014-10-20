@@ -27,7 +27,7 @@ OctOpenStack
 * [References](#references)
 * [UML Architecture Diagram](#uml-architecture-diagram)
 
-> **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on "autoconfig" branch.
+> **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
 
 USAGE
 ------
@@ -53,7 +53,8 @@ Hypervisors can be addeds and specified as in any other OpenStack plateform by t
 ### init
 > sudo ./octopenstack.py init
 
-This fonction initialise all the Databases.
+Should be run after the "run" command.
+This fonction initialise all the Databases and configure the services. 
 
 ### {stop, start}
 > sudo ./octopenstack.py stop
@@ -71,6 +72,11 @@ Remove the services
 ### ip
 > sudo ./octopenstack.py ip
 Display services IP address 
+
+### console
+> sudo ./octopenstack.py ip
+
+Open a managment console to interact with your OpenStack platform.
 
 CONFIGURATION
 -------------
@@ -131,4 +137,4 @@ BackLog
 References
 ----------
 - [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
-- [Docker-py API Documentation](https://github.com/docker/docker-py/blob/master/README.md)
+- [Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)

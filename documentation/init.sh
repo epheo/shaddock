@@ -18,20 +18,17 @@ keystone role-create --name=admin
 keystone user-role-add --user=admin --tenant=admin --role=admin
 keystone user-role-add --user=admin --role=_member_ --tenant=admin
 
-keystone user-create --name=demo --pass=demo --email=demo@octopenstack.eu
+keystone user-create --name=demo --pass=demo --email=demo@epheo.com
 keystone user-role-add --user=demo --role=_member_ --tenant=demo
 
 echo "=> Done!"
 
 ## Keystone create user
-SERVICE=$1
+SERVICE=keystone
 
 HOST_NAME=${HOST_NAME:-$2}
 KEYSTONE_PASS=${KEYSTONE_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Creating ${SERVICE} user"
 keystone user-create --name=${SERVICE} --pass=${KEYSTONE_PASS} --email=keystone@example.com 
@@ -39,15 +36,11 @@ keystone user-role-add --user=${SERVICE} --tenant=service --role=admin
 echo "=> Done!"
 
 ## Keystone register service
-SERVICE=$1
 
 HOST_NAME=${HOST_NAME:-$2}
 KEYSTONE_HOST=${KEYSTONE_HOST:-$2}
 KEYSTONE_PASS=${KEYSTONE_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Registering ${SERVICE}"
 keystone service-create --name=${SERVICE} --type=identity --description="OpenStack Identity Service"
@@ -58,14 +51,11 @@ keystone endpoint-create --service-id=$(keystone service-list | awk '/ identity 
 echo "=> Done!"
 
 ## Glance create user
-SERVICE=$1
+SERVICE=glance
 
 HOST_NAME=${HOST_NAME:-$2}
 GLANCE_PASS=${GLANCE_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Creating ${SERVICE} user"
 keystone user-create --name=${SERVICE} --pass=${GLANCE_PASS} --email=glance@example.com 
@@ -73,15 +63,10 @@ keystone user-role-add --user=${SERVICE} --tenant=service --role=admin
 echo "=> Done!"
 
 ## Glance register service
-SERVICE=$1
-
 HOST_NAME=${HOST_NAME:-$2}
 KEYSTONE_HOST=${KEYSTONE_HOST:-"localhost"}
 GLANCE_PASS=${GLANCE_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Registering ${SERVICE}"
 keystone service-create --name=${SERVICE} --type=image --description="OpenStack Image Service"
@@ -93,31 +78,22 @@ echo "=> Done!"
 
 
 ## Nova create user
-SERVICE=$1
+SERVICE=nova
 
 HOST_NAME=${HOST_NAME:-$2}
 NOVA_PASS=${NOVA_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Creating ${SERVICE} user"
 keystone user-create --name=${SERVICE} --pass=${NOVA_PASS} --email=nova@example.com 
 keystone user-role-add --user=${SERVICE} --tenant=service --role=admin
 echo "=> Done!"
 
-
 ## Nova register service
-SERVICE=$1
-
 HOST_NAME=${HOST_NAME:-$2}
 KEYSTONE_HOST=${KEYSTONE_HOST:-$2}
 NOVA_PASS=${NOVA_PASS:-"password"}
 ADMIN_TOKEN=${ADMIN_TOKEN:-"password"}
-
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-export OS_SERVICE_TOKEN=${ADMIN_TOKEN}
 
 echo "=> Registering ${SERVICE}"
 keystone service-create --name=${SERVICE} --type=compute --description="OpenStack Compute Service"
@@ -126,12 +102,8 @@ echo "=> Done!"
 
 
 ## Keystone test
-export HOST_NAME=$1
-
 keystone --os-username=admin --os-password=password --os-auth-url=http://${HOST_NAME}:35357/v2.0 token-get
 keystone --os-username=admin --os-password=password --os-tenant-name=admin  --os-auth-url=http://${HOST_NAME}:35357/v2.0 token-get
-#export OS_SERVICE_TOKEN=password
-#export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
 
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
@@ -150,16 +122,6 @@ keystone token-get
 
 
 ## Glance test
-export HOST_NAME=$1
-
-export OS_SERVICE_TOKEN=password
-export OS_SERVICE_ENDPOINT=http://${HOST_NAME}:35357/v2.0
-
-export OS_USERNAME=admin
-export OS_TENANT_NAME=admin
-export OS_AUTH_URL=http://${HOST_NAME}:5000/v2.0/
-export OS_PASSWORD=password
-
 echo "Download images"
 sudo mkdir images
 sudo wget --directory-prefix=./images http://cdn.download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img
