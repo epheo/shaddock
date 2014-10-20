@@ -19,6 +19,8 @@ RUN mkdir -p /var/log/supervisor
 RUN mkdir -p /var/run/sshd && echo 'root:root' |chpasswd
 RUN mkdir -p ~/.ssh/
 ADD authorized_keys ~/.ssh/authorized_keys
+RUN ssh-keygen -t rsa1 -N "" -f /etc/ssh/ssh_host_rsa_key
+RUN ssh-keygen -t dsa  -N "" -f /etc/ssh/ssh_host_dsa_key
 EXPOSE 22
 
 RUN yum -y upgrade
