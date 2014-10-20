@@ -1,6 +1,6 @@
 user: octopenstack
 
-confs:
+services_config:
     HOST_NAME: host_name
     HOST_IP: host_ip
     RABBITMQ_HOST: rabbitmq_host
@@ -14,3 +14,4 @@ confs:
     KEYSTONE_DBPASS: password
     NOVA_DBPASS: password
     ADMIN_PASS: password
+

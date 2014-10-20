@@ -12,19 +12,18 @@ class Model(object):
         self.make_services_dictionary(self.services)
 
     def make_services_dictionary(self, services):
-        services_file = open('services.yaml', "r")
-        yml_services = services_file.read()
+        services_dic  = open('services.yaml', "r")
+        services_dic  = services_dic.read()
+        services_dic  = yaml.load(services_dic)
+        services_keys = services_dic.keys()
 
-        services_dic=yaml.load(yml_services)
+        config_dic    = open('configuration.yaml', "r")
+        config_dic    = config_dic.read()
+        config_dic    = yaml.load(config_dic)
+        configuration = config_dic.get('services_config')
+        user          = config_dic.get('user')
 
-        instance_name_list = services_dic.keys()
-
-        configuration = open('configuration.yaml', "r")
-        yml_config    = configuration.read()
-        config_dic    = yaml.load(yml_config)
-        confs         = config_dic.get('confs')
-
-        for service in instance_name_list:
+        for service in services_keys:
             service_info = services_dic.get(service, None)
             if service_info is not None:
 
@@ -34,20 +33,11 @@ class Model(object):
                 binds           = service_info.get('binds')
                 privileged      = service_info.get('privileged')
 
-                self.make_service(name, ports, confs, volumes, binds, privileged, services)
+                self.make_service(name, ports, volumes, binds, privileged, services, configuration, user)
 
 
-        print(config_dic)
-
-    #   Glance
-    #   9292:9292 4324:4324
-    #   {'HOST_NAME': 'host_name', 'RABBITMQ_HOST': 'rabbitmq_host', 'MYSQL_USER': 'mysql_user', 'RABBITMQ_PASSWORD': 'rabbitmq_password', 'MYSQL_PASSWORD': 'mysql_pass', 'GLANCE_DBPASS': 'glance_pass', 'MYSQL_DB': 'mysql_host'}
-    #   {'/var/log/supervisor': '/var/log/octopenstack/glance', '/var/log/vrervefe': '/var/log/octvewacwe/fernce'}
-    #   None
-    #   False
-
-
-    def make_service(self, name, ports, confs, volumes, binds, privileged, services):
+    def make_service(self, name, ports, volumes, binds, privileged, services, configuration, user):
+        #  Final dictionary should be like:
         #  'glance': {
         #      'tag': '%s/osglance' % (user), 
         #      'path': '%s/glance/' % (path),
@@ -65,54 +55,29 @@ class Model(object):
         #      'binds': {'/var/log/octopenstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },
-        #print(name, ports, confs, volumes, binds, privileged)
 
-        keystone_pass       = 'password'
-        glance_pass         = 'password'
-        nova_pass           = 'password'
-        admin_token         = 'password'
-        rabbitmq_password   = 'password'
-        mysql_pass          = 'password'
-        mysql_user          = 'admin'
-        self.user           = 'octopenstack'
-
-        self.path           = '%s/dockerfiles' % (os.getcwd())
+        self.user = user
         #host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
-        host_ip             = '192.168.3.200'
-        host_name           = host_ip
-        admin_password      = admin_token
-        keystone_host       = host_name
-        rabbitmq_host       = host_name
-        mysql_host          = host_name
 
         service_dic = {}
+        self.path           = '%s/dockerfiles' % (os.getcwd())
 
-        ## Register Tag
+        ## Register Tag and Path
         service_dic['tag'] = '%s/oos-%s' % (self.user, name)
-
-        ## Register Path
         service_dic['path'] = '%s/%s' % (self.path, name)
 
-        ## Register Ports
+        ## Register Ports and ports bindings
         ports_list=[]
+        ports_bind_dico={}
+
         for port in ports:
           ports_list.append((port, 'tcp'))
+          ports_bind_dico[port] = ('0.0.0.0', port)
+
         service_dic['ports'] = ports_list
-
-        ## Register port_bindings
-        for port in ports:
-          service_dic['ports'] = {port: ('0.0.0.0', port)}
-
-        ## Register confs
-        #service_dic['confs'] = ??
+        service_dic['port_bindings'] = ports_bind_dico
 
         ## Register volumes and binds
-
-        ports_list=[]
-        for port in ports:
-          ports_list.append((port, 'tcp'))
-        service_dic['ports'] = ports_list
-
         volumes_list=[]
         binds_dico={}
         for volume in volumes.keys():
@@ -123,7 +88,7 @@ class Model(object):
         service_dic['volumes'] = volumes_list
         service_dic['binds'] = binds_dico
 
-        #TEST
-        services[name] = service_dic
+        service_dic['confs'] = configuration
 
-        #return maked_service
+        #Register all dic in an other one.
+        services[name] = service_dic
