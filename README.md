@@ -53,7 +53,8 @@ Hypervisors can be addeds and specified as in any other OpenStack plateform by t
 ### init
 > sudo ./octopenstack.py init
 
-This fonction initialise all the Databases.
+Should be run after the "run" command.
+This fonction initialise all the Databases and configure the services. 
 
 ### {stop, start}
 > sudo ./octopenstack.py stop
@@ -71,6 +72,11 @@ Remove the services
 ### ip
 > sudo ./octopenstack.py ip
 Display services IP address 
+
+### console
+> sudo ./octopenstack.py ip
+
+Open a managment console to interact with your OpenStack platform.
 
 CONFIGURATION
 -------------
