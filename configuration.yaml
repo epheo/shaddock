@@ -1,3 +1,17 @@
-###///!\\\ TODO ///!\\\###
-###///!\\\ TODO ///!\\\###
-###///!\\\ TODO ///!\\\###
+user: octopenstack
+
+services_config:
+    HOST_NAME: host_name
+    HOST_IP: host_ip
+    RABBITMQ_HOST: rabbitmq_host
+    MYSQL_DB: mysql_host
+    #For one node installation all the hosts are your IP
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
+    RABBITMQ_PASSWORD: password
+    GLANCE_DBPASS: password
+    ADMIN_TOKEN: password
+    KEYSTONE_DBPASS: password
+    NOVA_DBPASS: password
+    ADMIN_PASS: password
+

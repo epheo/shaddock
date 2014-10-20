@@ -23,7 +23,6 @@ class Controller(object):
             for service in service_list:
                 self.switch(service, action)
 
-
     def switch(self, service, action):
         service_info = self.model.services.get(service, None)
         if service_info is not None:
