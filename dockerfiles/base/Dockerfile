@@ -16,7 +16,7 @@ RUN pip install supervisor
 RUN mkdir -p /var/log/supervisor
 
 #Setup sshd
-RUN mkdir -p /var/run/sshd
+RUN mkdir -p /var/run/sshd && echo 'root:root' |chpasswd
 RUN mkdir -p /.ssh/
 ADD authorized_keys /.ssh/authorized_keys
 RUN chmod 600 /.ssh/authorized_keys

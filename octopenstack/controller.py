@@ -3,7 +3,8 @@
 
 from octopenstack import model
 from octopenstack import view
-from octopenstack import docker_controller 
+from octopenstack import docker_controller
+#from octopenstack import init_config
 
 class Controller(object):
 
@@ -11,6 +12,7 @@ class Controller(object):
         self.model          = model.Model()
         self.view           = view.View()
         self.container      = docker_controller.DockerController()
+        #self.init_config    = init_config.InitConfig()
 
 
     def exec_service_list(self, action, service):
@@ -48,7 +50,9 @@ class Controller(object):
                 self.container.start(id_container, binds, port_bindings, privileged)
 
             elif action=='init':
-                self.container.create_db(name, environment)
+                pass
+                #self.init_config.mysql(name, environment)
+                #self.init_config.keystone(name, environment)
 
             elif action=='create':
                 self.container.create(name, tag, volumes, ports, environment)
