@@ -1,12 +1,12 @@
+![alt text](https://raw.githubusercontent.com/Epheo/py-devstack/CentOS/documentation/images/octopenstack.png "OctOpenStack" )
+
+OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and who provides and manages Docker containers as cloud instances.
+
+-------------
+
 OctOpenStack
 ============
 
-OctOpenStack provides an OpenStack platform deployed in Docker containers and who provides and manages Docker containers as cloud instances.
-
-----------
-
-Table of Contents
------------------
 * [USAGE](#usage)
   * [build](#build)
   * [run](#run)
@@ -14,6 +14,7 @@ Table of Contents
   * [stop](#stop)
   * [start](#start)
   * [rm](#rm)
+  * [ip](#ip)
 * [CONFIGURATION](#configuration)
 * [REQUIEREMENTS](#requierements)
 * [INFORMATION](#information)
@@ -29,8 +30,8 @@ Table of Contents
 
 USAGE
 ------
-	chmod +x octopenstack.py
-	sudo ./octopenstack.py
+> sudo ./octopenstack.py command [container]
+Use the command only to interact with all services, you can also specify a container name.
 
 ### build
 > sudo ./octopenstack.py build
@@ -52,41 +53,42 @@ Hypervisors can be addeds and specified as in any other OpenStack plateform by t
 
 This fonction initialise all the Databases.
 
-### stop
+### {stop, start}
 > sudo ./octopenstack.py stop
 
 Stop the OpenStack services.
 
-### start
 > sudo ./octopenstack.py start
 
 Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
-in
 
 ### rm
 > sudo ./octopenstack.py rm
 Remove the services
 
+### ip
+> sudo ./octopenstack.py ip
+Display services IP address 
 
 CONFIGURATION
 -------------
-Docker instances are builds by templateds dockerfiles
-You will found the Services Dockerfiles templates in 'dockerfiles/' and their configurations in the services.yaml file.
 
 	- services.yaml
 	- configuration.yaml
 
-All your configurations from 
+The general architecture of the platform is defined in `services.yaml` 
+All the configurations (passwords, users, etc.) are in `configuration.yaml`
 
+Both are in [YAML](http://www.yaml.org/)
+
+Docker instances are builds by templateds dockerfiles
+You will find the Services Dockerfiles templates in 'dockerfiles/'
 
 REQUIEREMENTS
 -------------
-- Python2.7
-- Docker
-- pip install docker-py
-- pip install PyYaml
-- MySql Connector http://dev.mysql.com/downloads/connector/c/
-- oursql (pip install oursql)
+- [Docker](https://docs.docker.com/installation/archlinux/)
+- Docker Python API: `pip install docker-py`
+- PyYaml: `pip install PyYaml`
 
 
 INFORMATION
@@ -102,7 +104,7 @@ You can found the differents logs files in /var/log/octopenstack
 I'm really interested by any advice, idea, help, or contribution.
 
 ### License
-Not yet decided.
+OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 
 BackLog

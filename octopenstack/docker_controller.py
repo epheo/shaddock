@@ -111,19 +111,32 @@ class DockerController(object):
     def stop(self, tag, rm):
         launched_containers=self.get_info(tag)
         if bool(launched_containers)==True:
-            containers       = launched_containers.keys()
+            containers = launched_containers.keys()
             for container in containers:
                 container_infos = launched_containers.get(container)
                 dockerid = container_infos.get('dockerid')
-                print('Stoping container %s ...' % (tag))
-                docker_api.stop(dockerid)
+                self.view.stopping(tag)
+                timeout=30
+                docker_api.stop(dockerid, timeout)
                 if rm==True:
-                    print('Removing container %s ...' % (tag))
+                    self.view.removing(tag)
                     docker_api.remove_container(dockerid)
                 else:
                     pass
         else:
-            print('Services %s not launched' % (tag))
+            self.view.notlaunched(tag)
+
+    def ip(self, tag):
+        launched_containers=self.get_info(tag)
+        if bool(launched_containers)==True:
+            containers = launched_containers.keys()
+            for container in containers:
+                container_infos = launched_containers.get(container)
+                ipaddr = container_infos.get('ipaddr')
+                self.view.ip(tag, ipaddr)
+
+        else:
+            self.view.notlaunched(tag)
 
 
     def create_db(self, name, environment):

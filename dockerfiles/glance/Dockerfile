@@ -6,7 +6,7 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 RUN yum -y install openstack-glance python-glanceclient
 
 #Setup supervisord
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/glance"]
 

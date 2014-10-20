@@ -1,11 +1,11 @@
-FROM ubuntu:14.04
+FROM octopenstack/osbase:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 # Install rabbitmq
-RUN apt-get install -y --force-yes rabbitmq-server
-RUN rabbitmq-plugins enable rabbitmq_management
+RUN yum install -y rabbitmq-server
+#RUN rabbitmq-plugins enable rabbitmq_management
 
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
 
 # Add scripts
 ADD run.sh /run.sh
