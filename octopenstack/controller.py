@@ -36,7 +36,7 @@ class Controller(object):
             volumes         = service_info.get('volumes')
             binds           = service_info.get('binds')
             privileged      = service_info.get('privileged')
-            nocache         = False
+            nocache         = self.model.nocache
 
             if action=='build':
                 # Build base container first (cf next funct)
@@ -77,6 +77,6 @@ class Controller(object):
         name    ='osbase'
         tag     = '%s/osbase' % (self.model.user)
         path    = '%s/base/' % (self.model.path)
-        nocache = False
+        nocache = self.model.nocache
         environment = None
         self.container.build(name, tag, path, nocache, environment)

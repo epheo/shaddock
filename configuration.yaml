@@ -1,4 +1,5 @@
 user: octopenstack
+nocache: True
 
 services_config:
     HOST_NAME: host_name

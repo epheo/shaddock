@@ -22,6 +22,7 @@ class Model(object):
         config_dic    = yaml.load(config_dic)
         configuration = config_dic.get('services_config')
         user          = config_dic.get('user')
+        nocache       = config_dic.get('nocache')
 
         for service in services_keys:
             service_info = services_dic.get(service, None)
@@ -33,10 +34,10 @@ class Model(object):
                 binds           = service_info.get('binds')
                 privileged      = service_info.get('privileged')
 
-                self.make_service(name, ports, volumes, binds, privileged, services, configuration, user)
+                self.make_service(name, ports, volumes, binds, privileged, services, configuration, user, nocache)
 
 
-    def make_service(self, name, ports, volumes, binds, privileged, services, configuration, user):
+    def make_service(self, name, ports, volumes, binds, privileged, services, configuration, user, nocache):
         #  Final dictionary should be like:
         #  'glance': {
         #      'tag': '%s/osglance' % (user), 
@@ -55,8 +56,10 @@ class Model(object):
         #      'binds': {'/var/log/octopenstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },
-        name = name.lower()
-        self.user = user
+
+        name            = name.lower()
+        self.user       = user
+        self.nocache    = nocache
         #host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 
         service_dic = {}
