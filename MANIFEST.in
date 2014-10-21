@@ -2,7 +2,6 @@ include README.md
 include requirements.txt
 include test-requirements.txt
 include LICENSE
-include conf/
 exclude .gitignore
 exclude .travis.yml
 global-exclude *.pyc
