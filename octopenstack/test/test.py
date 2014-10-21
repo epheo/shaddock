@@ -15,31 +15,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import os
-import sys
+import unittest
 
-sys.path.insert(0, os.path.join(os.path.abspath(os.pardir)))
-sys.path.insert(0, os.path.abspath(os.getcwd()))
+class FooTests(unittest.TestCase):
 
-from octopenstack import controller 
-from octopenstack import dockercontroller
-from octopenstack import model
-from octopenstack import view 
+    def testFoo(self):
+        self.failUnless(True)
 
 def main():
-    try:
-        action = sys.argv[1]
-    except (TypeError, IndexError) as e:
-        view.View.usage()
-        exit()
-        
-    try:
-        service    = sys.argv[2]
-    except (TypeError, IndexError) as e:
-        service = None
-
-    control = controller.Controller()
-    control.exec_service_list(action, service)
+    unittest.main()
 
 if __name__ == '__main__':
-        sys.exit(main())
+    main()
