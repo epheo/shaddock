@@ -17,27 +17,24 @@
 import setuptools
 import os
 
-def read_requires(filename):
-    requires = []
-    with open(filename, "rb") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            requires.append(line)
-    return requires
+requirements = [
+                'docker-py',
+                'PyYAML>=3.1.0',
+                'argparse',
+                ]
+testrequirements=['nose', ]
 
 def get_config_files():
 
     config_files=[
-                  ('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml'])
+                  ('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']),
                   ]
-    config_path='/etc/octopenstack'
-    config_name='dockerfiles'
+    config_path = '/etc/octopenstack'
+    config_name = 'dockerfiles'
 
     for dirname, dirnames, filenames in os.walk('dockerfiles'):
         for subdirname in dirnames:
-            config_dest_path = ('/etc/octopenstack/%s' % dirname)
+            config_dest_path = ('/etc/octopenstack/%s' % subdirname)
             for dirname, dirnames, filenames in os.walk('dockerfiles/%s' % subdirname):
                 config_dir=[]
                 for filename in filenames:
@@ -45,13 +42,13 @@ def get_config_files():
                     config_dir.append(config_src_path)
 
             config_file_dir_liste = config_dest_path, config_dir
-        config_files.append(config_file_dir_liste)
+            config_files.append(config_file_dir_liste)
 
 
     return config_files
 
 containers_config=get_config_files()
-
+print(containers_config)
 setuptools.setup(
     name='octopenstack',
     description='Easily deploy an OpenStack platform in Docker Containers',
@@ -68,8 +65,8 @@ setuptools.setup(
         ]
     },
     data_files=containers_config,
-    install_requires=read_requires("requirements.txt"),
-    tests_require=read_requires("test-requirements.txt"),
+    install_requires=requirements,
+    tests_require=testrequirements,
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
