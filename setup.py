@@ -15,17 +15,35 @@
 #    under the License.
 
 import setuptools
+import os
 
 def read_requires(filename):
     requires = []
     with open(filename, "rb") as fh:
         for line in fh:
             line = line.strip()
-            if not line or line.startswith("#"):
+            if not line or line.startswith('#'):
                 continue
             requires.append(line)
     return requires
 
+def get_config_files():
+    conf_directories=[]
+
+    for dirname, dirnames, filenames in os.walk('dockerfiles'):
+        for subdirname in dirnames:
+            config_dest_path = ('/etc/octopenstack/%s' % dirname)
+            for dirname, dirnames, filenames in os.walk('dockerfiles/%s' % subdirname):
+                config_dir=[]
+                for filename in filenames:
+                    config_src_path = ('%s/%s' % (dirname, filename))
+                    config_dir.append(config_src_path)
+
+            config_file_dir_liste = config_dest_path, config_dir
+        conf_directories.append(config_file_dir_liste)
+    return conf_directories
+
+containers_config=get_config_files()
 
 setuptools.setup(
     name='octopenstack',
@@ -42,7 +60,7 @@ setuptools.setup(
             'octopenstack = octopenstack:main'
         ]
     },
-    data_files=[('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']),
+    data_files=[('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']), containers_config
                 ],
     install_requires=read_requires("requirements.txt"),
     tests_require=read_requires("test-requirements.txt"),

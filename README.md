@@ -29,21 +29,24 @@ OctOpenStack
 
 > **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
 
+
+```pip install octopenstack``` ou ```setup.py install``` 
+
 USAGE
 ------
-> sudo ./octopenstack.py command [container]
+> sudo octopenstack command [container]
 
 Use command only to interact with all services, you can also specify a container name.
 
 ### build
-> sudo ./octopenstack.py build
+> sudo octopenstack build
 
 Build the differents Docker containers and configure them to provide the differents OpenStack services.
 You can find a list of the differents containers and add new ones by editing services.yaml
 All the configuration of your OpenStack Docker platform is done in configuration.yaml
 
 ### run
-> sudo ./octopenstack.py run
+> sudo octopenstack run
 
 This command will create and run the architecture of your plateform and all the network configuration.
 A frontal HAproxy manage all the API calls and can provides HighAvailabilty for them with an second node.
@@ -51,30 +54,30 @@ A frontal HAproxy manage all the API calls and can provides HighAvailabilty for 
 Hypervisors can be addeds and specified as in any other OpenStack plateform by the CLI, Python API or Horizon Dashboard
 
 ### init
-> sudo ./octopenstack.py init
+> sudo octopenstack init
 
 Should be run after the "run" command.
 This fonction initialise all the Databases and configure the services. 
 
 ### {stop, start}
-> sudo ./octopenstack.py stop
+> sudo octopenstack stop
 
 Stop the OpenStack services.
 
-> sudo ./octopenstack.py start
+> sudo octopenstack start
 
 Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
 
 ### rm
-> sudo ./octopenstack.py rm
+> sudo octopenstack rm
 Remove the services
 
 ### ip
-> sudo ./octopenstack.py ip
+> sudo octopenstack ip
 Display services IP address 
 
 ### console
-> sudo ./octopenstack.py ip
+> sudo octopenstack ip
 
 Open a managment console to interact with your OpenStack platform.
 
