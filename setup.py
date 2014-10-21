@@ -16,9 +16,6 @@
 
 import setuptools
 
-from octopenstack import version
-
-
 def read_requires(filename):
     requires = []
     with open(filename, "rb") as fh:
@@ -39,14 +36,19 @@ setuptools.setup(
     long_description=open("README.md", 'rb').read(),
     packages=setuptools.find_packages(),
     license='Apache Software License',
-    version=version.version_string(),
-    scripts=[
-        "octopenstack/octopenstack",
-    ],
+    version='2014-0.4-dev',
+    entry_points={
+        'console_scripts': [
+            'octopenstack = octopenstack'
+        ]
+    },
+#    scripts=[
+#        "octopenstack/octopenstack",
+#    ],
     install_requires=read_requires("requirements.txt"),
     tests_require=read_requires("test-requirements.txt"),
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
         'Environment :: OpenStack',
         'Intended Audience :: Information Technology',
