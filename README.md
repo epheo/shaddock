@@ -30,7 +30,7 @@ OctOpenStack
 > **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
 
 
-```pip install octopenstack``` ou ```setup.py install``` 
+```sudo pip install octopenstack``` ou ```sudo python setup.py install``` 
 
 USAGE
 ------
