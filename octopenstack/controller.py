@@ -3,7 +3,7 @@
 
 from octopenstack import model
 from octopenstack import view
-from octopenstack import docker_controller
+from octopenstack import dockercontroller
 #from octopenstack import init_config
 
 class Controller(object):
@@ -11,7 +11,7 @@ class Controller(object):
     def __init__(self):
         self.model          = model.Model()
         self.view           = view.View()
-        self.container      = docker_controller.DockerController()
+        self.container      = dockercontroller.DockerController()
         #self.init_config    = init_config.InitConfig()
 
 

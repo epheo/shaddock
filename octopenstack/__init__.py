@@ -15,19 +15,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.join(os.path.abspath(os.pardir)))
 sys.path.insert(0, os.path.abspath(os.getcwd()))
 
 from octopenstack import controller 
-from octopenstack import view 
+from octopenstack import dockercontroller
 from octopenstack import model
-from octopenstack import docker_controller
+from octopenstack import view 
 
-if __name__ == '__main__':
-
+def main():
     try:
         action = sys.argv[1]
     except (TypeError, IndexError) as e:
@@ -39,6 +38,8 @@ if __name__ == '__main__':
     except (TypeError, IndexError) as e:
         service = None
 
-    controller = controller.Controller()
+    control = controller.Controller()
+    control.exec_service_list(action, service)
 
-    controller.exec_service_list(action, service)
+if __name__ == '__main__':
+        sys.exit(main())

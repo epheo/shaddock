@@ -39,12 +39,11 @@ setuptools.setup(
     version='2014-0.4-dev',
     entry_points={
         'console_scripts': [
-            'octopenstack = octopenstack'
+            'octopenstack = octopenstack:main'
         ]
     },
-#    scripts=[
-#        "octopenstack/octopenstack",
-#    ],
+    data_files=[('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']),
+                ],
     install_requires=read_requires("requirements.txt"),
     tests_require=read_requires("test-requirements.txt"),
     classifiers=[
