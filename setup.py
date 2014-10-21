@@ -51,7 +51,6 @@ def get_config_files():
     return config_files
 
 containers_config=get_config_files()
-print(containers_config)
 
 setuptools.setup(
     name='octopenstack',
