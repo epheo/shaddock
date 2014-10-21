@@ -22,13 +22,18 @@ def read_requires(filename):
     with open(filename, "rb") as fh:
         for line in fh:
             line = line.strip()
-            if not line or line.startswith('#'):
+            if not line or line.startswith("#"):
                 continue
             requires.append(line)
     return requires
 
 def get_config_files():
-    conf_directories=[]
+
+    config_files=[
+                  ('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml'])
+                  ]
+    config_path='/etc/octopenstack'
+    config_name='dockerfiles'
 
     for dirname, dirnames, filenames in os.walk('dockerfiles'):
         for subdirname in dirnames:
@@ -40,10 +45,13 @@ def get_config_files():
                     config_dir.append(config_src_path)
 
             config_file_dir_liste = config_dest_path, config_dir
-        conf_directories.append(config_file_dir_liste)
-    return conf_directories
+        config_files.append(config_file_dir_liste)
+
+
+    return config_files
 
 containers_config=get_config_files()
+print(containers_config)
 
 setuptools.setup(
     name='octopenstack',
@@ -60,8 +68,7 @@ setuptools.setup(
             'octopenstack = octopenstack:main'
         ]
     },
-    data_files=[('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']), containers_config
-                ],
+    data_files=containers_config,
     install_requires=read_requires("requirements.txt"),
     tests_require=read_requires("test-requirements.txt"),
     classifiers=[
