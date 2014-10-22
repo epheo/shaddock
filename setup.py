@@ -17,8 +17,7 @@
 import setuptools
 import os
 
-requirements = [
-                'docker-py',
+requirements = ['docker-py',
                 'PyYAML>=3.1.0',
                 'argparse',
                 ]

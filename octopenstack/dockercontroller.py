@@ -4,7 +4,7 @@
 import docker
 from octopenstack import view
 
-docker_api = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
+dockerapi = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
 
 class DockerController(object):
 
@@ -14,13 +14,13 @@ class DockerController(object):
 
     def build(self, name, tag, path, nocache, environment):
 
-        action = 'building'
-        quiet = False
-        dockerfile = '%s/Dockerfile' % (path)
-        rm = False
-        stream = False
-        timeout = None
-        custom_context = False
+        action          = 'building'
+        quiet           = False
+        dockerfile      = '%s/Dockerfile' % (path)
+        rm              = False
+        stream          = False
+        timeout         = None
+        custom_context  = False
 
         # DockerFile configuration: 
         # """""""""""""""""""""""""
@@ -48,7 +48,7 @@ class DockerController(object):
             
 
         self.view.service_information(action, name, tag, path, nocache)
-        for line in docker_api.build(path, tag, quiet, fileobj, nocache, rm, stream, timeout, custom_context):
+        for line in dockerapi.build(path, tag, quiet, fileobj, nocache, rm, stream, timeout, custom_context):
             self.view.display_stream(line)
 
 
@@ -63,7 +63,7 @@ class DockerController(object):
         tty         = False
 
         self.view.service_information(action, tag, command, hostname, user, ports, mem_limit, environment, volumes, name)
-        id_container = docker_api.create_container(tag, command, hostname, user, detach, ports, environment, volumes, name)
+        id_container = dockerapi.create_container(tag, command, hostname, user, detach, ports, environment, volumes, name)
         return id_container
 
     def start(self, id_container, binds, port_bindings, privileged):
@@ -71,7 +71,7 @@ class DockerController(object):
         publish_all_ports = True
 
         self.view.service_information(action, id_container, port_bindings, privileged)
-        docker_api.start(id_container, binds, port_bindings, publish_all_ports)
+        dockerapi.start(id_container, binds, port_bindings, publish_all_ports)
         
     def get_info(self, tag):
 
@@ -87,24 +87,23 @@ class DockerController(object):
         # Returned informations are stored in the 
         # 'launched_containers' dictionary.
 
-        containers_list = docker_api.containers()
-
-        launched_containers={}
+        containers_list     = dockerapi.containers()
+        launched_containers = {}
 
         for containers in containers_list:
             c_id = containers.get('Id')
-            container_infos = docker_api.inspect_container(c_id)
+            container_infos = dockerapi.inspect_container(c_id)
 
             config = container_infos.get('Config')
             if config.get('Image')==tag:
                 network  = container_infos.get('NetworkSettings')
 
-                container_specs={}
+                container_specs             = {}
                 container_specs['ipaddr']   = network.get('IPAddress')
                 container_specs['dockerid'] = c_id
                 container_specs['hostname'] = config.get('Hostname')
 
-                launched_containers[tag] = container_specs
+                launched_containers[tag]    = container_specs
 
         return launched_containers
 
@@ -117,22 +116,22 @@ class DockerController(object):
                 dockerid = container_infos.get('dockerid')
                 self.view.stopping(tag)
                 timeout=30
-                docker_api.stop(dockerid, timeout)
+                dockerapi.stop(dockerid, timeout)
                 if rm==True:
                     self.view.removing(tag)
-                    docker_api.remove_container(dockerid)
+                    dockerapi.remove_container(dockerid)
                 else:
                     pass
         else:
             self.view.notlaunched(tag)
 
     def ip(self, tag):
-        launched_containers=self.get_info(tag)
+        launched_containers = self.get_info(tag)
         if bool(launched_containers)==True:
             containers = launched_containers.keys()
             for container in containers:
                 container_infos = launched_containers.get(container)
-                ipaddr = container_infos.get('ipaddr')
+                ipaddr          = container_infos.get('ipaddr')
                 self.view.ip(tag, ipaddr)
 
         else:

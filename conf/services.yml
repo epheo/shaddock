@@ -7,8 +7,8 @@ glance:
     - 9292
     - 4324
   volumes: 
-    /var/log/supervisor: /var/log/octopenstack/glance
-    /var/log/vrervefe: /var/log/octvewacwe/fernce
+    '/var/log/supervisor': '/var/log/octopenstack/glance'
+    '/etc/glance': '/etc/octopenstack/glance/etc'
   privileged: false
 
 
@@ -17,7 +17,8 @@ horizon:
     - 80
     - 11211 
   volumes:
-    /var/log/supervisor: /var/log/octopenstack/horizon
+    '/var/log/supervisor': '/var/log/octopenstack/horizon'
+    '/etc/openstack-dashboard': '/etc/octopenstack/horizon/etc'
   privileged: false
 
 
@@ -26,7 +27,8 @@ keystone:
     - 35357
     - 5000
   volumes:
-    /var/log/supervisor: /var/log/octopenstack/keystone
+    '/var/log/supervisor': '/var/log/octopenstack/keystone'
+    '/etc/keystone': '/etc/octopenstack/keystone/etc'
   privileged: false
 
 
@@ -34,7 +36,7 @@ mysql:
   ports:
     - 3306
   volumes:
-    /var/log/supervisor: /var/log/octopenstack/mysql
+    '/var/log/supervisor': '/var/log/octopenstack/mysql'
   privileged: false
 
 
@@ -43,7 +45,8 @@ nova:
     - 8774
     - 8775
   volumes:
-    /var/log/supervisor: /var/log/octopenstack/nova
+    '/var/log/supervisor': '/var/log/octopenstack/nova'
+    '/etc/nova': '/etc/octopenstack/nova/etc'
   privileged: true
 
 
@@ -52,5 +55,6 @@ rabbitmq:
     - 5672
     - 15672
   volumes:
-    /var/log/supervisor: /var/log/octopenstack/rabbitmq
+    '/var/log/supervisor': '/var/log/octopenstack/rabbitmq'
+    '/etc/rabbitmq': '/etc/octopenstack/rabbitmq/etc'
   privileged: false

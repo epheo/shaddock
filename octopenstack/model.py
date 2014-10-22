@@ -10,10 +10,10 @@ class Model(object):
     def __init__(self):
         self.services = {}
         self.make_services_dictionary(self.services)
-        config_path = '/etc/octopenstack'
+        config_path   = '/etc/octopenstack'
 
     def make_services_dictionary(self, services):
-        config_path = '/etc/octopenstack'
+        config_path   = '/etc/octopenstack'
 
         services_dic  = open('%s/services.yml' % config_path, "r")
         services_dic  = services_dic.read()
@@ -30,7 +30,6 @@ class Model(object):
         for service in services_keys:
             service_info = services_dic.get(service, None)
             if service_info is not None:
-
                 name            = service.title()
                 ports           = service_info.get('ports')
                 volumes         = service_info.get('volumes')
@@ -60,41 +59,40 @@ class Model(object):
         #      'privileged': False
         #      },
 
+        service_dic     = {}
         name            = name.lower()
         self.user       = user
         self.nocache    = nocache
-        #host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
-
-        service_dic = {}
-        self.path   =  config_path
+        self.path       = config_path
 
         ## Register Tag and Path
-        service_dic['tag'] = '%s/oos-%s' % (self.user, name)
-        service_dic['path'] = '%s/%s' % (self.path, name)
+        service_dic['tag']  = '%s/oos-%s' % (self.user, name)
+        service_dic['path'] = '%s/%s'     % (self.path, name)
 
         ## Register Ports and ports bindings
-        ports_list=[]
-        ports_bind_dico={}
+        ports_list      = []
+        ports_bind_dico = {}
 
         for port in ports:
           ports_list.append((port, 'tcp'))
           ports_bind_dico[port] = ('0.0.0.0', port)
 
-        service_dic['ports'] = ports_list
+        service_dic['ports']         = ports_list
         service_dic['port_bindings'] = ports_bind_dico
 
         ## Register volumes and binds
-        volumes_list=[]
-        binds_dico={}
+        volumes_list = []
+        binds_dico   = {}
         for volume in volumes.keys():
           volumes_list.append(volume)
-          bind = volumes.get(volume)
+          bind             = volumes.get(volume)
           binds_dico[bind] = {'bind': volume, 'ro': False}
+        print(volumes_list)
+        print(binds_dico)
 
         service_dic['volumes'] = volumes_list
-        service_dic['binds'] = binds_dico
-
-        service_dic['confs'] = configuration
+        service_dic['binds']   = binds_dico
+        service_dic['confs']   = configuration
 
         #Register all dic in an other one.
         services[name] = service_dic

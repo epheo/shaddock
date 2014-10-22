@@ -2,11 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from pprint import pprint
+from octopenstack import model
 
-class FooTests(unittest.TestCase):
+class ModelTests(unittest.TestCase):
 
-    def testFoo(self):
-        self.failUnless(True)
+    def testService_dic(self):
+    	self.model  = model.Model()
+    	service_dic = self.model.services
+        pprint(service_dic)
+        
+        exit(1)
+
 
 def main():
     unittest.main()
