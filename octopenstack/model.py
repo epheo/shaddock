@@ -10,14 +10,17 @@ class Model(object):
     def __init__(self):
         self.services = {}
         self.make_services_dictionary(self.services)
+        config_path = '/etc/octopenstack'
 
     def make_services_dictionary(self, services):
-        services_dic  = open('/etc/octopenstack/services.yml', "r")
+        config_path = '/etc/octopenstack'
+
+        services_dic  = open('%s/services.yml' % config_path, "r")
         services_dic  = services_dic.read()
         services_dic  = yaml.load(services_dic)
         services_keys = services_dic.keys()
 
-        config_dic    = open('/etc/octopenstack/configuration.yml', "r")
+        config_dic    = open('%s/configuration.yml' % config_path, "r")
         config_dic    = config_dic.read()
         config_dic    = yaml.load(config_dic)
         configuration = config_dic.get('services_config')
@@ -34,10 +37,10 @@ class Model(object):
                 binds           = service_info.get('binds')
                 privileged      = service_info.get('privileged')
 
-                self.make_service(name, ports, volumes, binds, privileged, services, configuration, user, nocache)
+                self.make_service(name, ports, volumes, binds, privileged, services, configuration, user, nocache, config_path)
 
 
-    def make_service(self, name, ports, volumes, binds, privileged, services, configuration, user, nocache):
+    def make_service(self, name, ports, volumes, binds, privileged, services, configuration, user, nocache, config_path):
         #  Final dictionary should be like:
         #  'glance': {
         #      'tag': '%s/osglance' % (user), 
@@ -63,7 +66,7 @@ class Model(object):
         #host_ip             = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 
         service_dic = {}
-        self.path           = '%s/dockerfiles' % (os.getcwd())
+        self.path   =  config_path
 
         ## Register Tag and Path
         service_dic['tag'] = '%s/oos-%s' % (self.user, name)

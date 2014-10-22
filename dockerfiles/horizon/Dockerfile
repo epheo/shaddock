@@ -1,4 +1,4 @@
-FROM octopenstack/osbase:latest
+FROM octopenstack/oos-base:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 # http://docs.openstack.org/icehouse/install-guide/install/yum/content/install_dashboard.html
 

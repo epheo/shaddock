@@ -79,7 +79,7 @@ class Controller(object):
 
     def buildbase(self):
         name    ='osbase'
-        tag     = '%s/osbase' % (self.model.user)
+        tag     = '%s/oos-base' % (self.model.user)
         path    = '%s/base/' % (self.model.path)
         nocache = self.model.nocache
         environment = None
