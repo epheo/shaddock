@@ -87,8 +87,6 @@ class Model(object):
           volumes_list.append(volume)
           bind             = volumes.get(volume)
           binds_dico[bind] = {'bind': volume, 'ro': False}
-        print(volumes_list)
-        print(binds_dico)
 
         service_dic['volumes'] = volumes_list
         service_dic['binds']   = binds_dico
