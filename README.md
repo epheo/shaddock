@@ -118,25 +118,6 @@ I'm really interested in any advice, idea, help, or contribution.
 OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 
-BackLog
--------
-###Todo
-- HiPache for the high availability
-- Open containers in Tmux windows
-- Add proxy node
-- Add os ctl node
-- Change SH scripts by OS Python API call
-- Modif Dockerfiles > git sources (python:2-onbuild) ?
-- Pull images option from my repo
-- Reduce the MySql footprint (run conf in a docker container?)
-- Replace conf by YAML
-
-###Done
-- Add stop and rm Options
-- Change Name
-- Re-Organise files
-
-
 References
 ----------
 - [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
