@@ -47,17 +47,18 @@ def get_config_files():
     return config_files
 
 containers_config=get_config_files()
-print(containers_config)
+
 setuptools.setup(
     name='octopenstack',
     description='Easily deploy an OpenStack platform in Docker Containers',
     author='Thibaut Lapierre',
     author_email='root@epheo.eu',
-    url='http://epheo.eu/',
+    url='https://github.com/Epheo/octopenstack',
+    download_url='https://github.com/Epheo/octopenstack/archive/master.zip',
     long_description=open("README.md", 'rb').read(),
     packages=setuptools.find_packages(),
     license='Apache Software License',
-    version='2014-0.4-dev',
+    version='2014-0.1-dev',
     entry_points={
         'console_scripts': [
             'octopenstack = octopenstack:main'
