@@ -54,7 +54,7 @@ class DockerController(object):
 
     def create(self, name, tag, volumes, ports, environment):
         action      = 'creating'
-        command     = '/run.sh'
+        command     = None
         user        = 'root'
         mem_limit   = '0'
         hostname    = name
