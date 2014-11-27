@@ -10,11 +10,6 @@ ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/nova"]
 
-# Add scripts
-ADD run.sh /run.sh
-ADD create_db.sh /create_db.sh
-RUN chmod 755 ./*.sh
-
 EXPOSE 9774
 EXPOSE 8775
 
