@@ -25,12 +25,11 @@ OctOpenStack
   * [Todo](#todo)
   * [Done](#done)
 * [References](#references)
-* [UML Architecture Diagram](#uml-architecture-diagram)
 
 > **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
 
 
-```sudo pip install octopenstack``` ou ```sudo python setup.py install``` 
+```sudo python setup.py install``` ou ```sudo pip install octopenstack```
 
 USAGE
 ------

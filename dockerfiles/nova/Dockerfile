@@ -18,4 +18,4 @@ RUN chmod 755 ./*.sh
 EXPOSE 9774
 EXPOSE 8775
 
-CMD ["/run.sh"]
+CMD ["/usr/bin/supervisord", "-n"]
