@@ -74,8 +74,9 @@ class Controller(object):
                 self.container.stop(tag, rm)
 
             elif action=='ip':
-                self.container.ip(tag)
-
+                ip = self.container.ip(tag)
+                return ip
+                
             else:
                 self.view.command_not_found(action)
 

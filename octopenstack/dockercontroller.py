@@ -127,24 +127,22 @@ class DockerController(object):
 
     def ip(self, tag):
         launched_containers = self.get_info(tag)
+
+        ip_list = []
+
         if bool(launched_containers)==True:
             containers = launched_containers.keys()
-
-            ip_list = []
 
             for container in containers:
                 container_infos = launched_containers.get(container)
                 ipaddr          = container_infos.get('ipaddr')
 
                 ip_list.append(ipaddr)
-
                 self.view.ip(tag, ipaddr)
-
-            return ip_list
-
         else:
             self.view.notlaunched(tag)
 
+        return ip_list
 
     def create_db(self, name, environment):
 #        import MySQLdb
