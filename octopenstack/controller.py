@@ -63,6 +63,11 @@ class Controller(object):
             elif action=='stop':
                 rm = False
                 self.container.stop(tag, rm)
+
+            elif action=='restart':
+                rm = False
+                self.container.stop(tag, rm)
+                self.container.start(id_container, binds, port_bindings)
                     
             elif action=='rm':
                 rm = True

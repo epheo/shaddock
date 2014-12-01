@@ -134,6 +134,8 @@ class DockerController(object):
                 ipaddr          = container_infos.get('ipaddr')
                 self.view.ip(tag, ipaddr)
 
+            return ipaddr
+
         else:
             self.view.notlaunched(tag)
 
