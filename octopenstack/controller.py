@@ -22,8 +22,14 @@ class Controller(object):
             service_list = self.model.services.keys()
             self.view.service_list(service_list)
 
+            result_list = []
+
             for service in service_list:
-                self.switch(service, action)
+                
+                result = self.switch(service, action)
+                result_list.append(result)
+
+            return result_list
 
     def switch(self, service, action):
         service_info = self.model.services.get(service, None)
@@ -76,7 +82,7 @@ class Controller(object):
             elif action=='ip':
                 ip = self.container.ip(tag)
                 return ip
-                
+
             else:
                 self.view.command_not_found(action)
 
@@ -90,3 +96,6 @@ class Controller(object):
         nocache = self.model.nocache
         environment = None
         self.container.build(name, tag, path, nocache, environment)
+
+if ip is not None:
+    return ip
