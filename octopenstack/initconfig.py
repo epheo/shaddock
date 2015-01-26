@@ -5,13 +5,12 @@ from fabric.operations import local as lrun, run
 from fabric.api import *
 from fabric.state import env
 from octopenstack import dockercontroller
-from octopenstack import controller 
 import os
 
 class InitConfig(object):
 
     def __init__(self):
-        control = controller.Controller()
+        control = dockercontroller.Controller()
 
         ip_dic = {}
         ip_dic['mysql']     = control.exec_service_list('ip', 'mysql')

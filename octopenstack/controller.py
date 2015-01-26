@@ -28,8 +28,12 @@ class Controller(object):
                 
                 result = self.switch(service, action)
                 result_list.append(result)
-
+	    print(result_list)
             return result_list
+    
+    def service_list(self):
+        if service is not None:
+            
 
     def switch(self, service, action):
         service_info = self.model.services.get(service, None)
@@ -96,6 +100,3 @@ class Controller(object):
         nocache = self.model.nocache
         environment = None
         self.container.build(name, tag, path, nocache, environment)
-
-if ip is not None:
-    return ip
