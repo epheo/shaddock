@@ -90,90 +90,52 @@ class Container(object):
         self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
+        self.tag = self.dico.tag
 
-        self.dockerid =
+        containers_list = dockerapi.containers()
+        if containers_list:
+            for containers in containers_list:
+                c_id = containers.get('Id')
+                container_infos = dockerapi.inspect_container(c_id)
+
+                config = container_infos.get('Config')
+                if config.get('Image') == self.tag:
+                    network = container_infos.get('NetworkSettings')
+                    self.ip = network.get('IPAddress')
+                    self.id = c_id
+                    self.hostname = config.get('Hostname')
+        else:
+            print("No containers created, I'll create one four you.")
+            new_container = Image(self.name)
+            new_container.create()
 
     def start(self):
         action = 'starting'
         publish_all_ports = True
 
         self.view.service_information(action,
-                                      id_container,
+                                      self.id,
                                       self.dico.ports_bindings,
                                       self.dico.privileged)
-        dockerapi.start(id_container,
+        dockerapi.start(self.id,
                         self.dico.binds,
                         self.dico.ports_bindings,
                         publish_all_ports)
-    
-    def stop(self, tag, rm):
-        launched_containers = self.get_info(tag)
+
+    def stop(self, rm):
+        launched_containers = self.get_info()
         if bool(launched_containers) is True:
             containers = launched_containers.keys()
             for container in containers:
                 container_infos = launched_containers.get(container)
                 dockerid = container_infos.get('dockerid')
-                self.view.stopping(tag)
+                self.view.stopping(self.tag)
                 timeout = 30
                 dockerapi.stop(dockerid, timeout)
                 if rm is True:
-                    self.view.removing(tag)
+                    self.view.removing(self.tag)
                     dockerapi.remove_container(dockerid)
                 else:
                     pass
         else:
-            self.view.notlaunched(tag)
-
-        return launched_containers
-
-    def get_info(self):
-        containers_list = dockerapi.containers()
-        launched_containers = {}
-
-        # Retrieve existing containers informations:
-        # """"""""""""""""""""""""""""""""""""""""""
-        # First  retrieve all  the instances IDs, 
-        # Get informations  for  the returned IDs 
-        # And check for a match with a known tag.
-        #
-        # Then get instances  informations in the 
-        # dictionary for the matching one.
-        #
-        # Returned informations are stored in the 
-        # 'launched_containers' dictionary.
-
-        for containers in containers_list:
-            c_id = containers.get('Id')
-            container_infos = dockerapi.inspect_container(c_id)
-
-            config = container_infos.get('Config')
-            if config.get('Image') == self.dico.tag:
-                network = container_infos.get('NetworkSettings')
-
-                container_specs = {}
-                container_specs['ipaddr'] = network.get('IPAddress')
-                container_specs['dockerid'] = c_id
-                container_specs['hostname'] = config.get('Hostname')
-
-                launched_containers[self.dico.tag] = container_specs
-
-        return launched_containers
-
-    def get_ip(self):
-        launched_containers = self.get_info()
-
-        ip_list = []
-
-        if bool(launched_containers) is True:
-            containers = launched_containers.keys()
-
-            for container in containers:
-                container_infos = launched_containers.get(container)
-                ipaddr = container_infos.get('ipaddr')
-
-                ip_list.append(ipaddr)
-                self.view.ip(self.dico.tag, ipaddr)
-        else:
-            self.view.notlaunched(self.dico.tag)
-
-        return ip_list
+            self.view.notlaunched(self.tag)
