@@ -21,6 +21,7 @@ requirements = ['docker-py',
                 'PyYAML>=3.1.0',
                 'argparse',
                 ]
+                
 testrequirements=['nose', ]
 
 def get_config_files():

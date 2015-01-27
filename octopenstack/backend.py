@@ -91,17 +91,19 @@ class Container(object):
         self.name = service_name
         self.dico = model.Dico(self.name)
 
+        self.dockerid =
+
     def start(self):
         action = 'starting'
         publish_all_ports = True
 
         self.view.service_information(action,
                                       id_container,
-                                      port_bindings,
-                                      privileged)
+                                      self.dico.ports_bindings,
+                                      self.dico.privileged)
         dockerapi.start(id_container,
-                        binds,
-                        port_bindings,
+                        self.dico.binds,
+                        self.dico.ports_bindings,
                         publish_all_ports)
     
     def stop(self, tag, rm):
@@ -153,12 +155,12 @@ class Container(object):
                 container_specs['dockerid'] = c_id
                 container_specs['hostname'] = config.get('Hostname')
 
-                launched_containers[tag] = container_specs
+                launched_containers[self.dico.tag] = container_specs
 
         return launched_containers
 
-    def get_ip(self, tag):
-        launched_containers = self.get_info(tag)
+    def get_ip(self):
+        launched_containers = self.get_info()
 
         ip_list = []
 
@@ -170,8 +172,8 @@ class Container(object):
                 ipaddr = container_infos.get('ipaddr')
 
                 ip_list.append(ipaddr)
-                self.view.ip(tag, ipaddr)
+                self.view.ip(self.dico.tag, ipaddr)
         else:
-            self.view.notlaunched(tag)
+            self.view.notlaunched(self.dico.tag)
 
         return ip_list
