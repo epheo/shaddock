@@ -4,20 +4,20 @@
 from fabric.operations import local as lrun, run
 from fabric.api import *
 from fabric.state import env
-from octopenstack import dockercontroller
+from octopenstack import frontend
 import os
 
 class InitConfig(object):
 
     def __init__(self):
-        control = dockercontroller.Controller()
+        control = frontend.Controller()
 
         ip_dic = {}
-        ip_dic['mysql']     = control.exec_service_list('ip', 'mysql')
-        ip_dic['keystone']  = control.exec_service_list('ip', 'keystone')
-        ip_dic['glance']    = control.exec_service_list('ip', 'glance')
-        ip_dic['nova']      = control.exec_service_list('ip', 'nova')
-        ip_dic['horizon']   = control.exec_service_list('ip', 'horizon')
+        ip_dic['mysql'] = control.exec_service_list('ip', 'mysql')
+        ip_dic['keystone'] = control.exec_service_list('ip', 'keystone')
+        ip_dic['glance'] = control.exec_service_list('ip', 'glance')
+        ip_dic['nova'] = control.exec_service_list('ip', 'nova')
+        ip_dic['horizon'] = control.exec_service_list('ip', 'horizon')
 
         print(ip_dic)
         env.roledefs.update(ip_dic)

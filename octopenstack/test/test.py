@@ -8,11 +8,11 @@ from octopenstack import model
 class ModelTests(unittest.TestCase):
 
     def testService_dic(self):
-    	self.model  = model.Model()
+    	self.model = model.Model()
     	service_dic = self.model.services
         pprint(service_dic)
         
-        exit(1)
+        exit(0)
 
 
 def main():

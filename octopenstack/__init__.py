@@ -21,8 +21,8 @@ import sys
 sys.path.insert(0, os.path.join(os.path.abspath(os.pardir)))
 sys.path.insert(0, os.path.abspath(os.getcwd()))
 
-from octopenstack import controller 
-from octopenstack import dockercontroller
+from octopenstack import frontend 
+from octopenstack import backend
 from octopenstack import model
 from octopenstack import view 
 
@@ -34,11 +34,11 @@ def main():
         exit()
         
     try:
-        service    = sys.argv[2]
+        service = sys.argv[2]
     except (TypeError, IndexError) as e:
         service = None
 
-    control = controller.Controller()
+    control = frontend.Controller()
     control.exec_service_list(action, service)
 
 if __name__ == '__main__':

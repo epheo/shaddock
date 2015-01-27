@@ -4,6 +4,7 @@ __pycache__/
 
 octopenstack_rsa_key*
 *.swp
+.idea/
 
 # C extensions
 *.so
