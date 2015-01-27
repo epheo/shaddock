@@ -44,11 +44,9 @@ class Dico(object):
 
         service_dic = {}
 
-        # Register Tag and Path
         service_dic['tag'] = '%s/oos-%s' % (user, self.name)
         service_dic['path'] = '%s/%s' % (self.config_path, self.name)
 
-        # Register Ports and ports bindings
         ports_list = []
         ports_bind_dico = {}
 
@@ -59,7 +57,6 @@ class Dico(object):
         service_dic['ports'] = ports_list
         service_dic['port_bindings'] = ports_bind_dico
 
-        # Register volumes and binds
         volumes_list = []
         binds_dico = {}
         for volume in volumes.keys():

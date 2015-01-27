@@ -34,7 +34,7 @@ def __main__():
 #        for i in self.model.services.get(service, None):
 #            containor = backend.Container() i.title 
         pass
-    elif (args.foo):
+    elif (args.build):
         service = args['build']
         pass
 

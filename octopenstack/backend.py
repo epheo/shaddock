@@ -16,20 +16,18 @@
 #    under the License.
 
 import docker
-from octopenstack import view
+from octopenstack import view, model
 
 dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
                           version='1.12',
                           timeout=10)
 
-class Images(object):
+class Image(object):
 
     def __init__(self, service_name):
         self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
-
-        self.build()
 
     def build(self):
         action = 'building'
@@ -57,29 +55,17 @@ class Images(object):
                                     custom_context):
             self.view.display_stream(line)
 
-
-class Container(object):
-
-    def __init__(self, service_name):
-        self.view = view.View()
-        self.name = service_name
-        self.dico = model.Dico(self.name)
-
-        self.id_container = self.create()
-
-
     def create(self):
         action = 'creating'
         command = None
         user = 'root'
         mem_limit = '0'
-        hostname = self.name
         detach = False
 
         self.view.service_information(action,
                                       self.dico.tag,
                                       command,
-                                      hostname,
+                                      self.name,
                                       user,
                                       self.dico.ports,
                                       mem_limit,
@@ -89,7 +75,7 @@ class Container(object):
         
         id_container = dockerapi.create_container(self.dico.tag,
                                                   command,
-                                                  hostname,
+                                                  self.name,
                                                   user,
                                                   detach,
                                                   self.dico.ports,
@@ -97,6 +83,13 @@ class Container(object):
                                                   self.dico.volumes,
                                                   self.dico.name)
         return id_container
+
+class Container(object):
+
+    def __init__(self, service_name):
+        self.view = view.View()
+        self.name = service_name
+        self.dico = model.Dico(self.name)
 
     def start(self):
         action = 'starting'
@@ -131,26 +124,9 @@ class Container(object):
 
         return launched_containers
 
-    def get_info(self, tag):
+    def get_info(self):
         containers_list = dockerapi.containers()
         launched_containers = {}
-
-        for containers in containers_list:
-            c_id = containers.get('Id')
-            container_infos = dockerapi.inspect_container(c_id)
-
-            config = container_infos.get('Config')
-            if config.get('Image')==tag:
-                network = container_infos.get('NetworkSettings')
-
-                container_specs = {}
-                container_specs['ipaddr'] = network.get('IPAddress')
-                container_specs['dockerid'] = c_id
-                container_specs['hostname'] = config.get('Hostname')
-
-                launched_containers[tag] = container_specs
-
-        return launched_containers
 
         # Retrieve existing containers informations:
         # """"""""""""""""""""""""""""""""""""""""""
@@ -163,6 +139,23 @@ class Container(object):
         #
         # Returned informations are stored in the 
         # 'launched_containers' dictionary.
+
+        for containers in containers_list:
+            c_id = containers.get('Id')
+            container_infos = dockerapi.inspect_container(c_id)
+
+            config = container_infos.get('Config')
+            if config.get('Image') == self.dico.tag:
+                network = container_infos.get('NetworkSettings')
+
+                container_specs = {}
+                container_specs['ipaddr'] = network.get('IPAddress')
+                container_specs['dockerid'] = c_id
+                container_specs['hostname'] = config.get('Hostname')
+
+                launched_containers[tag] = container_specs
+
+        return launched_containers
 
     def get_ip(self, tag):
         launched_containers = self.get_info(tag)
