@@ -115,11 +115,11 @@ class Container(object):
 
         self.view.service_information(action,
                                       self.id,
-                                      self.dico.ports_bindings,
+                                      self.dico.port_bindings,
                                       self.dico.privileged)
         dockerapi.start(self.id,
                         self.dico.binds,
-                        self.dico.ports_bindings,
+                        self.dico.port_bindings,
                         publish_all_ports)
 
     def stop(self, rm):
