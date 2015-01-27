@@ -22,6 +22,7 @@ dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
                           version='1.12',
                           timeout=10)
 
+
 class Image(object):
 
     def __init__(self, service_name):
@@ -72,7 +73,7 @@ class Image(object):
                                       self.dico.config,
                                       self.dico.volumes,
                                       self.dico.name)
-        
+
         id_container = dockerapi.create_container(self.dico.tag,
                                                   command,
                                                   self.name,
@@ -84,6 +85,7 @@ class Image(object):
                                                   self.dico.name)
         return id_container
 
+
 class Container(object):
 
     def __init__(self, service_name):
@@ -92,22 +94,12 @@ class Container(object):
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
 
-        containers_list = dockerapi.containers()
-        if containers_list:
-            for containers in containers_list:
-                c_id = containers.get('Id')
-                container_infos = dockerapi.inspect_container(c_id)
-
-                config = container_infos.get('Config')
-                if config.get('Image') == self.tag:
-                    network = container_infos.get('NetworkSettings')
-                    self.ip = network.get('IPAddress')
-                    self.id = c_id
-                    self.hostname = config.get('Hostname')
-        else:
+        self.id, self.ip, self.hostname = self.get_info()
+        if not self.id:
             print("No containers created, I'll create one four you.")
             new_container = Image(self.name)
             new_container.create()
+            self.id, self.ip, self.hostname = self.get_info()
 
     def start(self):
         action = 'starting'
@@ -139,3 +131,16 @@ class Container(object):
                     pass
         else:
             self.view.notlaunched(self.tag)
+
+    def get_info(self):
+        containers_list = dockerapi.containers()
+        if containers_list:
+            for containers in containers_list:
+                c_id = containers.get('Id')
+                container_infos = dockerapi.inspect_container(c_id)
+
+                config = container_infos.get('Config')
+                if config.get('Image') == self.tag:
+                    network = container_infos.get('NetworkSettings')
+                    return (c_id, network.get('IPAddress'),
+                            config.get('Hostname'))
