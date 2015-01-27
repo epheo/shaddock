@@ -46,7 +46,7 @@ class Dico(object):
 
         # Register Tag and Path
         service_dic['tag'] = '%s/oos-%s' % (user, self.name)
-        service_dic['path'] = '%s/%s'     % (self.config_path, self.name)
+        service_dic['path'] = '%s/%s' % (self.config_path, self.name)
 
         # Register Ports and ports bindings
         ports_list = []
@@ -72,7 +72,6 @@ class Dico(object):
         service_dic['confs'] = configuration
 
         return service_dic
-
 
         #  Final dictionary should be like:
         #  'glance': {

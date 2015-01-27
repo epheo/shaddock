@@ -18,14 +18,18 @@
 import docker
 from octopenstack import view
 
-dockerapi = docker.Client(base_url='unix://var/run/docker.sock', version='1.12', timeout=10)
+dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
+                          version='1.12',
+                          timeout=10)
 
-class Container(object):
+class Images(object):
 
     def __init__(self, service_name):
         self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
+
+        self.build()
 
     def build(self):
         action = 'building'
@@ -44,14 +48,25 @@ class Container(object):
 
         for line in dockerapi.build(self.dico.path,
                                     self.dico.tag,
-                                    quiet, 
-                                    fileobj, 
+                                    quiet,
+                                    fileobj,
                                     self.dico.nocache,
-                                    rm, 
-                                    stream, 
-                                    timeout, 
+                                    rm,
+                                    stream,
+                                    timeout,
                                     custom_context):
             self.view.display_stream(line)
+
+
+class Container(object):
+
+    def __init__(self, service_name):
+        self.view = view.View()
+        self.name = service_name
+        self.dico = model.Dico(self.name)
+
+        self.id_container = self.create()
+
 
     def create(self):
         action = 'creating'
@@ -66,21 +81,21 @@ class Container(object):
                                       command,
                                       hostname,
                                       user,
-                                      ports,
+                                      self.dico.ports,
                                       mem_limit,
                                       self.dico.config,
-                                      volumes,
-                                      name)
+                                      self.dico.volumes,
+                                      self.dico.name)
         
-        id_container = dockerapi.create_container(tag, 
+        id_container = dockerapi.create_container(self.dico.tag,
                                                   command,
                                                   hostname,
                                                   user,
                                                   detach,
-                                                  ports,
-                                                  environment,
-                                                  volumes,
-                                                  name)
+                                                  self.dico.ports,
+                                                  self.dico.config,
+                                                  self.dico.volumes,
+                                                  self.dico.name)
         return id_container
 
     def start(self):
@@ -154,7 +169,7 @@ class Container(object):
 
         ip_list = []
 
-        if bool(launched_containers)==True:
+        if bool(launched_containers) is True:
             containers = launched_containers.keys()
 
             for container in containers:
