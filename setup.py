@@ -22,13 +22,12 @@ requirements = ['docker-py',
                 'argparse',
                 ]
                 
-testrequirements=['nose', ]
+testrequirements = ['nose']
 
 def get_config_files():
 
-    config_files=[
-                  ('/etc/octopenstack', ['conf/configuration.yml', 'conf/services.yml']),
-                  ]
+    config_files = [('/etc/octopenstack', ['conf/configuration.yml',
+                                           'conf/services.yml'])]
     config_path = '/etc/octopenstack'
     config_name = 'dockerfiles'
 
@@ -47,7 +46,7 @@ def get_config_files():
 
     return config_files
 
-containers_config=get_config_files()
+containers_config = get_config_files()
 
 setuptools.setup(
     name='octopenstack',
@@ -59,10 +58,10 @@ setuptools.setup(
     long_description=open("README.md", 'rb').read(),
     packages=setuptools.find_packages(),
     license='Apache Software License',
-    version='2014-0.1-dev',
+    version='2015-0.5-dev',
     entry_points={
         'console_scripts': [
-            'octopenstack = octopenstack:main'
+            'octopenstack = octopenstack:__main__'
         ]
     },
     data_files=containers_config,
