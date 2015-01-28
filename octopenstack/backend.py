@@ -16,8 +16,7 @@
 #    under the License.
 
 import docker
-# from octopenstack \
-import view, model
+from octopenstack import view, model
 
 dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
                           version='1.12',

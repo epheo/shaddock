@@ -17,8 +17,7 @@
 
 import sys
 import argparse
-# from octopenstack \
-import backend, model
+from octopenstack import backend, model
 
 def __main__():
     parser = argparse.ArgumentParser(description='OctOpenStack provides an '
