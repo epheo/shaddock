@@ -29,27 +29,27 @@ OctOpenStack
 
 USAGE
 ------
-```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]]
-   						    [-k [service_name]] [-i [service_name]] [-n [service_name]]```
+> ```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]]```    
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```[-k [service_name]] [-i [service_name]] [-n [service_name]]```
 
 Run without [service_name] for all services:
-> octopenstack -b
+> ```octopenstack -b```
 
 Octopenstack need **sudo** rights.
 
 Use command only to interact with all services, you can also specify a container name.
 
 ### build
-> -b [service_name], 
-> --build [service_name]
+> ```-b [service_name], ```  
+> ```--build [service_name]```
 
 Build the different Docker containers and configure them to provide the different OpenStack services.
 You can find a list of the different containers and add new ones by editing services.yaml
 All the configuration of your OpenStack Docker platform is done in configuration.yaml
 
 ### create
-> -c [service_name],
-> --create [service_name]
+> ```-c [service_name], ```  
+> ```--create [service_name]```
 
 This command will the architecture of your platform and all the network configuration.
 A frontal HAproxy manage all the API calls and can provides HighAvailability for them with an second node.
@@ -58,28 +58,28 @@ Hypervisors can be added and specified as in any other OpenStack platform by the
 
 
 ### start
-> -s [service_name],
-> --start [service_name]
+> ```-s [service_name], ```  
+> ```--start [service_name]```
 
 Start OpenStack services if the platform exist, (if not, run 'create')
 
 
 ## stop
-> -k [service_name],
-> --stop [service_name]
+> ```-k [service_name], ```  
+> ```--stop [service_name]```
 
 Stop the OpenStack services.
 
 
 ## info
-> -i [service_name],
-> --info [service_name]
+> ```-i [service_name], ```  
+> ```--info [service_name]```
 
 Get containers information
 
 ## remove
-> -r [service_name],
-> --rm [service_name]
+> ```-r [service_name], ```  
+> ```--rm [service_name]```
 
 Remove containers
 
