@@ -14,8 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import setuptools
 import os
+from setuptools import setup, find_packages
 
 requirements = ['docker-py',
                 'PyYAML>=3.1.0',
@@ -28,8 +28,6 @@ def get_config_files():
 
     config_files = [('/etc/octopenstack', ['conf/configuration.yml',
                                            'conf/services.yml'])]
-    config_path = '/etc/octopenstack'
-    config_name = 'dockerfiles'
 
     for dirname, dirnames, filenames in os.walk('dockerfiles'):
         for subdirname in dirnames:
@@ -46,27 +44,23 @@ def get_config_files():
 
     return config_files
 
-containers_config = get_config_files()
 
-setuptools.setup(
+setup(
     name='octopenstack',
     description='Easily deploy an OpenStack platform in Docker Containers',
     author='Thibaut Lapierre',
     author_email='root@epheo.eu',
     url='https://github.com/Epheo/octopenstack',
-    download_url='https://github.com/Epheo/octopenstack/archive/master.zip',
-    long_description=open("README.md", 'rb').read(),
-    packages=setuptools.find_packages(),
+    # download_url='https://github.com/Epheo/octopenstack/archive/master.zip',
+    # setup_requires=['setuptools-markdown'],
+    long_description_markdown_filename='README.md',
     license='Apache Software License',
     version='2015-0.5-dev',
-    entry_points={
-        'console_scripts': [
+    entry_points={'console_scripts': [
             'octopenstack = octopenstack:__main__'
-        ]
-    },
-    data_files=containers_config,
-    install_requires=requirements,
-    tests_require=testrequirements,
+        ]},
+    data_files=get_config_files(),
+    packages=find_packages(),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',

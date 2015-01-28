@@ -57,18 +57,15 @@ class Dico(object):
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
 
+        ports = None
+        volumes = None
+
         for service in configfile.services_keys:
             if service.lower() == self.name:
                 service_info = services_dic.get(self.name, None)
                 ports = service_info.get('ports')
                 volumes = service_info.get('volumes')
                 self.privileged = service_info.get('privileged')
-
-        try:
-           ports
-        except NameError:
-            print("Unrecognized service name")
-            exit(0)
 
         service_dic = {}
 
@@ -78,23 +75,26 @@ class Dico(object):
         ports_list = []
         ports_bind_dico = {}
 
-        for port in ports:
-            ports_list.append((port, 'tcp'))
-            ports_bind_dico[port] = ('0.0.0.0', port)
+        if ports is not None:
+            for port in ports:
+                ports_list.append((port, 'tcp'))
+                ports_bind_dico[port] = ('0.0.0.0', port)
 
         service_dic['ports'] = ports_list
         service_dic['port_bindings'] = ports_bind_dico
 
         volumes_list = []
         binds_dico = {}
-        for volume in volumes.keys():
-            volumes_list.append(volume)
-            bind = volumes.get(volume)
-            binds_dico[bind] = {'bind': volume, 'ro': False}
 
-        service_dic['volumes'] = volumes_list
-        service_dic['binds'] = binds_dico
-        service_dic['confs'] = configfile.configuration
+        if volumes is not None:
+            for volume in volumes.keys():
+                volumes_list.append(volume)
+                bind = volumes.get(volume)
+                binds_dico[bind] = {'bind': volume, 'ro': False}
+
+            service_dic['volumes'] = volumes_list
+            service_dic['binds'] = binds_dico
+            service_dic['confs'] = configfile.configuration
 
         return service_dic
 

@@ -40,23 +40,36 @@ class Image(object):
         custom_context = False
         fileobj = None
 
-        self.view.service_information(action,
-                                      self.dico.name,
-                                      self.dico.tag,
-                                      self.dico.path,
-                                      self.configfile.nocache)
+        if self.name == 'base':
+            for line in dockerapi.build(self.dico.path,
+                                        self.dico.tag,
+                                        quiet,
+                                        fileobj,
+                                        self.configfile.nocache,
+                                        rm,
+                                        stream,
+                                        timeout,
+                                        custom_context):
+                self.view.display_stream(line)
+        elif self.dico.tag is not None:
+            self.view.service_information(action,
+                                          self.dico.name,
+                                          self.dico.tag,
+                                          self.dico.path,
+                                          self.configfile.nocache)
 
-        for line in dockerapi.build(self.dico.path,
-                                    self.dico.tag,
-                                    quiet,
-                                    fileobj,
-                                    self.configfile.nocache,
-                                    rm,
-                                    stream,
-                                    timeout,
-                                    custom_context):
-            self.view.display_stream(line)
-
+            for line in dockerapi.build(self.dico.path,
+                                        self.dico.tag,
+                                        quiet,
+                                        fileobj,
+                                        self.configfile.nocache,
+                                        rm,
+                                        stream,
+                                        timeout,
+                                        custom_context):
+                self.view.display_stream(line)
+        else:
+            print("Unrecognized service name")
 
     def create(self):
         action = 'creating'
