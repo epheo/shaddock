@@ -15,45 +15,91 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import sys
 import argparse
-from octopenstack import model
-from octopenstack import view
-from octopenstack import backend
+# from octopenstack \
+import backend, model
 
 def __main__():
-    parser = argparse.ArgumentParser(description='Description of your program')
-    parser.add_argument('-b','--build', help='Build container(s)', default='all')
-    parser.add_argument('-c','--create', help='Create container(s)', default='all')
-    parser.add_argument('-s','--start', help='Start container(s)', default='all')
-    parser.add_argument('-k','--kill', help='Stop (kill) container(s)', default='all')
-    parser.add_argument('-i','--info', help='Get info about container(s)', default='all')
-    parser.add_argument('-n','--net', help='Get IP of container(s)', default='all')
+    parser = argparse.ArgumentParser(description='OctOpenStack provides an '
+                                                 'OpenStack platform deployed '
+                                                 'in Docker containers and '
+                                                 'who provides and manages '
+                                                 'Docker containers as cloud '
+                                                 'instances.')
+    parser.add_argument('-b', '--build',
+                        nargs='?',
+                        action='store',
+                        help='Build container(s)',
+                        default=False)
+    parser.add_argument('-c', '--create',
+                        nargs='?',
+                        action='store',
+                        help='Create container(s)',
+                        default=False)
+    parser.add_argument('-s', '--start',
+                        nargs='?',
+                        action='store',
+                        help='Start container(s)',
+                        default=False)
+    parser.add_argument('-k', '--stop',
+                        nargs='?',
+                        action='store',
+                        help='Stop container(s)',
+                        default=False)
+    parser.add_argument('-i', '--info',
+                        nargs='?',
+                        action='store',
+                        help='Get info about container(s)',
+                        default=False)
+    parser.add_argument('-n', '--net',
+                        nargs='?',
+                        action='store',
+                        help='Get IP of container(s)',
+                        default=False)
     args = vars(parser.parse_args())
 
-    if args['build'] == 'all':
-#        for i in self.model.services.get(service, None):
-#            containor = backend.Container() i.title 
-        pass
-    elif (args.build):
-        service = args['build']
-        pass
+    if args['build'] is not False:
+        if args['build'] is not None:
+            image = backend.Image(args['build'])
+            image.build()
+            print('%s successfully built' % args['build'])
+        else:
+            print('Je build all')
 
-    if args['create'] == 'all':
-        # code here
-        pass
+    if args['create'] is not False:
+        if args['create'] is not None:
+            image = backend.Image(args['create'])
+            image.create()
+            print('%s successfully created' % args['create'])
+        else:
+            print('Je create all')
 
-    if args['start'] == 'all':
-        # code here
-        pass
+    if args['start'] is not False:
+        if args['start'] is not None:
+            container = backend.Container(args['start'])
+            container.start()
+            print('%s successfully started' % args['start'])
+        else:
+            print('Je start all')
 
-    if args['kill'] == 'all':
-        # code here
-        pass
+    if args['stop'] is not False:
+        if args['stop'] is not None:
+            container = backend.Container(args['stop'])
+            container.stop()
+            print('%s successfully stoped' % args['stop'])
+        else:
+            print('Je kill all')
 
-    if args['info'] == 'all':
-        # code here
-        pass
+    if args['info'] is not False:
+        if args['info'] is not None:
+            container = backend.Container(args['info'])
+            infos = container.get_info()
+            print('%s info:\n'
+                  '%s' % (args['info'], infos))
+        else:
+            print('Je info all')
 
-    if args['net'] == 'all':
-        # code here
-        pass
+
+if __name__ == '__main__':
+    sys.exit(__main__())

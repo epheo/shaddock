@@ -16,7 +16,8 @@
 #    under the License.
 
 import docker
-from octopenstack import view, model
+# from octopenstack \
+import view, model
 
 dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
                           version='1.12',
@@ -102,45 +103,31 @@ class Container(object):
             self.id, self.ip, self.hostname = self.get_info()
 
     def start(self):
-        action = 'starting'
-        publish_all_ports = True
+        print('Starting %s\n'
+              'id: %s' % self.tag, self.id)
 
-        self.view.service_information(action,
-                                      self.id,
-                                      self.dico.port_bindings,
-                                      self.dico.privileged)
         dockerapi.start(self.id,
                         self.dico.binds,
                         self.dico.port_bindings,
-                        publish_all_ports)
+                        'True')
 
     def stop(self, rm):
-        launched_containers = self.get_info()
-        if bool(launched_containers) is True:
-            containers = launched_containers.keys()
-            for container in containers:
-                container_infos = launched_containers.get(container)
-                dockerid = container_infos.get('dockerid')
-                self.view.stopping(self.tag)
-                timeout = 30
-                dockerapi.stop(dockerid, timeout)
-                if rm is True:
-                    self.view.removing(self.tag)
-                    dockerapi.remove_container(dockerid)
-                else:
-                    pass
-        else:
-            self.view.notlaunched(self.tag)
+        print('Stopping %s...' % self.tag)
+        dockerapi.stop(self.id, '30')
+        if rm is True:
+            print('Removing %s...' % self.tag)
+            dockerapi.remove_container(self.id)
 
     def get_info(self):
         containers_list = dockerapi.containers()
         if containers_list:
             for containers in containers_list:
                 c_id = containers.get('Id')
-                container_infos = dockerapi.inspect_container(c_id)
+                container_info = dockerapi.inspect_container(c_id)
 
-                config = container_infos.get('Config')
+                config = container_info.get('Config')
                 if config.get('Image') == self.tag:
-                    network = container_infos.get('NetworkSettings')
+                    network = container_info.get('NetworkSettings')
+
                     return (c_id, network.get('IPAddress'),
                             config.get('Hostname'))

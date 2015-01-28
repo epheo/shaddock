@@ -39,8 +39,12 @@ class Dico(object):
                 ports = service_info.get('ports')
                 volumes = service_info.get('volumes')
                 self.privileged = service_info.get('privileged')
-#            else:
-#                print("No entry found for this service name")
+
+        try:
+           ports
+        except NameError:
+            print("Unrecognized service name")
+            exit(0)
 
         service_dic = {}
 
@@ -51,8 +55,8 @@ class Dico(object):
         ports_bind_dico = {}
 
         for port in ports:
-          ports_list.append((port, 'tcp'))
-          ports_bind_dico[port] = ('0.0.0.0', port)
+            ports_list.append((port, 'tcp'))
+            ports_bind_dico[port] = ('0.0.0.0', port)
 
         service_dic['ports'] = ports_list
         service_dic['port_bindings'] = ports_bind_dico
