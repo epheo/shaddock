@@ -29,6 +29,7 @@ class Image(object):
         self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
+        self.configfile = model.ConfigFile()
 
     def build(self):
         action = 'building'
@@ -43,18 +44,19 @@ class Image(object):
                                       self.dico.name,
                                       self.dico.tag,
                                       self.dico.path,
-                                      self.dico.nocache)
+                                      self.configfile.nocache)
 
         for line in dockerapi.build(self.dico.path,
                                     self.dico.tag,
                                     quiet,
                                     fileobj,
-                                    self.dico.nocache,
+                                    self.configfile.nocache,
                                     rm,
                                     stream,
                                     timeout,
                                     custom_context):
             self.view.display_stream(line)
+
 
     def create(self):
         action = 'creating'

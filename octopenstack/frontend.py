@@ -57,6 +57,7 @@ def __main__():
                         help='Get IP of container(s)',
                         default=False)
     args = vars(parser.parse_args())
+    cf = model.ConfigFile()
 
     if args['build'] is not False:
         if args['build'] is not None:
@@ -64,7 +65,12 @@ def __main__():
             image.build()
             print('%s successfully built' % args['build'])
         else:
-            print('Je build all')
+            image = backend.Image('base')
+            image.build()
+
+            for i in cf.services_keys:
+                image = backend.Image(i)
+                image.build()
 
     if args['create'] is not False:
         if args['create'] is not None:
@@ -72,7 +78,9 @@ def __main__():
             image.create()
             print('%s successfully created' % args['create'])
         else:
-            print('Je create all')
+            for i in cf.services_keys:
+                image = backend.Image(i)
+                image.build()
 
     if args['start'] is not False:
         if args['start'] is not None:
@@ -80,7 +88,9 @@ def __main__():
             container.start()
             print('%s successfully started' % args['start'])
         else:
-            print('Je start all')
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.create()
 
     if args['stop'] is not False:
         if args['stop'] is not None:
@@ -88,7 +98,9 @@ def __main__():
             container.stop()
             print('%s successfully stoped' % args['stop'])
         else:
-            print('Je kill all')
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.stop()
 
     if args['info'] is not False:
         if args['info'] is not None:
@@ -97,7 +109,9 @@ def __main__():
             print('%s info:\n'
                   '%s' % (args['info'], infos))
         else:
-            print('Je info all')
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.info()
 
 
 if __name__ == '__main__':

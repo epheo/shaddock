@@ -1,15 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#    Copyright (C) 2014 Thibaut Lapierre <root@epheo.eu>. All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
 import yaml
-import os
-import socket
+
+
+class ConfigFile(object):
+
+    def __init__(self):
+        self.config_path = '/etc/octopenstack'
+
+        services_dic = open('%s/services.yml' % self.config_path, "r")
+        services_dic = services_dic.read()
+        services_dic = yaml.load(services_dic)
+        self.services_keys = services_dic.keys()
+
+        config_dic = open('%s/configuration.yml' % self.config_path, "r")
+        config_dic = config_dic.read()
+        config_dic = yaml.load(config_dic)
+        self.configuration = config_dic.get('services_config')
+        self.user = config_dic.get('user')
+        self.nocache = config_dic.get('nocache')
+
 
 class Dico(object):
 
     def __init__(self, service_name):
         self.name = service_name
-        self.config_path = '/etc/octopenstack'
         self.dictionary = self.make_service_dictionary()
         self.tag = self.dictionary.get('tag')
         self.path = self.dictionary.get('path')
@@ -21,19 +51,13 @@ class Dico(object):
         self.privileged = self.dictionary.get('privileged')
 
     def make_service_dictionary(self):
-        services_dic = open('%s/services.yml' % self.config_path, "r")
+        configfile = ConfigFile()
+
+        services_dic = open('%s/services.yml' % configfile.config_path, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
-        services_keys = services_dic.keys()
 
-        config_dic = open('%s/configuration.yml' % self.config_path, "r")
-        config_dic = config_dic.read()
-        config_dic = yaml.load(config_dic)
-        configuration = config_dic.get('services_config')
-        user = config_dic.get('user')
-        self.nocache = config_dic.get('nocache')
-
-        for service in services_keys:
+        for service in configfile.services_keys:
             if service.lower() == self.name:
                 service_info = services_dic.get(self.name, None)
                 ports = service_info.get('ports')
@@ -48,8 +72,8 @@ class Dico(object):
 
         service_dic = {}
 
-        service_dic['tag'] = '%s/oos-%s' % (user, self.name)
-        service_dic['path'] = '%s/%s' % (self.config_path, self.name)
+        service_dic['tag'] = '%s/oos-%s' % (configfile.user, self.name)
+        service_dic['path'] = '%s/%s' % (configfile.config_path, self.name)
 
         ports_list = []
         ports_bind_dico = {}
@@ -64,13 +88,13 @@ class Dico(object):
         volumes_list = []
         binds_dico = {}
         for volume in volumes.keys():
-          volumes_list.append(volume)
-          bind = volumes.get(volume)
-          binds_dico[bind] = {'bind': volume, 'ro': False}
+            volumes_list.append(volume)
+            bind = volumes.get(volume)
+            binds_dico[bind] = {'bind': volume, 'ro': False}
 
         service_dic['volumes'] = volumes_list
         service_dic['binds'] = binds_dico
-        service_dic['confs'] = configuration
+        service_dic['confs'] = configfile.configuration
 
         return service_dic
 
