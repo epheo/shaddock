@@ -80,7 +80,7 @@ def __main__():
         else:
             for i in cf.services_keys:
                 image = backend.Image(i)
-                image.build()
+                image.create()
 
     if args['start'] is not False:
         if args['start'] is not None:
@@ -90,7 +90,7 @@ def __main__():
         else:
             for i in cf.services_keys:
                 container = backend.Container(i)
-                container.create()
+                container.start()
 
     if args['stop'] is not False:
         if args['stop'] is not None:
@@ -111,7 +111,7 @@ def __main__():
         else:
             for i in cf.services_keys:
                 container = backend.Container(i)
-                container.info()
+                container.get_info()
 
 
 if __name__ == '__main__':
