@@ -40,18 +40,7 @@ class Image(object):
         custom_context = False
         fileobj = None
 
-        if self.name == 'base':
-            for line in dockerapi.build(self.dico.path,
-                                        self.dico.tag,
-                                        quiet,
-                                        fileobj,
-                                        self.configfile.nocache,
-                                        rm,
-                                        stream,
-                                        timeout,
-                                        custom_context):
-                self.view.display_stream(line)
-        elif self.dico.tag is not None:
+        if self.dico.tag is not None:
             self.view.service_information(action,
                                           self.dico.name,
                                           self.dico.tag,

@@ -8,22 +8,18 @@ OctOpenStack
 ============
 
 * [USAGE](#usage)
-  * [build](#build)
-  * [run](#run)
-  * [init](#init)
-  * [stop](#stop)
-  * [start](#start)
-  * [rm](#rm)
-  * [ip](#ip)
+  * [Build](#build)
+  * [Create](#create)
+  * [Start](#start)
+  * [Stop](#stop)
+  * [Info](#info)
+  * [Remove](#rm)
 * [CONFIGURATION](#configuration)
 * [REQUIEREMENTS](#requierements)
 * [INFORMATION](#information)
   * [Logs](#logs)
   * [Contributing](#contributing)
   * [License](#license)
-* [BackLog](#backlog)
-  * [Todo](#todo)
-  * [Done](#done)
 * [References](#references)
 
 > **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
@@ -33,52 +29,65 @@ OctOpenStack
 
 USAGE
 ------
-> sudo octopenstack command [container]
+> usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]] [-k [service_name]] [-i [service_name]] [-n [service_name]]
+
+Run without [service_name] for all services:
+> octopenstack -b
+
+Octopenstack need **sudo** rights.
 
 Use command only to interact with all services, you can also specify a container name.
 
 ### build
-> sudo octopenstack build
+> -b [service_name]
 
-Build the differents Docker containers and configure them to provide the differents OpenStack services.
-You can find a list of the differents containers and add new ones by editing services.yaml
+> --build [service_name]
+
+Build the different Docker containers and configure them to provide the different OpenStack services.
+You can find a list of the different containers and add new ones by editing services.yaml
 All the configuration of your OpenStack Docker platform is done in configuration.yaml
 
-### run
-> sudo octopenstack run
+### create
+> -c [service_name]
 
-This command will create and run the architecture of your plateform and all the network configuration.
-A frontal HAproxy manage all the API calls and can provides HighAvailabilty for them with an second node.
+> --create [service_name]
 
-Hypervisors can be addeds and specified as in any other OpenStack plateform by the CLI, Python API or Horizon Dashboard
+This command will the architecture of your platform and all the network configuration.
+A frontal HAproxy manage all the API calls and can provides HighAvailability for them with an second node.
 
-### init
-> sudo octopenstack init
+Hypervisors can be added and specified as in any other OpenStack platform by the CLI, Python API or Horizon Dashboard
 
-Should be run after the "run" command.
-This fonction initialise all the Databases and configure the services. 
 
-### {stop, start}
-> sudo octopenstack stop
+### start
+> -s [service_name]
+
+> --start [service_name]
+
+Start OpenStack services if the platform exist, (if not, run 'create')
+
+
+## stop
+> -k [service_name]
+
+> --stop [service_name]
 
 Stop the OpenStack services.
 
 > sudo octopenstack start
 
-Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
+## info
+> -i [service_name]
 
-### rm
-> sudo octopenstack rm
-Remove the services
+> --info [service_name]
 
-### ip
-> sudo octopenstack ip
-Display services IP address 
+Get containers informations
 
-### console
-> sudo octopenstack ip
+## remove
+> -r [service_name]
 
-Open a managment console to interact with your OpenStack platform.
+> --rm [service_name]
+
+Remove containers
 
 CONFIGURATION
 -------------
