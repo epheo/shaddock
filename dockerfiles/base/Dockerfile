@@ -6,7 +6,7 @@ RUN yum -y update
 
 RUN yum -y install mysql MySQL-python yum-plugin-priorities initscripts openssh-server
 RUN yum -y install http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-3.noarch.rpm
-RUN yum -y install http://ftp.astral.ro/mirrors/fedora/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+RUN yum -y install epel-release
 RUN yum -y install openstack-utils openstack-selinux
 
 #Setup supervisord
