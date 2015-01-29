@@ -106,8 +106,8 @@ class Container(object):
             self.id, self.ip, self.hostname = self.get_info()
 
     def start(self):
-        print('Starting %s\n'
-              'id: %s' % self.tag, self.id)
+        print(('Starting %s\n'
+              'id: %s') % (self.tag, self.id))
 
         dockerapi.start(self.id,
                         self.dico.binds,
