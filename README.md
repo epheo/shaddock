@@ -29,8 +29,7 @@ OctOpenStack
 
 USAGE
 ------
-> ```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]]```    
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```[-k [service_name]] [-i [service_name]] [-n [service_name]]```
+> ```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]] [-k [service_name]] [-i [service_name]] [-n [service_name]]```
 
 Run without [service_name] for all services:
 > ```octopenstack -b```
