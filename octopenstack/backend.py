@@ -18,10 +18,6 @@
 import docker
 from octopenstack import view, model
 
-dockerapi = docker.Client(base_url='unix://var/run/docker.sock',
-                          version='1.12',
-                          timeout=10)
-
 
 class Image(object):
 
@@ -30,6 +26,10 @@ class Image(object):
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.configfile = model.ConfigFile()
+
+        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
+                                       version='1.12',
+                                       timeout=10)
 
     def build(self):
         action = 'building'
@@ -47,15 +47,15 @@ class Image(object):
                                           self.dico.path,
                                           self.configfile.nocache)
 
-            for line in dockerapi.build(self.dico.path,
-                                        self.dico.tag,
-                                        quiet,
-                                        fileobj,
-                                        self.configfile.nocache,
-                                        rm,
-                                        stream,
-                                        timeout,
-                                        custom_context):
+            for line in self.dockerapi.build(self.dico.path,
+                                             self.dico.tag,
+                                             quiet,
+                                             fileobj,
+                                             self.configfile.nocache,
+                                             rm,
+                                             stream,
+                                             timeout,
+                                             custom_context):
                 self.view.display_stream(line)
         else:
             print("Unrecognized service name")
@@ -78,15 +78,15 @@ class Image(object):
                                       self.dico.volumes,
                                       self.dico.name)
 
-        id_container = dockerapi.create_container(self.dico.tag,
-                                                  command,
-                                                  self.name,
-                                                  user,
-                                                  detach,
-                                                  self.dico.ports,
-                                                  self.dico.config,
-                                                  self.dico.volumes,
-                                                  self.dico.name)
+        id_container = self.dockerapi.create_container(self.dico.tag,
+                                                       command,
+                                                       self.name,
+                                                       user,
+                                                       detach,
+                                                       self.dico.ports,
+                                                       self.dico.config,
+                                                       self.dico.volumes,
+                                                       self.dico.name)
         return id_container
 
 
@@ -97,6 +97,11 @@ class Container(object):
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
+        self.configfile = model.ConfigFile()
+
+        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
+                                       version='1.12',
+                                       timeout=10)
 
         self.id, self.ip, self.hostname = self.get_info()
         if not self.id:
@@ -109,25 +114,27 @@ class Container(object):
         print(('Starting %s\n'
               'id: %s') % (self.tag, self.id))
 
-        dockerapi.start(self.id,
-                        self.dico.binds,
-                        self.dico.port_bindings,
-                        'True')
+        self.dockerapi.start(self.id,
+                             self.dico.binds,
+                             self.dico.port_bindings,
+                             'True')
 
     def stop(self):
         print('Stopping %s...' % self.tag)
-        dockerapi.stop(self.id, '30')
+        timeout = '30'
+        self.dockerapi.stop(self.id, timeout)
 
     def remove(self):
         print('Removing %s...' % self.tag)
-        dockerapi.remove_container(self.id)
+        self.dockerapi.stop(self.id, '30')
+        self.dockerapi.remove_container(self.id)
 
     def get_info(self):
-        containers_list = dockerapi.containers(all=True)
+        containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             for containers in containers_list:
                 c_id = containers.get('Id')
-                container_info = dockerapi.inspect_container(c_id)
+                container_info = self.dockerapi.inspect_container(c_id)
 
                 config = container_info.get('Config')
                 if config.get('Image') == self.tag:

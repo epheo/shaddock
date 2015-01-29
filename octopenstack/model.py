@@ -33,6 +33,7 @@ class ConfigFile(object):
         config_dic = yaml.load(config_dic)
         self.configuration = config_dic.get('services_config')
         self.user = config_dic.get('user')
+        self.docker_url = config_dic.get('docker_url')
         self.nocache = config_dic.get('nocache')
 
 
