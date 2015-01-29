@@ -19,6 +19,7 @@ import sys
 import argparse
 from octopenstack import backend, model
 
+
 def __main__():
     parser = argparse.ArgumentParser(description='OctOpenStack provides an '
                                                  'OpenStack platform deployed '
@@ -112,7 +113,6 @@ def __main__():
             for i in cf.services_keys:
                 container = backend.Container(i)
                 container.get_info()
-
 
 if __name__ == '__main__':
     sys.exit(__main__())

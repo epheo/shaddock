@@ -132,5 +132,6 @@ class Container(object):
                 if config.get('Image') == self.tag:
                     network = container_info.get('NetworkSettings')
 
-                    return (c_id, network.get('IPAddress'),
-                            config.get('Hostname'))
+                    ip = network.get('IPAddress')
+                    name = config.get('Hostname')
+                    return c_id, ip, name
