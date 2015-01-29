@@ -95,6 +95,8 @@ Both are in [YAML](http://www.yaml.org/)
 Docker instances are (will be :) ) builds by templated dockerfiles
 You will find the Services Dockerfiles templates in 'dockerfiles/'
 
+In order to use Octopenstack with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
+
 REQUIEREMENTS
 -------------
 - [Docker](https://docs.docker.com/installation/archlinux/)
