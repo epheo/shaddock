@@ -1,0 +1,159 @@
+OctOpenStack Configuration
+=========================
+
+Mysql
+-----
+mysql -u admin -h 10.0.0.3 -p
+
+CREATE DATABASE keystone;
+GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';
+GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';
+
+CREATE DATABASE glance;
+GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
+
+CREATE DATABASE nova;
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+
+exit
+
+
+
+Keystone
+--------
+## Configure Keystone service
+openstack-config --set /etc/keystone/keystone.conf database connection mysql://keystone:KEYSTONE_DBPASS@10.0.0.3/keystone
+
+ADMIN_TOKEN=$(openssl rand -hex 10)
+echo $ADMIN_TOKEN
+openstack-config --set /etc/keystone/keystone.conf DEFAULT admin_token $ADMIN_TOKEN
+
+keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+chown -R keystone:keystone /etc/keystone/ssl
+chmod -R o-rwx /etc/keystone/ssl
+
+su -s /bin/sh -c "keystone-manage db_sync" keystone
+
+#(crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/keystone-tokenflush.log 2>&1' >> /var/spool/cron/keystone
+#sudo octopenstack restart keystone
+
+## Define users, tenants, and roles
+keystone user-create --name=admin --pass=password --email=root@epheo.eu
+keystone role-create --name=admin
+keystone tenant-create --name=admin --description="Admin Tenant"
+keystone user-role-add --user=admin --tenant=admin --role=admin
+keystone user-role-add --user=admin --role=_member_ --tenant=admin
+keystone user-create --name=demo --pass=DEMO_PASS --email=DEMO_EMAIL
+keystone tenant-create --name=demo --description="Demo Tenant"
+keystone user-role-add --user=demo --role=_member_ --tenant=demo
+keystone tenant-create --name=service --description="Service Tenant"
+
+## Define services and API endpoints
+keystone service-create --name=keystone --type=identity --description="OpenStack Identity"
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ identity / {print $2}') --publicurl=http://10.0.0.3:5000/v2.0 --internalurl=http://10.0.0.3:5000/v2.0 --adminurl=http://10.0.0.3:35357/v2.0
+
+## verify ?
+
+
+Glance
+------
+openstack-config --set /etc/glance/glance-api.conf database connection mysql://glance:GLANCE_DBPASS@10.0.0.3/glance
+openstack-config --set /etc/glance/glance-registry.conf database connection mysql://glance:GLANCE_DBPASS@10.0.0.3/glance
+
+su -s /bin/sh -c "glance-manage db_sync" glance
+
+export OS_SERVICE_TOKEN=e27be1e2bac62b5c3736
+export OS_SERVICE_ENDPOINT=http://10.0.0.3:35357/v2.0
+
+keystone user-create --name=glance --pass=GLANCE_PASS  --email=glance@example.com
+keystone user-role-add --user=glance --tenant=service --role=admin
+
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://10.0.0.3:5000
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_host 10.0.0.3
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_port 35357
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_protocol http
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_user glance
+openstack-config --set /etc/glance/glance-api.conf keystone_authtoken admin_password GLANCE_PASS
+openstack-config --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://10.0.0.3:5000
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken auth_host 10.0.0.3
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken auth_port 35357
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken auth_protocol http
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_user glance
+openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken admin_password GLANCE_PASS
+openstack-config --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
+
+keystone service-create --name=glance --type=image --description="OpenStack Image Service"
+keystone endpoint-create \
+  --service-id=$(keystone service-list | awk '/ image / {print $2}') \
+  --publicurl=http://10.0.0.3:9292 \
+  --internalurl=http://10.0.0.3:9292 \
+  --adminurl=http://10.0.0.3:9292
+
+#sudo octopenstack restart glance
+
+
+Horizon
+-------
+sed -i -e "s/^OPENSTACK_HOST.*/OPENSTACK_HOST = \"10.0.0.3\"/g" /etc/openstack-dashboard/local_settings
+sed -i -e "s/^ALLOWED_HOST.*/ALLOWED_HOST = \"\*\"/g" /etc/openstack-dashboard/local_settings
+sed -i -e "s/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = \"http:\/\/10.0.0.3:5000\/v2.0\"/g" /etc/openstack-dashboard/local_settings
+
+
+Nova
+----
+openstack-config --set /etc/nova/nova.conf database connection mysql://nova:NOVA_DBPASS@10.0.0.3/nova
+
+openstack-config --set /etc/nova/nova.conf DEFAULT rpc_backend qpid
+openstack-config --set /etc/nova/nova.conf DEFAULT qpid_hostname 10.0.0.3
+
+openstack-config --set /etc/nova/nova.conf DEFAULT my_ip 10.0.0.3
+openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_listen 10.0.0.3
+openstack-config --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address 10.0.0.3
+
+su -s /bin/sh -c "nova-manage db sync" nova
+
+export OS_SERVICE_TOKEN=e27be1e2bac62b5c3736
+export OS_SERVICE_ENDPOINT=http://10.0.0.3:35357/v2.0
+
+keystone user-create --name=nova --pass=NOVA_PASS --email=nova@example.com
+keystone user-role-add --user=nova --tenant=service --role=admin
+
+openstack-config --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_uri http://10.0.0.3:5000
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_host 10.0.0.3
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_protocol http
+openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_port 35357
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_user nova
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
+openstack-config --set /etc/nova/nova.conf keystone_authtoken admin_password NOVA_PASS
+
+keystone service-create --name=nova --type=compute --description="OpenStack Compute"
+keystone endpoint-create \
+  --service-id=$(keystone service-list | awk '/ compute / {print $2}') \
+  --publicurl=http://10.0.0.3:8774/v2/%\(tenant_id\)s \
+  --internalurl=http://10.0.0.3:8774/v2/%\(tenant_id\)s \
+  --adminurl=http://10.0.0.3:8774/v2/%\(tenant_id\)s
+
+
+
+
+TEST
+----
+export OS_USERNAME=admin
+export OS_PASSWORD=password
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL=http://10.0.0.3:35357/v2.0
+
+#Keystone
+keystone --os-username=admin --os-password=password --os-auth-url=http://10.0.0.3:35357/v2.0 token-get
+keystone --os-username=admin --os-password=password --os-tenant-name=admin --os-auth-url=http://10.0.0.3:35357/v2.0 token-get
+
+#Glance 
+cd /tmp/images/
+wget http://cdn.download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img
+glance image-create --name "cirros-0.3.2-x86_64" --disk-format qcow2   --container-format bare --is-public True --progress < cirros-0.3.2-x86_64-disk.img

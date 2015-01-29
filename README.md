@@ -1,6 +1,6 @@
 ![alt text](https://raw.githubusercontent.com/Epheo/octopenstack/master/documentation/images/octopenstack.png "OctOpenStack" )
 
-OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and who provides and manages Docker containers as cloud instances.
+OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and witch provides and manages Docker containers as cloud instances.
 
 -------------
 
@@ -8,82 +8,83 @@ OctOpenStack
 ============
 
 * [USAGE](#usage)
-  * [build](#build)
-  * [run](#run)
-  * [init](#init)
-  * [stop](#stop)
-  * [start](#start)
-  * [rm](#rm)
-  * [ip](#ip)
+  * [Build](#build)
+  * [Create](#create)
+  * [Start](#start)
+  * [Stop](#stop)
+  * [Info](#info)
+  * [Remove](#rm)
 * [CONFIGURATION](#configuration)
 * [REQUIEREMENTS](#requierements)
 * [INFORMATION](#information)
   * [Logs](#logs)
   * [Contributing](#contributing)
   * [License](#license)
-* [BackLog](#backlog)
-  * [Todo](#todo)
-  * [Done](#done)
 * [References](#references)
-* [UML Architecture Diagram](#uml-architecture-diagram)
 
-> **Note:** This program is in devellopment! Services auto configuration is broken since migration to CentOS7, you can SSH ('ip' command) into containers by specifying an rsa key in base dockerfile directory to configure them. I'm actually working on it on [autoconfig](https://github.com/Epheo/octopenstack/tree/autoconfig) branch.
+> **Note:** This program is in development! Services auto configuration is broken since migration to CentOS7.
 
 
-```sudo pip install octopenstack``` ou ```sudo python setup.py install``` 
+```sudo python setup.py install``` ou ```sudo pip install octopenstack```
 
 USAGE
 ------
-> sudo octopenstack command [container]
+> ```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]]```    
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```[-k [service_name]] [-i [service_name]] [-n [service_name]]```
+
+Run without [service_name] for all services:
+> ```octopenstack -b```
+
+Octopenstack need **sudo** rights.
 
 Use command only to interact with all services, you can also specify a container name.
 
 ### build
-> sudo octopenstack build
+> ```-b [service_name], ```  
+> ```--build [service_name]```
 
-Build the differents Docker containers and configure them to provide the differents OpenStack services.
-You can find a list of the differents containers and add new ones by editing services.yaml
+Build the different Docker containers and configure them to provide the different OpenStack services.
+You can find a list of the different containers and add new ones by editing services.yaml
 All the configuration of your OpenStack Docker platform is done in configuration.yaml
 
-### run
-> sudo octopenstack run
+### create
+> ```-c [service_name], ```  
+> ```--create [service_name]```
 
-This command will create and run the architecture of your plateform and all the network configuration.
-A frontal HAproxy manage all the API calls and can provides HighAvailabilty for them with an second node.
+This command will the architecture of your platform and all the network configuration.
+A frontal HAproxy manage all the API calls and can provides HighAvailability for them with an second node.
 
-Hypervisors can be addeds and specified as in any other OpenStack plateform by the CLI, Python API or Horizon Dashboard
+Hypervisors can be added and specified as in any other OpenStack platform by the CLI, Python API or Horizon Dashboard
 
-### init
-> sudo octopenstack init
 
-Should be run after the "run" command.
-This fonction initialise all the Databases and configure the services. 
+### start
+> ```-s [service_name], ```  
+> ```--start [service_name]```
 
-### {stop, start}
-> sudo octopenstack stop
+Start OpenStack services if the platform exist, (if not, run 'create')
+
+
+## stop
+> ```-k [service_name], ```  
+> ```--stop [service_name]```
 
 Stop the OpenStack services.
 
-> sudo octopenstack start
 
-Start OpenStack services if the platform exist, (please prefer 'run' if he doesn't)
+## info
+> ```-i [service_name], ```  
+> ```--info [service_name]```
 
-### rm
-> sudo octopenstack rm
-Remove the services
+Get containers information
 
-### ip
-> sudo octopenstack ip
-Display services IP address 
+## remove
+> ```-r [service_name], ```  
+> ```--rm [service_name]```
 
-### console
-> sudo octopenstack ip
-
-Open a managment console to interact with your OpenStack platform.
+Remove containers
 
 CONFIGURATION
 -------------
-
 	- services.yaml
 	- configuration.yaml
 
@@ -92,7 +93,7 @@ All the configurations (passwords, users, etc.) are in `configuration.yaml`
 
 Both are in [YAML](http://www.yaml.org/)
 
-Docker instances are (will be :) ) builds by templateds dockerfiles
+Docker instances are (will be :) ) builds by templated dockerfiles
 You will find the Services Dockerfiles templates in 'dockerfiles/'
 
 REQUIEREMENTS
@@ -108,7 +109,7 @@ INFORMATION
 - MVC architecture model.
 
 ### Logs
-You can found the differents logs files in /var/log/octopenstack
+You can found the different logs files in /var/log/octopenstack
 	> tail -f /var/log/octopenstack/*.log
 
 ### Contributing
@@ -121,4 +122,4 @@ OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); 
 References
 ----------
 - [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
-- [Docker-py API Docuementation](https://github.com/docker/docker-py/blob/master/README.md)
+- [Docker-py API Documentation](https://github.com/docker/docker-py/blob/master/README.md)

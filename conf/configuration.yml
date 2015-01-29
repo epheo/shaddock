@@ -3,6 +3,12 @@
 #####################################################
 
 user: octopenstack
+
+docker_url: unix://var/run/docker.sock
+
+# For Mac OS with Boot2Docker:
+# docker_url : tcp://192.168.59.103:2375
+
 ## Specify Docker repository to build containers with
 
 nocache: False
