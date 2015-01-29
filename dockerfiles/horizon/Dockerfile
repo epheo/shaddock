@@ -12,11 +12,8 @@ ADD supervisord.conf /etc/supervisord.conf
 
 VOLUME  ["/var/log/horizon"]
 
-# Add scripts
-ADD run.sh /run.sh
-RUN chmod 755 ./*.sh
 
 EXPOSE 80
 EXPOSE 11211
 
-CMD ["/run.sh"]
+CMD ["/usr/bin/supervisord", "-n"]
