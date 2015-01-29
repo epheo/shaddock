@@ -114,12 +114,13 @@ class Container(object):
                         self.dico.port_bindings,
                         'True')
 
-    def stop(self, rm):
+    def stop(self):
         print('Stopping %s...' % self.tag)
         dockerapi.stop(self.id, '30')
-        if rm is True:
-            print('Removing %s...' % self.tag)
-            dockerapi.remove_container(self.id)
+
+    def remove(self):
+        print('Removing %s...' % self.tag)
+        dockerapi.remove_container(self.id)
 
     def get_info(self):
         containers_list = dockerapi.containers(all=True)

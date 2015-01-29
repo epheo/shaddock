@@ -42,7 +42,7 @@ def __main__():
                         action='store',
                         help='Start container(s)',
                         default=False)
-    parser.add_argument('-k', '--stop',
+    parser.add_argument('--stop',
                         nargs='?',
                         action='store',
                         help='Stop container(s)',
@@ -52,10 +52,10 @@ def __main__():
                         action='store',
                         help='Get info about container(s)',
                         default=False)
-    parser.add_argument('-n', '--net',
+    parser.add_argument('--rm',
                         nargs='?',
                         action='store',
-                        help='Get IP of container(s)',
+                        help=' container(s)',
                         default=False)
     args = vars(parser.parse_args())
     cf = model.ConfigFile()
@@ -102,6 +102,16 @@ def __main__():
             for i in cf.services_keys:
                 container = backend.Container(i)
                 container.stop()
+
+    if args['rm'] is not False:
+        if args['stop'] is not None:
+            container = backend.Container(args['stop'])
+            container.remove()
+            print('%s successfully removed' % args['stop'])
+        else:
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.remove()
 
     if args['info'] is not False:
         if args['info'] is not None:
