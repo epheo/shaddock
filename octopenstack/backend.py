@@ -124,9 +124,11 @@ class Container(object):
         self.dockerapi.stop(self.id)
 
     def remove(self):
-        print('Removing %s...' % self.tag)
         self.dockerapi.stop(self.id)
+        print('Removing container %s' % self.id)
         self.dockerapi.remove_container(self.id)
+
+
 
     def get_info(self):
         containers_list = self.dockerapi.containers(all=True)
