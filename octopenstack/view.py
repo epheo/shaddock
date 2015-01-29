@@ -13,10 +13,7 @@ class View(object):
         print('')
 
     def service_information(self, action, name, *argv):
-        print('%s service %s with arguments:' % (action, name) )
-        for arg in argv:
-            print(arg)
-        print('')
+        print('%s service %s' % (action, name) )
 
     def service_not_found(self, name):
         print('The service "%s" does not exist' % name)
@@ -26,12 +23,13 @@ class View(object):
         print('Available commands are: build, create or start')
 
     def display_stream(self, line):
-        jsonstream =  json.loads(line)
+
+        jsonstream =  json.loads(line.decode())
         stream = jsonstream.get('stream')
         error = jsonstream.get('error')
-        if not error==None:
+        if not error == None:
             print(error)
-        if not stream==None:
+        if not stream == None:
             print(stream)
 
     def usage():
