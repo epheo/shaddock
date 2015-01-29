@@ -121,12 +121,11 @@ class Container(object):
 
     def stop(self):
         print('Stopping %s...' % self.tag)
-        timeout = '30'
-        self.dockerapi.stop(self.id, timeout)
+        self.dockerapi.stop(self.id)
 
     def remove(self):
         print('Removing %s...' % self.tag)
-        self.dockerapi.stop(self.id, '30')
+        self.dockerapi.stop(self.id)
         self.dockerapi.remove_container(self.id)
 
     def get_info(self):
