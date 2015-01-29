@@ -98,12 +98,12 @@ class Container(object):
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
 
-        self.id, self.ip, self.hostname = self.get_info()
+        self.get_info()
         if not self.id:
             print("No containers created, I'll create one four you.")
             new_container = Image(self.name)
             new_container.create()
-            self.id, self.ip, self.hostname = self.get_info()
+            self.get_info()
 
     def start(self):
         print('Starting %s\n'
@@ -126,12 +126,12 @@ class Container(object):
         if containers_list:
             for containers in containers_list:
                 c_id = containers.get('Id')
-                container_info = dockerapi.inspect_container(c_id)
 
+                container_info = dockerapi.inspect_container(c_id)
                 config = container_info.get('Config')
                 if config.get('Image') == self.tag:
                     network = container_info.get('NetworkSettings')
 
-                    ip = network.get('IPAddress')
-                    name = config.get('Hostname')
-                    return c_id, ip, name
+                    self.id = c_id
+                    self.ip = network.get('IPAddress')
+                    self.hostname = config.get('Hostname')
