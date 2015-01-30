@@ -28,7 +28,7 @@ class Image(object):
         self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version='1.12',
+                                       version='1.13',
                                        timeout=10)
 
     def build(self):
@@ -78,7 +78,7 @@ class Image(object):
                                       self.dico.volumes,
                                       self.dico.name)
 
-        id_container = self.dockerapi.create_container(self.dico.tag,
+        id_c = self.dockerapi.create_container(self.dico.tag,
                                                        command,
                                                        self.name,
                                                        user,
@@ -87,7 +87,7 @@ class Image(object):
                                                        self.dico.config,
                                                        self.dico.volumes,
                                                        self.dico.name)
-        return id_container
+        return id_c
 
 
 class Container(object):
@@ -100,7 +100,7 @@ class Container(object):
         self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version='1.12',
+                                       version='1.13',
                                        timeout=10)
 
         self.id, self.ip, self.hostname = self.get_info()
