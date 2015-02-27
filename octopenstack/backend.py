@@ -102,8 +102,7 @@ class Container(object):
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
                                        version=self.configfile.docker_version,
                                        timeout=10)
-        if self.get_info() is not True:
-            self.id, self.ip, self.hostname = self.get_info()
+        self.id, self.ip, self.hostname = self.get_info()
 
         if not self.id:
             print("No containers created, I'll create one four you.")
