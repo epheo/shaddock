@@ -8,7 +8,7 @@ import os
 
 class InitConfig(object):
 
-    def __init__(self, name)
+    def __init__(self, name):
         self.name = name
         self.backend = backend.Container()
         self.model = model.ConfigFile()

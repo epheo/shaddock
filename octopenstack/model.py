@@ -35,6 +35,7 @@ class ConfigFile(object):
         self.user = config_dic.get('user')
         self.docker_url = config_dic.get('docker_url')
         self.nocache = config_dic.get('nocache')
+        self.docker_version = config_dic.get('docker_version')
 
 
 class Dico(object):

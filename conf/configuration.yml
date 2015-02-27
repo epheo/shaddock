@@ -5,13 +5,14 @@
 user: octopenstack
 
 docker_url: unix://var/run/docker.sock
-
 # For Mac OS with Boot2Docker:
 # docker_url : tcp://192.168.59.103:2375
 
+docker_version: '1.12'
+
 ## Specify Docker repository to build containers with
 
-nocache: False
+nocache: True
 ## Pass to True in order to force rebuild of your  
 #  containers without using previous cached builds.
 

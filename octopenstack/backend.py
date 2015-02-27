@@ -28,7 +28,7 @@ class Image(object):
         self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version='1.13',
+                                       version=self.configfile.docker_version,
                                        timeout=10)
 
     def build(self):
@@ -100,10 +100,11 @@ class Container(object):
         self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version='1.13',
+                                       version=self.configfile.docker_version,
                                        timeout=10)
+        if self.get_info() is not True:
+            self.id, self.ip, self.hostname = self.get_info()
 
-        self.id, self.ip, self.hostname = self.get_info()
         if not self.id:
             print("No containers created, I'll create one four you.")
             new_container = Image(self.name)
@@ -144,3 +145,7 @@ class Container(object):
 
                     return (c_id, network.get('IPAddress'),
                             config.get('Hostname'))
+                else:
+                    return True
+        else:
+            return True
