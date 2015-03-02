@@ -126,11 +126,23 @@ class Container(object):
             self.dockerapi.stop(self.id)
 
     def remove(self):
-        if self.started is True:
-            self.stop()
+        self.stop()
         if self.created is True:
             print('Removing container %s' % self.id)
             self.dockerapi.remove_container(self.id)
+
+    def restart(self):
+        self.stop()
+        self.start()
+
+    def display_info(self):
+        print('Name: %s' % self.name)
+        print('Created: %s' % self.created)
+        print('Started: %s' % self.started)
+        print('IP: %s' % self.ip)
+        print('ID: %s' % self.id)
+        print('Hostname: %s' % self.hostname)
+        print('Tag: %s' % self.tag)
 
     def get_info(self):
         info = {}

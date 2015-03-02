@@ -47,6 +47,11 @@ def __main__():
                         action='store',
                         help='Stop container(s)',
                         default=False)
+    parser.add_argument('--restart',
+                        nargs='?',
+                        action='store',
+                        help='Restart container(s)',
+                        default=False)
     parser.add_argument('-i', '--info',
                         nargs='?',
                         action='store',
@@ -103,6 +108,16 @@ def __main__():
                 container = backend.Container(i)
                 container.stop()
 
+    if args['restart'] is not False:
+        if args['restart'] is not None:
+            container = backend.Container(args['restart'])
+            container.restart()
+            print('%s successfully restarted' % args['restart'])
+        else:
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.restart()
+
     if args['rm'] is not False:
         if args['stop'] is not None:
             container = backend.Container(args['stop'])
@@ -116,13 +131,11 @@ def __main__():
     if args['info'] is not False:
         if args['info'] is not None:
             container = backend.Container(args['info'])
-            infos = container.get_info()
-            print('%s info:\n'
-                  '%s' % (args['info'], infos))
+            container.display_info()
         else:
             for i in cf.services_keys:
                 container = backend.Container(i)
-                container.get_info()
+                container.display_info()
 
 if __name__ == '__main__':
     sys.exit(__main__())
