@@ -164,6 +164,6 @@ class Container(object):
                     info['ip'] = network.get('IPAddress')
                     info['hostname'] = config.get('Hostname')
                     info['created'] = True
-                    if network.get('IPAddress') is not None:
+                    if info.get('ip') is not None:
                         info['started'] = True
         return info
