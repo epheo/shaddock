@@ -8,7 +8,7 @@ glance:
     - 4324
   volumes: 
     '/var/log/supervisor': '/var/log/octopenstack/glance'
-    #'/etc/glance': '/etc/octopenstack/glance/etc'
+    '/etc/glance': '/var/lib/octopenstack/glance/etc'
   privileged: false
 
 
@@ -18,7 +18,7 @@ horizon:
     - 11211 
   volumes:
     '/var/log/supervisor': '/var/log/octopenstack/horizon'
-    #'/etc/openstack-dashboard': '/etc/octopenstack/horizon/etc'
+    '/etc/openstack-dashboard': '/var/lib/octopenstack/horizon/etc'
   privileged: false
 
 
@@ -28,7 +28,7 @@ keystone:
     - 5000
   volumes:
     '/var/log/supervisor': '/var/log/octopenstack/keystone'
-    #'/etc/keystone': '/etc/octopenstack/keystone/etc'
+    '/etc/keystone': '/var/lib/octopenstack/keystone/etc'
   privileged: false
 
 
@@ -46,7 +46,7 @@ nova:
     - 8775
   volumes:
     '/var/log/supervisor': '/var/log/octopenstack/nova'
-    #'/etc/nova': '/etc/octopenstack/nova/etc'
+    '/etc/nova': '/var/lib/octopenstack/nova/etc'
   privileged: true
 
 
@@ -56,5 +56,6 @@ rabbitmq:
     - 15672
   volumes:
     '/var/log/supervisor': '/var/log/octopenstack/rabbitmq'
-    #'/etc/rabbitmq': '/etc/octopenstack/rabbitmq/etc'
+    '/etc/rabbitmq': '/var/lib/octopenstack/rabbitmq/etc'
   privileged: false
+

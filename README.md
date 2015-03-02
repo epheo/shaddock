@@ -103,16 +103,6 @@ REQUIEREMENTS
 - Docker Python API: `pip install docker-py`
 - PyYaml: `pip install PyYaml`
 
-
-INFORMATION
------------
-- OpenSTack services are deployed in CentOS7 environments.
-- MVC architecture model.
-
-### Logs
-You can found the different logs files in /var/log/octopenstack
-	> tail -f /var/log/octopenstack/*.log
-
 ### Contributing
 I'm really interested in any advice, idea, help, or contribution.
 

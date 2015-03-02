@@ -9,13 +9,13 @@ RUN yum -y install http://repos.fedorapeople.org/repos/openstack/openstack-iceho
 RUN yum -y install epel-release
 RUN yum -y install openstack-utils openstack-selinux
 
-#Setup supervisord
+# Setup supervisord
 RUN yum -y install python-setuptools
 RUN easy_install pip
 RUN pip install supervisor
 RUN mkdir -p /var/log/supervisor
 
-#Setup sshd
+# Setup sshd
 RUN mkdir -p /var/run/sshd && echo 'root:root' |chpasswd
 RUN mkdir -p /.ssh/
 ADD authorized_keys /.ssh/authorized_keys

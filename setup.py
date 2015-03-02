@@ -26,12 +26,12 @@ testrequirements = ['nose']
 
 def get_config_files():
 
-    config_files = [('/etc/octopenstack', ['conf/configuration.yml',
+    config_files = [('/var/lib/octopenstack', ['conf/configuration.yml',
                                            'conf/services.yml'])]
 
     for dirname, dirnames, filenames in os.walk('dockerfiles'):
         for subdirname in dirnames:
-            config_dest_path = ('/etc/octopenstack/%s' % subdirname)
+            config_dest_path = ('/var/lib/octopenstack/%s' % subdirname)
             for dirname, dirnames, filenames in os.walk('dockerfiles/%s' % subdirname):
                 config_dir=[]
                 for filename in filenames:
