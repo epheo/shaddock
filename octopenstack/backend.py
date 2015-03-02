@@ -101,7 +101,7 @@ class Container(object):
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
                                        version=self.configfile.docker_version,
-                                       timeout=10)
+                                       timeout=60)
         info = self.get_info()
         self.id = info.get('id')
         self.ip = info.get('ip')
