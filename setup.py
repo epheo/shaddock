@@ -34,7 +34,7 @@ setup(
     # setup_requires=['setuptools-markdown'],
     long_description_markdown_filename='README.md',
     license='Apache Software License',
-    version='2015-0.5-dev',
+    version='0.0.5',
     entry_points={'console_scripts': [
             'panama = panama:__main__'
         ]},
