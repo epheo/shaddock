@@ -1,10 +1,10 @@
-![alt text](https://github.com/Epheo/octopenstack/blob/m1s2/documentation/images/octopenstack.png?raw=true "OctOpenStack" )
+![alt text](https://github.com/Epheo/panama/blob/m1s2/documentation/images/panama.png?raw=true "Panama" )
 
-OctOpenStack provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and witch provides and manages Docker containers as cloud instances.
+Panama provides an [OpenStack](http://openstack.org) platform deployed in [Docker](http://docker.io) containers and witch provides and manages Docker containers as cloud instances.
 
 -------------
 
-OctOpenStack
+Panama
 ============
 
 * [USAGE](#usage)
@@ -25,16 +25,16 @@ OctOpenStack
 > **Note:** This program is in development! Services auto configuration is broken since migration to CentOS7.
 
 
-```sudo python setup.py install``` ou ```sudo pip install octopenstack```
+```sudo python setup.py install``` ou ```sudo pip install panama```
 
 USAGE
 ------
-> ```usage: octopenstack [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]] [-k [service_name]] [-i [service_name]] [-n [service_name]]```
+> ```usage: panama [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]] [-k [service_name]] [-i [service_name]] [-n [service_name]]```
 
 Run without [service_name] for all services:
-> ```octopenstack -b```
+> ```panama -b```
 
-Octopenstack need **sudo** rights.
+Panama need **sudo** rights.
 
 Use command only to interact with all services, you can also specify a container name.
 
@@ -95,7 +95,7 @@ Both are in [YAML](http://www.yaml.org/)
 Docker instances are (will be :) ) builds by templated dockerfiles
 You will find the Services Dockerfiles templates in 'dockerfiles/'
 
-In order to use Octopenstack with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
+In order to use Panama with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
 
 REQUIEREMENTS
 -------------
@@ -107,7 +107,7 @@ REQUIEREMENTS
 I'm really interested in any advice, idea, help, or contribution.
 
 ### License
-OctOpenStack is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+Panama is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 
 References

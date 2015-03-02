@@ -3,7 +3,7 @@
 
 from fabric.operations import local as lrun, run, add
 from fabric.api import *
-from octopenstack import backend, model
+from panama import backend, model
 import os
 
 class InitConfig(object):

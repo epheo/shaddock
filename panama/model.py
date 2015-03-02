@@ -21,7 +21,7 @@ import yaml
 class ConfigFile(object):
 
     def __init__(self):
-        self.config_path = '/etc/octopenstack'
+        self.config_path = '/var/lib/panama'
 
         services_dic = open('%s/services.yml' % self.config_path, "r")
         services_dic = services_dic.read()
@@ -71,7 +71,7 @@ class Dico(object):
 
         service_dic = {}
 
-        service_dic['tag'] = '%s/oos-%s' % (configfile.user, self.name)
+        service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
         service_dic['path'] = '%s/%s' % (configfile.config_path, self.name)
 
         ports_list = []
@@ -115,6 +115,6 @@ class Dico(object):
         #                'GLANCE_DBPASS': glance_pass
         #               },
         #      'volumes': ['/var/log/supervisor'],
-        #      'binds': {'/var/log/octopenstack/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+        #      'binds': {'/var/log/panama/glance': {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },
