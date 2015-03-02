@@ -99,39 +99,47 @@ class Container(object):
         self.tag = self.dico.tag
         self.configfile = model.ConfigFile()
 
+        info = self.get_info()
+        self.id = info.get('id')
+        self.ip = info.get('ip')
+        self.hostname = info.get('hostname')
+        self.started = info.get('started')
+        self.created = info.get('created')
+
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
                                        version=self.configfile.docker_version,
                                        timeout=10)
-        self.id, self.ip, self.hostname = self.get_info()
-
-        if not self.id:
-            print("No containers created, I'll create one four you.")
-            new_container = Image(self.name)
-            new_container.create()
-            self.id, self.ip, self.hostname = self.get_info()
 
     def start(self):
-        print(('Starting %s\n'
-              'id: %s') % (self.tag, self.id))
+        if self.started is False and self.created is True:
+            print(('Starting %s\n'
+                   'id: %s') % (self.tag, self.id))
 
-        self.dockerapi.start(self.id,
-                             self.dico.binds,
-                             self.dico.port_bindings,
-                             'True')
+            self.dockerapi.start(self.id,
+                                 self.dico.binds,
+                                 self.dico.port_bindings,
+                                 'True')
 
     def stop(self):
-        print('Stopping %s...' % self.tag)
-        self.dockerapi.stop(self.id)
+        if self.started is True:
+            print('Stopping %s...' % self.tag)
+            self.dockerapi.stop(self.id)
 
     def remove(self):
-        if self.tag is not None:
+        if self.started is True:
             self.stop()
-        print('Removing container %s' % self.id)
-        self.dockerapi.remove_container(self.id)
-
-
+        if self.created is True:
+            print('Removing container %s' % self.id)
+            self.dockerapi.remove_container(self.id)
 
     def get_info(self):
+        info = {}
+        info['id'] = None
+        info['ip'] = None
+        info['hostname'] = None
+        info['started'] = False
+        info['created'] = False
+
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             for containers in containers_list:
@@ -141,10 +149,10 @@ class Container(object):
                 config = container_info.get('Config')
                 if config.get('Image') == self.tag:
                     network = container_info.get('NetworkSettings')
-
-                    return (c_id, network.get('IPAddress'),
-                            config.get('Hostname'))
-                else:
-                    return True
-        else:
-            return True
+                    info['id'] = c_id
+                    info['ip'] = network.get('IPAddress')
+                    info['hostname'] = config.get('Hostname')
+                    info['created'] = True
+                    if config.get('IPAddress') is not None:
+                        info['started'] = True
+        return info
