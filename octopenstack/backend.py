@@ -141,7 +141,6 @@ class Container(object):
         print('Started: %s' % self.started)
         print('IP: %s' % self.ip)
         print('ID: %s' % self.id)
-        print('Hostname: %s' % self.hostname)
         print('Tag: %s \n' % self.tag)
 
     def get_info(self):
@@ -165,6 +164,6 @@ class Container(object):
                     info['ip'] = network.get('IPAddress')
                     info['hostname'] = config.get('Hostname')
                     info['created'] = True
-                    if config.get('IPAddress') is not None:
+                    if network.get('IPAddress') is not None:
                         info['started'] = True
         return info
