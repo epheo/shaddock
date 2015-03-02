@@ -119,10 +119,10 @@ def __main__():
                 container.restart()
 
     if args['rm'] is not False:
-        if args['stop'] is not None:
-            container = backend.Container(args['stop'])
+        if args['rm'] is not None:
+            container = backend.Container(args['rm'])
             container.remove()
-            print('%s successfully removed' % args['stop'])
+            print('%s successfully removed' % args['rm'])
         else:
             for i in cf.services_keys:
                 container = backend.Container(i)

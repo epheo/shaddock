@@ -142,7 +142,7 @@ class Container(object):
         print('IP: %s' % self.ip)
         print('ID: %s' % self.id)
         print('Hostname: %s' % self.hostname)
-        print('Tag: %s' % self.tag)
+        print('Tag: %s \n' % self.tag)
 
     def get_info(self):
         info = {}
