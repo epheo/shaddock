@@ -1,8 +1,8 @@
 #####################################################
-## OCTOPENSTACK: Services Configuration Definition ##
+## PANAMA: Services Configuration Definition ##
 #####################################################
 
-user: octopenstack
+user: panama
 
 docker_url: unix://var/run/docker.sock
 # For Mac OS with Boot2Docker:

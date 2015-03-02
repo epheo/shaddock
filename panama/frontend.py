@@ -17,11 +17,11 @@
 
 import sys
 import argparse
-from octopenstack import backend, model
+from panama import backend, model
 
 
 def __main__():
-    parser = argparse.ArgumentParser(description='OctOpenStack provides an '
+    parser = argparse.ArgumentParser(description='Panama provides an '
                                                  'OpenStack platform deployed '
                                                  'in Docker containers and '
                                                  'who provides and manages '

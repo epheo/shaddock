@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 
-octopenstack_rsa_key*
+panama_rsa_key*
 *.swp
 .idea/
 

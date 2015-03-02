@@ -16,7 +16,7 @@
 #    under the License.
 
 import docker
-from octopenstack import view, model
+from panama import view, model
 
 
 class Image(object):

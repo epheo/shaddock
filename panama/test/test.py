@@ -3,7 +3,7 @@
 
 import unittest
 from pprint import pprint
-from octopenstack import model
+from panama import model
 
 class ModelTests(unittest.TestCase):
 

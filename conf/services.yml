@@ -1,5 +1,5 @@
 ####################################################
-## OCTOPENSTACK: Services Architecture Definition ##
+## PANAMA: Services Architecture Definition ##
 ####################################################
 
 glance:
@@ -7,8 +7,8 @@ glance:
     - 9292
     - 4324
   volumes: 
-    '/var/log/supervisor': '/var/log/octopenstack/glance'
-    '/etc/glance': '/var/lib/octopenstack/glance/etc'
+    '/var/log/supervisor': '/var/log/panama/glance'
+    '/etc/glance': '/var/lib/panama/glance/etc'
   privileged: false
 
 
@@ -17,8 +17,8 @@ horizon:
     - 80
     - 11211 
   volumes:
-    '/var/log/supervisor': '/var/log/octopenstack/horizon'
-    '/etc/openstack-dashboard': '/var/lib/octopenstack/horizon/etc'
+    '/var/log/supervisor': '/var/log/panama/horizon'
+    '/etc/openstack-dashboard': '/var/lib/panama/horizon/etc'
   privileged: false
 
 
@@ -27,8 +27,8 @@ keystone:
     - 35357
     - 5000
   volumes:
-    '/var/log/supervisor': '/var/log/octopenstack/keystone'
-    '/etc/keystone': '/var/lib/octopenstack/keystone/etc'
+    '/var/log/supervisor': '/var/log/panama/keystone'
+    '/etc/keystone': '/var/lib/panama/keystone/etc'
   privileged: false
 
 
@@ -36,7 +36,7 @@ mysql:
   ports:
     - 3306
   volumes:
-    '/var/log/supervisor': '/var/log/octopenstack/mysql'
+    '/var/log/supervisor': '/var/log/panama/mysql'
   privileged: false
 
 
@@ -45,8 +45,8 @@ nova:
     - 8774
     - 8775
   volumes:
-    '/var/log/supervisor': '/var/log/octopenstack/nova'
-    '/etc/nova': '/var/lib/octopenstack/nova/etc'
+    '/var/log/supervisor': '/var/log/panama/nova'
+    '/etc/nova': '/var/lib/panama/nova/etc'
   privileged: true
 
 
@@ -55,7 +55,7 @@ rabbitmq:
     - 5672
     - 15672
   volumes:
-    '/var/log/supervisor': '/var/log/octopenstack/rabbitmq'
-    '/etc/rabbitmq': '/var/lib/octopenstack/rabbitmq/etc'
+    '/var/log/supervisor': '/var/log/panama/rabbitmq'
+    '/etc/rabbitmq': '/var/lib/panama/rabbitmq/etc'
   privileged: false
 

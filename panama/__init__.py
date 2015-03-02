@@ -21,7 +21,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.abspath(os.pardir)))
 sys.path.insert(0, os.path.abspath(os.getcwd()))
 
-from octopenstack import frontend, backend, model, view
+from panama import frontend, backend, model, view
 
 
 def __main__():
