@@ -38,8 +38,6 @@ setup(
     entry_points={'console_scripts': [
             'panama = panama:__main__'
         ]},
-    data_files=[('/var/lib/panama', ['conf/configuration.yml',
-                                           'conf/services.yml'])],
     packages=find_packages(),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
