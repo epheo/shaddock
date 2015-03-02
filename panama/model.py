@@ -21,7 +21,7 @@ import yaml
 class ConfigFile(object):
 
     def __init__(self):
-        self.config_path = '/etc/panama'
+        self.config_path = '/var/lib/panama'
 
         services_dic = open('%s/services.yml' % self.config_path, "r")
         services_dic = services_dic.read()
