@@ -71,7 +71,7 @@ class Dico(object):
 
         service_dic = {}
 
-        service_dic['tag'] = '%s/oos-%s' % (configfile.user, self.name)
+        service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
         service_dic['path'] = '%s/%s' % (configfile.config_path, self.name)
 
         ports_list = []
