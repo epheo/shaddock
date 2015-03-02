@@ -99,6 +99,9 @@ class Container(object):
         self.tag = self.dico.tag
         self.configfile = model.ConfigFile()
 
+        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
+                                       version=self.configfile.docker_version,
+                                       timeout=10)
         info = self.get_info()
         self.id = info.get('id')
         self.ip = info.get('ip')
@@ -106,9 +109,6 @@ class Container(object):
         self.started = info.get('started')
         self.created = info.get('created')
 
-        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version=self.configfile.docker_version,
-                                       timeout=10)
 
     def start(self):
         if self.started is False and self.created is True:
