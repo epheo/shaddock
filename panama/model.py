@@ -21,7 +21,7 @@ import yaml
 class ConfigFile(object):
 
     def __init__(self):
-        self.config_path = '/var/lib/panama'
+        self.config_path = '/var/lib/panama/conf'
 
         services_dic = open('%s/services.yml' % self.config_path, "r")
         services_dic = services_dic.read()
@@ -35,6 +35,7 @@ class ConfigFile(object):
         self.user = config_dic.get('user')
         self.docker_url = config_dic.get('docker_url')
         self.nocache = config_dic.get('nocache')
+        self.template_dir = config_dic.get('template_dir')
         self.docker_version = config_dic.get('docker_version')
 
 
@@ -72,7 +73,7 @@ class Dico(object):
         service_dic = {}
 
         service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
-        service_dic['path'] = '%s/%s' % (configfile.config_path, self.name)
+        service_dic['path'] = '%s/%s' % (configfile.template_dir, self.name)
 
         ports_list = []
         ports_bind_dico = {}

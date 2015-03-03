@@ -25,10 +25,10 @@ Panama
 > **Note:** This program is in development! Services auto configuration is broken since migration to CentOS7.
 
 
-```sudo python setup.py install``` ou ```sudo pip install panama```
+```sudo python setup.py install``` or ```sudo pip install panama```
 
 USAGE
-------
+-----
 > ```usage: panama [-h] [-b [service_name]] [-c [service_name]] [-s [service_name]] [-k [service_name]] [-i [service_name]] [-n [service_name]]```
 
 Run without [service_name] for all services:
