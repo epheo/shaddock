@@ -6,12 +6,6 @@ Panama
 ============
 
 * [USAGE](#usage)
-  * [Build](#build)
-  * [Create](#create)
-  * [Start](#start)
-  * [Stop](#stop)
-  * [Info](#info)
-  * [Remove](#rm)
 * [CONFIGURATION](#configuration)
 * [REQUIEREMENTS](#requierements)
 * [INFORMATIONS](#informations)
@@ -28,22 +22,16 @@ Panama need **sudo** rights.
 A basic infrastructure template can be found in [Panama-template](https://github.com/Epheo/panama-template) repository.
 This template deploy a basic OpenStack infrastructure. You can/should edit it in ```/var/lib/panama``` you'll find the differents OpenStack services with their Dockerfiles and ```etc``` directory.
 
-## build
 > ```--build [service_name]```
 
-## create
 > ```--create [service_name]```
 
-## start
 > ```--start [service_name]```
 
-## stop
 > ```--stop [service_name]```
 
-## info
 > ```--info [service_name]```
 
-## remove
 > ```--rm [service_name]```
 
 CONFIGURATION
