@@ -62,31 +62,23 @@ class Image(object):
 
     def create(self):
         action = 'creating'
-        command = None
-        user = 'root'
-        mem_limit = '0'
         detach = False
 
         self.view.service_information(action,
                                       self.dico.tag,
-                                      command,
                                       self.name,
-                                      user,
                                       self.dico.ports,
-                                      mem_limit,
                                       self.dico.config,
                                       self.dico.volumes,
                                       self.dico.name)
 
-        id_c = self.dockerapi.create_container(self.dico.tag,
-                                                       command,
-                                                       self.name,
-                                                       user,
-                                                       detach,
-                                                       self.dico.ports,
-                                                       self.dico.config,
-                                                       self.dico.volumes,
-                                                       self.dico.name)
+        id_c = self.dockerapi.create_container(image = self.dico.tag,
+                                               name = self.name,
+                                               detach = detach,
+                                               ports = self.dico.ports,
+                                               environment = self.configfile.template_vars,
+                                               volumes = self.dico.volumes,
+                                               hostname = self.dico.name)
         return id_c
 
 
