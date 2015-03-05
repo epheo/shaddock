@@ -16,27 +16,28 @@
 #    under the License.
 
 import yaml
-
+from configparser import ConfigParser
 
 class ConfigFile(object):
 
     def __init__(self):
-        self.config_path = '/var/lib/panama/conf'
+        config = ConfigParser()
+        config.read('/etc/panama.conf')
+        self.docker_url = config.get('DEFAULT', 'docker_url')
+        self.nocache = config.get('DEFAULT', 'nocache')
+        self.template_dir = config.get('DEFAULT', 'template_dir')
+        self.docker_version = str(config.get('DEFAULT', 'docker_version'))
+        self.user = config.get('DEFAULT', 'user')
 
-        services_dic = open('%s/services.yml' % self.config_path, "r")
+        services_dic = open('%s/conf/services.yml' % self.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
         self.services_keys = services_dic.keys()
 
-        config_dic = open('%s/configuration.yml' % self.config_path, "r")
+        config_dic = open('%s/conf/configuration.yml' % self.template_dir, "r")
         config_dic = config_dic.read()
         config_dic = yaml.load(config_dic)
-        self.configuration = config_dic.get('services_config')
-        self.user = config_dic.get('user')
-        self.docker_url = config_dic.get('docker_url')
-        self.nocache = config_dic.get('nocache')
-        self.template_dir = config_dic.get('template_dir')
-        self.docker_version = config_dic.get('docker_version')
+        self.template_vars = config_dic.get('template_vars')
 
 
 class Dico(object):

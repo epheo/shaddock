@@ -1,3 +1,4 @@
 docker-py
 PyYAML>=3.1.0
 argparse
+future

@@ -39,6 +39,7 @@ setup(
             'panama = panama:__main__'
         ]},
     packages=find_packages(),
+    data_files=[('/etc/', ['conf/panama.conf'])],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
