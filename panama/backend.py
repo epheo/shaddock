@@ -33,12 +33,6 @@ class Image(object):
 
     def build(self):
         action = 'building'
-        quiet = False
-        rm = False
-        stream = False
-        timeout = None
-        custom_context = False
-        fileobj = None
 
         if self.dico.tag is not None:
             self.view.service_information(action,
@@ -47,15 +41,9 @@ class Image(object):
                                           self.dico.path,
                                           self.configfile.nocache)
 
-            for line in self.dockerapi.build(self.dico.path,
-                                             self.dico.tag,
-                                             quiet,
-                                             fileobj,
-                                             self.configfile.nocache,
-                                             rm,
-                                             stream,
-                                             timeout,
-                                             custom_context):
+            for line in self.dockerapi.build(path = self.dico.path,
+                                             tag = self.dico.tag,
+                                             nocache = self.configfile.nocache):
                 self.view.display_stream(line)
         else:
             print("Unrecognized service name")
