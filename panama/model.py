@@ -57,7 +57,7 @@ class Dico(object):
     def make_service_dictionary(self):
         configfile = ConfigFile()
 
-        services_dic = open('%s/services.yml' % configfile.config_path, "r")
+        services_dic = open('%s/conf/services.yml' % configfile.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
 
@@ -74,7 +74,7 @@ class Dico(object):
         service_dic = {}
 
         service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
-        service_dic['path'] = '%s/%s' % (configfile.template_dir, self.name)
+        service_dic['path'] = '%s/template/%s' % (configfile.template_dir, self.name)
 
         ports_list = []
         ports_bind_dico = {}
@@ -98,7 +98,6 @@ class Dico(object):
 
             service_dic['volumes'] = volumes_list
             service_dic['binds'] = binds_dico
-            service_dic['confs'] = configfile.configuration
 
         return service_dic
 
