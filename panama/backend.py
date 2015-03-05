@@ -33,12 +33,6 @@ class Image(object):
 
     def build(self):
         action = 'building'
-        quiet = False
-        rm = False
-        stream = False
-        timeout = None
-        custom_context = False
-        fileobj = None
 
         if self.dico.tag is not None:
             self.view.service_information(action,
@@ -47,46 +41,32 @@ class Image(object):
                                           self.dico.path,
                                           self.configfile.nocache)
 
-            for line in self.dockerapi.build(self.dico.path,
-                                             self.dico.tag,
-                                             quiet,
-                                             fileobj,
-                                             self.configfile.nocache,
-                                             rm,
-                                             stream,
-                                             timeout,
-                                             custom_context):
+            for line in self.dockerapi.build(path = self.dico.path,
+                                             tag = self.dico.tag,
+                                             nocache = self.configfile.nocache):
                 self.view.display_stream(line)
         else:
             print("Unrecognized service name")
 
     def create(self):
         action = 'creating'
-        command = None
-        user = 'root'
-        mem_limit = '0'
         detach = False
 
         self.view.service_information(action,
                                       self.dico.tag,
-                                      command,
                                       self.name,
-                                      user,
                                       self.dico.ports,
-                                      mem_limit,
                                       self.dico.config,
                                       self.dico.volumes,
                                       self.dico.name)
 
-        id_c = self.dockerapi.create_container(self.dico.tag,
-                                                       command,
-                                                       self.name,
-                                                       user,
-                                                       detach,
-                                                       self.dico.ports,
-                                                       self.dico.config,
-                                                       self.dico.volumes,
-                                                       self.dico.name)
+        id_c = self.dockerapi.create_container(image = self.dico.tag,
+                                               name = self.name,
+                                               detach = detach,
+                                               ports = self.dico.ports,
+                                               environment = self.configfile.template_vars,
+                                               volumes = self.dico.volumes,
+                                               hostname = self.dico.name)
         return id_c
 
 
