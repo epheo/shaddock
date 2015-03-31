@@ -93,7 +93,8 @@ class Container(object):
     def start(self):
         if self.started is False and self.created is True:
             print(('Starting %s\n'
-                   'id: %s') % (self.tag, self.id))
+                   'Logs:\n'
+                   'sudo docker logs %s') % (self.tag, self.id))
 
             self.dockerapi.start(self.id,
                                  self.dico.binds,
