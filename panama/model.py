@@ -53,6 +53,7 @@ class Dico(object):
         self.volumes = self.dictionary.get('volumes')
         self.binds = self.dictionary.get('binds')
         self.privileged = self.dictionary.get('privileged')
+        self.network_mode = self.dictionary.get('network_mode')
 
     def make_service_dictionary(self):
         configfile = ConfigFile()
