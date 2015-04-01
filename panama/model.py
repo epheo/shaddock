@@ -70,7 +70,8 @@ class Dico(object):
                 service_info = services_dic.get(self.name, None)
                 ports = service_info.get('ports')
                 volumes = service_info.get('volumes')
-                self.privileged = service_info.get('privileged')
+                privileged = service_info.get('privileged')
+                network_mode = service_info.get('network_mode')
 
         service_dic = {}
 
@@ -99,6 +100,8 @@ class Dico(object):
 
             service_dic['volumes'] = volumes_list
             service_dic['binds'] = binds_dico
+            service_dic['privileged'] = privileged
+            service_dic['network_mode'] = network_mode
 
         return service_dic
 
