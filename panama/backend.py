@@ -77,6 +77,14 @@ class Container(object):
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
+        if self.dico.privileged:
+            self.privileged = self.dico.privileged
+        else:
+            self.privileged = None
+        if self.dico.network_mode:
+            self.network_mode = self.dico.network_mode
+        else:
+            self.network_mode = 'bridge'
         self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
@@ -95,10 +103,11 @@ class Container(object):
             print(('Starting %s\n'
                    'id: %s') % (self.tag, self.id))
 
-            self.dockerapi.start(self.id,
-                                 self.dico.binds,
-                                 self.dico.port_bindings,
-                                 'True')
+            self.dockerapi.start(container = self.id,
+                                 binds = self.dico.binds,
+                                 port_bindings = self.dico.port_bindings,
+                                 privileged = self.privileged,
+                                 network_mode = self.network_mode)
 
     def stop(self):
         if self.started is True:

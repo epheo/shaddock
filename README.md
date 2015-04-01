@@ -62,5 +62,4 @@ Panama is licensed under the Apache License, Version 2.0 (the "License"); you ma
 
 References
 ----------
-- [OpenStack yum Install Guide](http://docs.openstack.org/icehouse/install-guide/install/yum/content/)
 - [Docker-py API Documentation](https://github.com/docker/docker-py/blob/master/README.md)
