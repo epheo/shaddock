@@ -41,7 +41,7 @@ class Build(Command):
 
         if name:
             image = backend.Image(name)
-            image.build()
+            image.build(nocache)
         else:
             image = backend.Image('base')
             image.build(nocache)
