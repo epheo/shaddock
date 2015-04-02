@@ -64,7 +64,7 @@ class Create(ShowOne):
         if name:
             image = backend.Image(name)
             image.create()
-            print('%s successfully created' % name)
+            container = backend.Container(name)
             columns = ('Name',
                        'Created',
                        'Started',
@@ -96,7 +96,7 @@ class Start(ShowOne):
         if name:
             container = backend.Container(name)
             container.start()
-            print('%s successfully started' % name)
+            container = backend.Container(name)
             columns = ('Name',
                        'Created',
                        'Started',
@@ -128,7 +128,7 @@ class Stop(ShowOne):
         if name:
             container = backend.Container(name)
             container.stop()
-            print('%s successfully stoped' % name)
+            container = backend.Container(name)
             columns = ('Name',
                        'Created',
                        'Started',
@@ -160,7 +160,7 @@ class Restart(ShowOne):
         if name:
             container = backend.Container(name)
             container.restart()
-            print('%s successfully restarted' % name)
+            container = backend.Container(name)
             columns = ('Name',
                        'Created',
                        'Started',
@@ -192,7 +192,7 @@ class Remove(ShowOne):
         if name:
             container = backend.Container(name)
             container.remove()
-            print('%s successfully removed' % name)
+            container = backend.Container(name)
             columns = ('Name',
                        'Created',
                        'Started',
