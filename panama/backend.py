@@ -32,15 +32,7 @@ class Image(object):
                                        timeout=10)
 
     def build(self, nocache):
-        action = 'building'
-
         if self.dico.tag is not None:
-            self.view.service_information(action,
-                                          self.dico.name,
-                                          self.dico.tag,
-                                          self.dico.path,
-                                          nocache)
-
             for line in self.dockerapi.build(path=self.dico.path,
                                              tag=self.dico.tag,
                                              nocache=nocache):
@@ -57,25 +49,13 @@ class Image(object):
             print("Unrecognized service name")
 
     def create(self):
-        action = 'creating'
-        detach = False
-
-        self.view.service_information(action,
-                                      self.dico.tag,
-                                      self.name,
-                                      self.dico.ports,
-                                      self.dico.config,
-                                      self.dico.volumes,
-                                      self.dico.name)
-
-        id_c = self.dockerapi.create_container(image=self.dico.tag,
-                                               name=self.name,
-                                               detach=detach,
-                                               ports=self.dico.ports,
-                                               environment=self.configfile.template_vars,
-                                               volumes=self.dico.volumes,
-                                               hostname=self.dico.name)
-        return id_c
+        self.dockerapi.create_container(image=self.dico.tag,
+                                        name=self.name,
+                                        detach=False,
+                                        ports=self.dico.ports,
+                                        environment=self.configfile.template_vars,
+                                        volumes=self.dico.volumes,
+                                        hostname=self.dico.name)
 
 
 class Container(object):
