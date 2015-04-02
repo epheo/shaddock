@@ -124,14 +124,6 @@ class Container(object):
         self.stop()
         self.start()
 
-    def display_info(self):
-        print('Name: %s' % self.name)
-        print('Created: %s' % self.created)
-        print('Started: %s' % self.started)
-        print('IP: %s' % self.ip)
-        print('ID: %s' % self.id)
-        print('Tag: %s \n' % self.tag)
-
     def get_info(self):
         info = {}
         info['id'] = None
@@ -139,20 +131,21 @@ class Container(object):
         info['hostname'] = None
         info['started'] = False
         info['created'] = False
-
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
-            for containers in containers_list:
-                c_id = containers.get('Id')
-                container_info = self.dockerapi.inspect_container(c_id)
+            try:
+                c_id = [item['Id'] for item in containers_list if self.tag in item['Image']][0]
+            except IndexError:
+                c_id = None
 
-                config = container_info.get('Config')
-                if config.get('Image') == self.tag:
-                    network = container_info.get('NetworkSettings')
-                    info['id'] = c_id
-                    info['ip'] = network.get('IPAddress')
-                    info['hostname'] = config.get('Hostname')
-                    info['created'] = True
-                    if info.get('ip'):
-                        info['started'] = True
+            if c_id:
+                container_info = self.dockerapi.inspect_container(c_id)
+                config = container_info['Config']
+                network = container_info['NetworkSettings']
+                info['id'] = c_id
+                info['ip'] = network['IPAddress']
+                info['hostname'] = config['Hostname']
+                info['created'] = True
+                if info.get('ip'):
+                    info['started'] = True
         return info

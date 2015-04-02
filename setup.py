@@ -35,9 +35,20 @@ setup(
     long_description_markdown_filename='README.md',
     license='Apache Software License',
     version='0.0.5',
-    entry_points={'console_scripts': [
-            'panama = panama:__main__'
-        ]},
+    entry_points={
+        'console_scripts': [
+            'panama = panama.main:main'
+        ],
+        'panama.cli': [
+            'simple = panama.simple:Simple',
+            'two_part = panama.simple:Simple',
+            'error = panama.simple:Error',
+            'list containers = panama.list:Containers',
+            'list = panama.list:Containers',
+            'file = panama.show:File',
+            'show file = panama.show:File',
+        ],
+    },
     packages=find_packages(),
     data_files=[('/etc/', ['conf/panama.conf'])],
     classifiers=[
