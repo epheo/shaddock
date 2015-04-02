@@ -83,8 +83,11 @@ class Start(Command):
         name = parsed_args.name
         if name:
             container = backend.Container(name)
-            container.start()
-            print('%s successfully started' % name)
+            started = container.start()
+            if started:
+                print('%s successfully started' % name)
+            else:
+                print("%s isn't created yet." % name)
         else:
             for i in cf.services_keys:
                 container = backend.Container(i)
