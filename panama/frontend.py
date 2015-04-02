@@ -83,6 +83,7 @@ class Start(ShowOne):
         name = parsed_args.name
         if name:
             container = backend.Container(name)
+<<<<<<< HEAD
             container.start()
             print('%s successfully started' % name)
             columns = ('Name',
@@ -102,6 +103,18 @@ class Start(ShowOne):
 
 
         return columns, data
+=======
+            started = container.start()
+            if started:
+                print('%s successfully started' % name)
+            else:
+                print("%s isn't created yet." % name)
+        else:
+            for i in cf.services_keys:
+                container = backend.Container(i)
+                container.start()
+        return True
+>>>>>>> 3c693b6e946460aae44f7801d5cdead4e134de04
 
 
 class Stop(Command):

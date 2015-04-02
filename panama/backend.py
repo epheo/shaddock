@@ -100,14 +100,14 @@ class Container(object):
 
     def start(self):
         if self.started is False and self.created is True:
-            print(('Starting %s\n'
-                   'id: %s') % (self.tag, self.id))
+            print(('Starting %s') % (self.tag))
 
             self.dockerapi.start(container=self.id,
                                  binds=self.dico.binds,
                                  port_bindings=self.dico.port_bindings,
                                  privileged=self.privileged,
                                  network_mode=self.network_mode)
+        return True
 
     def stop(self):
         if self.started is True:
