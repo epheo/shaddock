@@ -41,9 +41,9 @@ class Image(object):
                                           self.dico.path,
                                           self.configfile.nocache)
 
-            for line in self.dockerapi.build(path = self.dico.path,
-                                             tag = self.dico.tag,
-                                             nocache = self.configfile.nocache):
+            for line in self.dockerapi.build(path=self.dico.path,
+                                             tag=self.dico.tag,
+                                             nocache=self.configfile.nocache):
                 self.view.display_stream(line)
         else:
             print("Unrecognized service name")
@@ -60,13 +60,13 @@ class Image(object):
                                       self.dico.volumes,
                                       self.dico.name)
 
-        id_c = self.dockerapi.create_container(image = self.dico.tag,
-                                               name = self.name,
-                                               detach = detach,
-                                               ports = self.dico.ports,
-                                               environment = self.configfile.template_vars,
-                                               volumes = self.dico.volumes,
-                                               hostname = self.dico.name)
+        id_c = self.dockerapi.create_container(image=self.dico.tag,
+                                               name=self.name,
+                                               detach=detach,
+                                               ports=self.dico.ports,
+                                               environment=self.configfile.template_vars,
+                                               volumes=self.dico.volumes,
+                                               hostname=self.dico.name)
         return id_c
 
 
@@ -103,11 +103,11 @@ class Container(object):
             print(('Starting %s\n'
                    'id: %s') % (self.tag, self.id))
 
-            self.dockerapi.start(container = self.id,
-                                 binds = self.dico.binds,
-                                 port_bindings = self.dico.port_bindings,
-                                 privileged = self.privileged,
-                                 network_mode = self.network_mode)
+            self.dockerapi.start(container=self.id,
+                                 binds=self.dico.binds,
+                                 port_bindings=self.dico.port_bindings,
+                                 privileged=self.privileged,
+                                 network_mode=self.network_mode)
 
     def stop(self):
         if self.started is True:
