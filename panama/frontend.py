@@ -52,7 +52,7 @@ class Build(Command):
         return True
 
 
-class Create(Command):
+class Create(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
@@ -65,11 +65,23 @@ class Create(Command):
             image = backend.Image(name)
             image.create()
             print('%s successfully created' % name)
-        else:
-            for i in cf.services_keys:
-                image = backend.Image(i)
-                image.create()
-        return True
+            columns = ('Name',
+                       'Created',
+                       'Started',
+                       'IP',
+                       'Tag',
+                       'Docker-id',
+                        )
+
+            data = (name,
+                    container.created,
+                    container.started,
+                    container.ip,
+                    container.tag,
+                    container.id)
+
+
+        return columns, data
 
 
 class Start(ShowOne):
@@ -104,7 +116,7 @@ class Start(ShowOne):
         return columns, data
 
 
-class Stop(Command):
+class Stop(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
@@ -117,14 +129,26 @@ class Stop(Command):
             container = backend.Container(name)
             container.stop()
             print('%s successfully stoped' % name)
-        else:
-            for i in cf.services_keys:
-                container = backend.Container(i)
-                container.stop()
-        return True
+            columns = ('Name',
+                       'Created',
+                       'Started',
+                       'IP',
+                       'Tag',
+                       'Docker-id',
+                        )
+
+            data = (name,
+                    container.created,
+                    container.started,
+                    container.ip,
+                    container.tag,
+                    container.id)
 
 
-class Restart(Command):
+        return columns, data
+
+
+class Restart(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
@@ -137,14 +161,26 @@ class Restart(Command):
             container = backend.Container(name)
             container.restart()
             print('%s successfully restarted' % name)
-        else:
-            for i in cf.services_keys:
-                container = backend.Container(i)
-                container.restart()
-        return True
+            columns = ('Name',
+                       'Created',
+                       'Started',
+                       'IP',
+                       'Tag',
+                       'Docker-id',
+                        )
+
+            data = (name,
+                    container.created,
+                    container.started,
+                    container.ip,
+                    container.tag,
+                    container.id)
 
 
-class Remove(Command):
+        return columns, data
+
+
+class Remove(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
@@ -157,11 +193,23 @@ class Remove(Command):
             container = backend.Container(name)
             container.remove()
             print('%s successfully removed' % name)
-        else:
-            for i in cf.services_keys:
-                container = backend.Container(i)
-                container.remove()
-        return True
+            columns = ('Name',
+                       'Created',
+                       'Started',
+                       'IP',
+                       'Tag',
+                       'Docker-id',
+                        )
+
+            data = (name,
+                    container.created,
+                    container.started,
+                    container.ip,
+                    container.tag,
+                    container.id)
+
+
+        return columns, data
 
 
 class List(Lister):
