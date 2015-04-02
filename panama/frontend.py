@@ -29,20 +29,26 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('--no-cache', help='Build the container without cache')
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        if parsed_args.no_cache:
+            nocache = True
+        else:
+            nocache = False
+
         if name:
             image = backend.Image(name)
-            image.build()
+            image.build(nocache)
         else:
             image = backend.Image('base')
-            image.build()
+            image.build(nocache)
 
             for i in cf.services_keys:
                 image = backend.Image(i)
-                image.build()
+                image.build(nocache)
         return True
 
 
@@ -176,6 +182,7 @@ class Show(ShowOne):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+
         columns = ('Name',
                    'Created',
                    'Started',

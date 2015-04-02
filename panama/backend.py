@@ -31,7 +31,7 @@ class Image(object):
                                        version=self.configfile.docker_version,
                                        timeout=10)
 
-    def build(self):
+    def build(self, nocache):
         action = 'building'
 
         if self.dico.tag is not None:
@@ -39,11 +39,11 @@ class Image(object):
                                           self.dico.name,
                                           self.dico.tag,
                                           self.dico.path,
-                                          self.configfile.nocache)
+                                          nocache)
 
             for line in self.dockerapi.build(path=self.dico.path,
                                              tag=self.dico.tag,
-                                             nocache=self.configfile.nocache):
+                                             nocache=nocache):
                 self.view.display_stream(line)
         else:
             print("Unrecognized service name")

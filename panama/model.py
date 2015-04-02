@@ -24,7 +24,6 @@ class ConfigFile(object):
         config = ConfigParser()
         config.read('/etc/panama.conf')
         self.docker_url = config.get('DEFAULT', 'docker_url')
-        self.nocache = config.get('DEFAULT', 'nocache')
         self.template_dir = config.get('DEFAULT', 'template_dir')
         self.docker_version = str(config.get('DEFAULT', 'docker_version'))
         self.user = config.get('DEFAULT', 'user')
