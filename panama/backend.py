@@ -17,12 +17,12 @@
 
 import docker
 from panama import view, model
+import json
 
 
 class Image(object):
 
     def __init__(self, service_name):
-        self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.configfile = model.ConfigFile()
@@ -44,7 +44,15 @@ class Image(object):
             for line in self.dockerapi.build(path=self.dico.path,
                                              tag=self.dico.tag,
                                              nocache=nocache):
-                self.view.display_stream(line)
+                jsonstream =  json.loads(line.decode())
+                stream = jsonstream.get('stream')
+                error = jsonstream.get('error')
+                if not error == None:
+                    print(error)
+                if not stream == None:
+                    print(stream)
+
+
         else:
             print("Unrecognized service name")
 
@@ -73,7 +81,6 @@ class Image(object):
 class Container(object):
 
     def __init__(self, service_name):
-        self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
@@ -100,7 +107,7 @@ class Container(object):
 
     def start(self):
         if self.started is False and self.created is True:
-            print(('Starting %s') % (self.tag))
+            print('Starting %s' % self.tag)
 
             self.dockerapi.start(container=self.id,
                                  binds=self.dico.binds,
@@ -111,7 +118,7 @@ class Container(object):
 
     def stop(self):
         if self.started is True:
-            print('Stopping %s...' % self.tag)
+            print('Stopping container %s...' % self.tag)
             self.dockerapi.stop(self.id)
 
     def remove(self):
