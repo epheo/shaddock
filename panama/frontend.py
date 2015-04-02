@@ -41,7 +41,7 @@ class Build(Command):
 
         if name:
             image = backend.Image(name)
-            image.build(nocache)
+            image.build()
         else:
             image = backend.Image('base')
             image.build(nocache)
@@ -72,7 +72,7 @@ class Create(Command):
         return True
 
 
-class Start(Command):
+class Start(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
@@ -85,11 +85,23 @@ class Start(Command):
             container = backend.Container(name)
             container.start()
             print('%s successfully started' % name)
-        else:
-            for i in cf.services_keys:
-                container = backend.Container(i)
-                container.start()
-        return True
+            columns = ('Name',
+                       'Created',
+                       'Started',
+                       'IP',
+                       'Tag',
+                       'Docker-id',
+                        )
+
+            data = (name,
+                    container.created,
+                    container.started,
+                    container.ip,
+                    container.tag,
+                    container.id)
+
+
+        return columns, data
 
 
 class Stop(Command):
