@@ -3,7 +3,7 @@ Panama
 Panama provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
 
 
-USAGE
+Usage
 -----
 A basic infrastructure template can be found in [Panama-template](https://github.com/Epheo/panama-template) repository.
 This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/panama**
@@ -16,7 +16,7 @@ This template deploy a basic OpenStack infrastructure. You can/should edit it in
     show [service_name]
     remove [service_name]
 
-CONFIGURATION
+Configuration
 -------------
 	services.yaml
 	configuration.yaml
@@ -28,8 +28,23 @@ Both are in [YAML](http://www.yaml.org/)
 
 In order to use Panama with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
 
-REQUIEREMENTS
--------------
+Installation
+------------
+
+Docker installation: https://docs.docker.com/installation/
+
+Panama installation:
+
+    sudo pip install panama
+or
+    sudo python setupy.py install
+
+Panama template installation:
+(For an OpenStack platform)
+    git clone https://github.com/Epheo/panama-template /var/lib/panama/
+
+Requirements
+''''''''''''
     [Docker](https://docs.docker.com/installation/archlinux/)
     Docker Python API: pip install docker-py
     PyYaml: pip install PyYaml
