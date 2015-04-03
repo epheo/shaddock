@@ -15,3 +15,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+class scheduler(object):
+
+    def build(self):
+        pass
+
+    def create(self):
+        pass
+
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
+
+    def remove(self):
+        raise NotImplementedError
+
+
