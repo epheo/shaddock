@@ -87,7 +87,7 @@ class Container(object):
 
     def start(self):
         if self.started is False and self.created is True:
-            print('Starting %s' % self.tag)
+            print('Starting %s ...' % self.tag)
 
             self.dockerapi.start(container=self.id,
                                  binds=self.dico.binds,
@@ -98,18 +98,17 @@ class Container(object):
 
     def stop(self):
         if self.started is True:
-            print('Stopping container %s...' % self.tag)
+            print('Stopping container %s ...' % self.tag)
             self.dockerapi.stop(self.id)
 
     def remove(self):
         self.stop()
         if self.created is True:
-            print('Removing container %s' % self.id)
+            print('Removing container %s ...' % self.id)
             self.dockerapi.remove_container(self.id)
 
     def restart(self):
-        self.stop()
-        self.start()
+        self.dockerapi.restart(self.id)
 
     def get_info(self):
         info = {}
