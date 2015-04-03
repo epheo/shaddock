@@ -9,11 +9,17 @@ A basic infrastructure template can be found in [Panama-template](https://github
 This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/panama**
 
     build [service_name]
+
     create [service_name]
+
     start [service_name]
+
     stop [service_name]
+
     list
+
     show [service_name]
+
     remove [service_name]
 
 Installation
@@ -25,13 +31,17 @@ https://docs.docker.com/installation/
 
 Panama installation
 '''''''''''''''''''
+
     sudo pip install panama
+
 or
+
     sudo python setupy.py install
 
 Panama template installation
 ''''''''''''''''''''''''''''
 (For an OpenStack platform)
+
     git clone https://github.com/Epheo/panama-template /var/lib/panama/
 
 Requirements
