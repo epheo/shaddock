@@ -8,18 +8,13 @@ Usage
 A basic infrastructure template can be found in [Panama-template](https://github.com/Epheo/panama-template) repository.
 This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/panama**
 
+Common commands are::
     build [service_name]
-
     create [service_name]
-
     start [service_name]
-
     stop [service_name]
-
     list
-
     show [service_name]
-
     remove [service_name]
 
 Installation
@@ -52,7 +47,9 @@ Requirements
 
 Configuration
 -------------
+
 	services.yaml
+
 	configuration.yaml
 
 The general architecture of the platform is defined in *services.yaml*
