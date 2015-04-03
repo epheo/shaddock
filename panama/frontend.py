@@ -43,7 +43,7 @@ class Build(Command):
             image = backend.Image(name)
             image.build(nocache)
         else:
-            image = backend.Image('base')
+            image = backend.Image('seed')
             image.build(nocache)
 
             for i in cf.services_keys:

@@ -28,12 +28,12 @@ class ConfigFile(object):
         self.docker_version = str(config.get('DEFAULT', 'docker_version'))
         self.user = config.get('DEFAULT', 'user')
 
-        services_dic = open('%s/conf/services.yml' % self.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % self.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
         self.services_keys = services_dic.keys()
 
-        config_dic = open('%s/conf/configuration.yml' % self.template_dir, "r")
+        config_dic = open('%s/etc/configuration.yml' % self.template_dir, "r")
         config_dic = config_dic.read()
         config_dic = yaml.load(config_dic)
         self.template_vars = config_dic.get('template_vars')
@@ -57,7 +57,7 @@ class Dico(object):
     def make_service_dictionary(self):
         configfile = ConfigFile()
 
-        services_dic = open('%s/conf/services.yml' % configfile.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % configfile.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
 

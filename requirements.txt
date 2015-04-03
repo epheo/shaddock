@@ -1,4 +1,6 @@
+pbr>=0.6,!=0.7,<1.0
 docker-py
 PyYAML>=3.1.0
 future
 cliff
+panama-openstacktemplate

@@ -14,56 +14,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from setuptools import setup, find_packages
+#    THIS FILE IS MANAGED BY THE GLOBAL REQUIREMENTS REPO - DO NOT EDIT
 
-requirements = ['docker-py',
-                'PyYAML>=3.1.0',
-                'argparse',
-                'panama-template'
-                ]
-                
-testrequirements = ['nose']
+import setuptools
 
-setup(
-    name='panama',
-    description='Easily deploy an OpenStack platform in Docker Containers',
-    author='Thibaut Lapierre',
-    author_email='root@epheo.eu',
-    url='https://github.com/Epheo/panama',
-    # download_url='https://github.com/Epheo/panama/archive/master.zip',
-    # setup_requires=['setuptools-markdown'],
-    long_description_markdown_filename='README.md',
-    license='Apache Software License',
-    version='0.0.5',
-    entry_points={
-        'console_scripts': [
-            'panama = panama.main:main'
-        ],
-        'panama.cli': [
-            'build = panama.frontend:Build',
-            'create = panama.frontend:Create',
-            'start = panama.frontend:Start',
-            'stop = panama.frontend:Stop',
-            'restart = panama.frontend:Restart',
-            'remove = panama.frontend:Remove',
-            'list = panama.frontend:List',
-            'show = panama.frontend:Show',
-        ],
-    },
-    packages=find_packages(),
-    data_files=[('/etc/', ['conf/panama.conf'])],
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Environment :: Console',
-        'Environment :: OpenStack',
-        'Intended Audience :: Information Technology',
-        'Intended Audience :: Developers',
-        'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-    ],
-)
+# In python < 2.7.4, a lazy loading of package `pbr` will break
+# setuptools if some other modules registered functions in `atexit`.
+# solution from: http://bugs.python.org/issue15881#msg170215
+try:
+    import multiprocessing  # noqa
+except ImportError:
+    pass
+
+setuptools.setup(
+    setup_requires=['pbr'],
+    pbr=True)
