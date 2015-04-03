@@ -17,12 +17,12 @@
 
 import docker
 from panama import view, model
+import json
 
 
 class Image(object):
 
     def __init__(self, service_name):
-        self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.configfile = model.ConfigFile()
@@ -31,49 +31,36 @@ class Image(object):
                                        version=self.configfile.docker_version,
                                        timeout=10)
 
-    def build(self):
-        action = 'building'
-
+    def build(self, nocache):
         if self.dico.tag is not None:
-            self.view.service_information(action,
-                                          self.dico.name,
-                                          self.dico.tag,
-                                          self.dico.path,
-                                          self.configfile.nocache)
+            for line in self.dockerapi.build(path=self.dico.path,
+                                             tag=self.dico.tag,
+                                             nocache=nocache):
+                jsonstream =  json.loads(line.decode())
+                stream = jsonstream.get('stream')
+                error = jsonstream.get('error')
+                if not error == None:
+                    print(error)
+                if not stream == None:
+                    print(stream)
 
-            for line in self.dockerapi.build(path = self.dico.path,
-                                             tag = self.dico.tag,
-                                             nocache = self.configfile.nocache):
-                self.view.display_stream(line)
+
         else:
             print("Unrecognized service name")
 
     def create(self):
-        action = 'creating'
-        detach = False
-
-        self.view.service_information(action,
-                                      self.dico.tag,
-                                      self.name,
-                                      self.dico.ports,
-                                      self.dico.config,
-                                      self.dico.volumes,
-                                      self.dico.name)
-
-        id_c = self.dockerapi.create_container(image = self.dico.tag,
-                                               name = self.name,
-                                               detach = detach,
-                                               ports = self.dico.ports,
-                                               environment = self.configfile.template_vars,
-                                               volumes = self.dico.volumes,
-                                               hostname = self.dico.name)
-        return id_c
+        self.dockerapi.create_container(image=self.dico.tag,
+                                        name=self.name,
+                                        detach=False,
+                                        ports=self.dico.ports,
+                                        environment=self.configfile.template_vars,
+                                        volumes=self.dico.volumes,
+                                        hostname=self.dico.name)
 
 
 class Container(object):
 
     def __init__(self, service_name):
-        self.view = view.View()
         self.name = service_name
         self.dico = model.Dico(self.name)
         self.tag = self.dico.tag
@@ -100,37 +87,28 @@ class Container(object):
 
     def start(self):
         if self.started is False and self.created is True:
-            print(('Starting %s\n'
-                   'id: %s') % (self.tag, self.id))
+            print('Starting %s ...' % self.tag)
 
-            self.dockerapi.start(container = self.id,
-                                 binds = self.dico.binds,
-                                 port_bindings = self.dico.port_bindings,
-                                 privileged = self.privileged,
-                                 network_mode = self.network_mode)
+            self.dockerapi.start(container=self.id,
+                                 binds=self.dico.binds,
+                                 port_bindings=self.dico.port_bindings,
+                                 privileged=self.privileged,
+                                 network_mode=self.network_mode)
+        return True
 
     def stop(self):
         if self.started is True:
-            print('Stopping %s...' % self.tag)
+            print('Stopping container %s ...' % self.tag)
             self.dockerapi.stop(self.id)
 
     def remove(self):
         self.stop()
         if self.created is True:
-            print('Removing container %s' % self.id)
+            print('Removing container %s ...' % self.id)
             self.dockerapi.remove_container(self.id)
 
     def restart(self):
-        self.stop()
-        self.start()
-
-    def display_info(self):
-        print('Name: %s' % self.name)
-        print('Created: %s' % self.created)
-        print('Started: %s' % self.started)
-        print('IP: %s' % self.ip)
-        print('ID: %s' % self.id)
-        print('Tag: %s \n' % self.tag)
+        self.dockerapi.restart(self.id)
 
     def get_info(self):
         info = {}
@@ -139,20 +117,21 @@ class Container(object):
         info['hostname'] = None
         info['started'] = False
         info['created'] = False
-
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
-            for containers in containers_list:
-                c_id = containers.get('Id')
-                container_info = self.dockerapi.inspect_container(c_id)
+            try:
+                c_id = [item['Id'] for item in containers_list if self.tag in item['Image']][0]
+            except IndexError:
+                c_id = None
 
-                config = container_info.get('Config')
-                if config.get('Image') == self.tag:
-                    network = container_info.get('NetworkSettings')
-                    info['id'] = c_id
-                    info['ip'] = network.get('IPAddress')
-                    info['hostname'] = config.get('Hostname')
-                    info['created'] = True
-                    if info.get('ip'):
-                        info['started'] = True
+            if c_id:
+                container_info = self.dockerapi.inspect_container(c_id)
+                config = container_info['Config']
+                network = container_info['NetworkSettings']
+                info['id'] = c_id
+                info['ip'] = network['IPAddress']
+                info['hostname'] = config['Hostname']
+                info['created'] = True
+                if info.get('ip'):
+                    info['started'] = True
         return info
