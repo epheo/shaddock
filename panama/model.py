@@ -16,18 +16,44 @@
 #    under the License.
 
 import yaml
-from configparser import ConfigParser
+from oslo_config import cfg
+
+
+docker_group = cfg.OptGroup(name='docker',
+                            title='Docker options')
+
+docker_opts = [
+     cfg.StrOpt('host',
+                default='unix://var/run/docker.sock',
+                help='IP/hostname to the Docker API.'),
+     cfg.IntOpt('version',
+                default=1.12,
+                help='Version of the Docker API.')
+]
+
+
+opts = [
+    cfg.StrOpt('template_dir',
+               default='/var/lib/panama',
+               help='Template directory to use.'),
+    cfg.StrOpt('user',
+               default='panama',
+               help='User used to build Docker images.')
+]
 
 
 class ConfigFile(object):
 
-    def __init__(self):
-        config = ConfigParser()
-        config.read('/etc/panama.conf')
-        self.docker_url = config.get('DEFAULT', 'docker_url')
-        self.template_dir = config.get('DEFAULT', 'template_dir')
-        self.docker_version = str(config.get('DEFAULT', 'docker_version'))
-        self.user = config.get('DEFAULT', 'user')
+    def __init__(self, conf):
+        self.conf = conf
+        self.conf.register_opts(opts)
+        self.conf.register_group(docker_group)
+        self.conf.register_opts(docker_opts, group='docker')
+
+        self.docker_url = conf.docker.host
+        self.template_dir = conf.template_dir
+        self.docker_version = str(conf.docker.version)
+        self.user = conf.user
 
         services_dic = open('%s/etc/services.yml' % self.template_dir, "r")
         services_dic = services_dic.read()
