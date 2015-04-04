@@ -39,11 +39,6 @@ Panama template installation
 
     git clone https://github.com/Epheo/panama-template /var/lib/panama/
 
-Requirements
-''''''''''''
-    - [Docker](https://docs.docker.com/installation/archlinux/)
-    - Docker Python API: pip install docker-py
-    - PyYaml: pip install PyYaml
 
 Configuration
 -------------

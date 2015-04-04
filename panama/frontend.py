@@ -15,7 +15,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import sys
 import logging
 from cliff.command import Command
 from cliff.lister import Lister
@@ -29,7 +28,8 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
-        parser.add_argument('--no-cache', help='Build the container without cache')
+        parser.add_argument('--no-cache',
+                            help='Build the container without cache')
         return parser
 
     def take_action(self, parsed_args):
@@ -39,16 +39,11 @@ class Build(Command):
         else:
             nocache = False
 
-        if name:
+        if name is not in ['all', None]:
             image = backend.Image(name)
             image.build(nocache)
-        else:
-            image = backend.Image('seed')
-            image.build(nocache)
-
-            for i in cf.services_keys:
-                image = backend.Image(i)
-                image.build(nocache)
+        elif name is 'all':
+            raise NotImplementedError
         return True
 
 
@@ -61,7 +56,7 @@ class Create(ShowOne):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        if name:
+        if name :
             image = backend.Image(name)
             image.create()
             container = backend.Container(name)
@@ -70,8 +65,7 @@ class Create(ShowOne):
                        'Started',
                        'IP',
                        'Tag',
-                       'Docker-id',
-                        )
+                       'Docker-id')
 
             data = (name,
                     container.created,
@@ -79,7 +73,6 @@ class Create(ShowOne):
                     container.ip,
                     container.tag,
                     container.id)
-
 
         return columns, data
 
@@ -102,8 +95,7 @@ class Start(ShowOne):
                        'Started',
                        'IP',
                        'Tag',
-                       'Docker-id',
-                        )
+                       'Docker-id')
 
             data = (name,
                     container.created,
@@ -111,7 +103,6 @@ class Start(ShowOne):
                     container.ip,
                     container.tag,
                     container.id)
-
 
         return columns, data
 
@@ -134,8 +125,7 @@ class Stop(ShowOne):
                        'Started',
                        'IP',
                        'Tag',
-                       'Docker-id',
-                        )
+                       'Docker-id')
 
             data = (name,
                     container.created,
@@ -143,7 +133,6 @@ class Stop(ShowOne):
                     container.ip,
                     container.tag,
                     container.id)
-
 
         return columns, data
 
@@ -166,8 +155,7 @@ class Restart(ShowOne):
                        'Started',
                        'IP',
                        'Tag',
-                       'Docker-id',
-                        )
+                       'Docker-id')
 
             data = (name,
                     container.created,
@@ -175,7 +163,6 @@ class Restart(ShowOne):
                     container.ip,
                     container.tag,
                     container.id)
-
 
         return columns, data
 
@@ -198,8 +185,7 @@ class Remove(ShowOne):
                        'Started',
                        'IP',
                        'Tag',
-                       'Docker-id',
-                        )
+                       'Docker-id')
 
             data = (name,
                     container.created,
@@ -208,13 +194,12 @@ class Remove(ShowOne):
                     container.tag,
                     container.id)
 
-
         return columns, data
 
 
 class List(Lister):
     """Show a list of Containers.
-    The 'Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id' are printed by default.
+       The 'Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id' are printed by default.
     """
 
     log = logging.getLogger(__name__)

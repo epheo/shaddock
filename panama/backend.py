@@ -16,7 +16,7 @@
 #    under the License.
 
 import docker
-from panama import view, model
+from panama import model
 import json
 
 
@@ -36,26 +36,26 @@ class Image(object):
             for line in self.dockerapi.build(path=self.dico.path,
                                              tag=self.dico.tag,
                                              nocache=nocache):
-                jsonstream =  json.loads(line.decode())
+                jsonstream = json.loads(line.decode())
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
-                if not error == None:
+                if error is not None:
                     print(error)
-                if not stream == None:
+                if stream is not None:
                     print(stream)
-
 
         else:
             print("Unrecognized service name")
 
     def create(self):
-        self.dockerapi.create_container(image=self.dico.tag,
-                                        name=self.name,
-                                        detach=False,
-                                        ports=self.dico.ports,
-                                        environment=self.configfile.template_vars,
-                                        volumes=self.dico.volumes,
-                                        hostname=self.dico.name)
+        self.dockerapi.create_container(
+            image=self.dico.tag,
+            name=self.name,
+            detach=False,
+            ports=self.dico.ports,
+            environment=self.configfile.template_vars,
+            volumes=self.dico.volumes,
+            hostname=self.dico.name)
 
 
 class Container(object):
@@ -83,7 +83,6 @@ class Container(object):
         self.hostname = info.get('hostname')
         self.started = info.get('started')
         self.created = info.get('created')
-
 
     def start(self):
         if self.started is False and self.created is True:
@@ -120,7 +119,8 @@ class Container(object):
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             try:
-                c_id = [item['Id'] for item in containers_list if self.tag in item['Image']][0]
+                c_id = [item['Id'] for item in containers_list
+                        if self.tag in item['Image']][0]
             except IndexError:
                 c_id = None
 

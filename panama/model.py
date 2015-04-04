@@ -18,6 +18,7 @@
 import yaml
 from configparser import ConfigParser
 
+
 class ConfigFile(object):
 
     def __init__(self):
@@ -57,7 +58,8 @@ class Dico(object):
     def make_service_dictionary(self):
         configfile = ConfigFile()
 
-        services_dic = open('%s/etc/services.yml' % configfile.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % configfile.template_dir,
+                            "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
 
@@ -75,7 +77,8 @@ class Dico(object):
         service_dic = {}
 
         service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
-        service_dic['path'] = '%s/template/%s' % (configfile.template_dir, self.name)
+        service_dic['path'] = '%s/template/%s' % (configfile.template_dir,
+                                                  self.name)
 
         ports_list = []
         ports_bind_dico = {}
@@ -106,19 +109,20 @@ class Dico(object):
 
         #  Final dictionary should be like:
         #  'glance': {
-        #      'tag': '%s/osglance' % (user), 
+        #      'tag': '%s/osglance' % (user),
         #      'path': '%s/glance/' % (path),
         #      'ports': [(9292, 'tcp')],
         #      'port_bindings': {9292: ('0.0.0.0', 9292)},
-        #      'confs': {'HOST_NAME': host_name, 
-        #                'MYSQL_DB': mysql_host, 
-        #                'MYSQL_USER': mysql_user, 
-        #                'MYSQL_PASSWORD': mysql_pass, 
-        #                'RABBITMQ_HOST': rabbitmq_host, 
-        #                'RABBITMQ_PASSWORD': rabbitmq_password, 
+        #      'confs': {'HOST_NAME': host_name,
+        #                'MYSQL_DB': mysql_host,
+        #                'MYSQL_USER': mysql_user,
+        #                'MYSQL_PASSWORD': mysql_pass,
+        #                'RABBITMQ_HOST': rabbitmq_host,
+        #                'RABBITMQ_PASSWORD': rabbitmq_password,
         #                'GLANCE_DBPASS': glance_pass
         #               },
         #      'volumes': ['/var/log/supervisor'],
-        #      'binds': {'/var/log/panama/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+        #      'binds': {'/var/log/panama/glance':
+        #                   {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },
