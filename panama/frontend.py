@@ -39,7 +39,7 @@ class Build(Command):
         else:
             nocache = False
 
-        if name is not in ['all', None]:
+        if name is not 'all' and name is not None:
             image = backend.Image(name)
             image.build(nocache)
         elif name is 'all':
@@ -56,7 +56,7 @@ class Create(ShowOne):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        if name :
+        if name:
             image = backend.Image(name)
             image.create()
             container = backend.Container(name)
@@ -199,7 +199,8 @@ class Remove(ShowOne):
 
 class List(Lister):
     """Show a list of Containers.
-       The 'Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id' are printed by default.
+       The 'Name', 'Created', 'Started', 'IP', 'Tag',
+       'Docker-id' are printed by default.
     """
 
     log = logging.getLogger(__name__)
