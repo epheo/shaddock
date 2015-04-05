@@ -8,7 +8,7 @@ from shaddock import model
 class ModelTests(unittest.TestCase):
 
     def testService_dic(self):
-        self.containerconfig = model.Containerconfig('nova')
+        self.containerconfig = model.ContainerConfig('nova')
 
 
 def main():

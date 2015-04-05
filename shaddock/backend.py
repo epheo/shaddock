@@ -38,7 +38,7 @@ class Image(object):
 
     def __init__(self, service_name):
         self.name = service_name
-        self.containerconfig = model.Containerconfig(self.name)
+        self.containerconfig = model.ContainerConfig(self.name)
         self.template = model.Template()
 
         self.dockerapi = docker.Client(base_url=CONF.docker_host,
@@ -78,7 +78,7 @@ class Container(object):
 
     def __init__(self, service_name):
         self.name = service_name
-        self.containerconfig = model.Containerconfig(self.name)
+        self.containerconfig = model.ContainerConfig(self.name)
         self.tag = self.containerconfig.tag
         if self.containerconfig.privileged:
             self.privileged = self.containerconfig.privileged
