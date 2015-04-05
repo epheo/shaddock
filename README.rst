@@ -1,6 +1,6 @@
 Shaddock
 ============
-Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
+Shaddock provides a platform deployed in .. _Docker: http://docker.com containers following a predefined template (like a basic .. _OpenStack: http://openstack.org infrastructure.)
 
 
 Usage
