@@ -3,7 +3,7 @@
 
 import unittest
 from pprint import pprint
-from panama import model
+from shaddock import model
 
 class ModelTests(unittest.TestCase):
 

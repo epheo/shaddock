@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 
-panama_rsa_key*
+shaddock_rsa_key*
 *.swp
 .idea/
 

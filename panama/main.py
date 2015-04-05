@@ -20,15 +20,15 @@ import logging
 import sys
 
 
-class PanamaCli(App):
+class ShaddockCli(App):
 
     log = logging.getLogger(__name__)
 
     def __init__(self):
-        super(PanamaCli, self).__init__(
-            description='Panama shell',
+        super(ShaddockCli, self).__init__(
+            description='Shaddock shell',
             version='0.2',
-            command_manager=CommandManager('panama.cli'),
+            command_manager=CommandManager('shaddock.cli'),
             )
 
     def initialize_app(self, argv):
@@ -44,7 +44,7 @@ class PanamaCli(App):
 
 
 def main(argv=sys.argv[1:]):
-    myapp = PanamaCli()
+    myapp = ShaddockCli()
     return myapp.run(argv)
 
 

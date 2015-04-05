@@ -14,8 +14,8 @@
 
 import itertools
 
-from panama import backend
-from panama import model
+from shaddock import backend
+from shaddock import model
 
 
 def list_opts():

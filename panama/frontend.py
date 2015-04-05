@@ -19,7 +19,7 @@ import logging
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from panama import backend, model
+from shaddock import backend, model
 
 
 def get_container_info(name):

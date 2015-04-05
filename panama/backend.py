@@ -17,7 +17,7 @@
 
 import docker
 import json
-from panama import model
+from shaddock import model
 from oslo_config import cfg
 
 

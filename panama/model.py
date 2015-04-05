@@ -20,10 +20,10 @@ from oslo_config import cfg
 
 OPTS = [
     cfg.StrOpt('template_dir',
-               default='/var/lib/panama',
+               default='/var/lib/shaddock',
                help='Template directory to use.'),
     cfg.StrOpt('user',
-               default='panama',
+               default='shaddock',
                help='User used to build Docker images.'),
     cfg.StrOpt('nocache',
                default='False',
@@ -133,7 +133,7 @@ class Dico(object):
         #                'GLANCE_DBPASS': glance_pass
         #               },
         #      'volumes': ['/var/log/supervisor'],
-        #      'binds': {'/var/log/panama/glance':
+        #      'binds': {'/var/log/shaddock/glance':
         #                   {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },

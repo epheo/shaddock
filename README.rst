@@ -1,12 +1,12 @@
-Panama
+Shaddock
 ============
-Panama provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
+Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
 
 
 Usage
 -----
-A basic infrastructure template can be found in [Panama-template](https://github.com/Epheo/panama-template) repository.
-This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/panama**
+A basic infrastructure template can be found in [Shaddock-template](https://github.com/Epheo/shaddock-template) repository.
+This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
 
 Common commands are:
     - build [service_name]
@@ -24,20 +24,20 @@ Docker installation
 '''''''''''''''''''
 https://docs.docker.com/installation/
 
-Panama installation
+Shaddock installation
 '''''''''''''''''''
 
-    sudo pip install panama
+    sudo pip install shaddock
 
 or
 
     sudo python setupy.py install
 
-Panama template installation
+Shaddock template installation
 ''''''''''''''''''''''''''''
 (For an OpenStack platform)
 
-    git clone https://github.com/Epheo/panama-template /var/lib/panama/
+    git clone https://github.com/Epheo/shaddock-template /var/lib/shaddock/
 
 
 Configuration
@@ -52,7 +52,7 @@ All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
 Both are in [YAML](http://www.yaml.org/)
 
-In order to use Panama with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
+In order to use Shaddock with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
 
 INFORMATIONS
 ------------
@@ -63,7 +63,7 @@ I'm really interested in any advice, idea, help, or contribution.
 
 License
 '''''''
-Panama is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 References
 ''''''''''
