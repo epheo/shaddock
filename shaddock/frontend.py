@@ -15,12 +15,30 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import sys
 import logging
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from panama import backend, model
+from shaddock import backend, model, scheduler
+
+
+def get_container_info(name):
+    container = backend.Container(name)
+    columns = ('Name',
+               'Created',
+               'Started',
+               'IP',
+               'Tag',
+               'Docker-id')
+
+    data = (name,
+            container.created,
+            container.started,
+            container.ip,
+            container.tag,
+            container.id)
+
+    return columns, data
 
 
 class Build(Command):
@@ -29,30 +47,27 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
-        parser.add_argument('--no-cache', help='Build the container without cache')
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        if parsed_args.no_cache:
-            nocache = True
-        else:
-            nocache = False
 
-        if name:
-            image = backend.Image(name)
-            image.build(nocache)
+        if name is not None:
+            if name == 'all':
+                print('Building all the services...')
+                schedul = scheduler.Scheduler()
+                schedul.build_all()
+            else:
+                image = backend.Image(name)
+                image.build()
         else:
-            image = backend.Image('base')
-            image.build(nocache)
+            print('Please specify a name or all')
 
-            for i in cf.services_keys:
-                image = backend.Image(i)
-                image.build(nocache)
         return True
 
 
 class Create(ShowOne):
+    """Create new container"""
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
@@ -64,27 +79,11 @@ class Create(ShowOne):
         if name:
             image = backend.Image(name)
             image.create()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id',
-                        )
-
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Start(ShowOne):
+    """Start new container"""
 
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
@@ -96,27 +95,12 @@ class Start(ShowOne):
         if name:
             container = backend.Container(name)
             container.start()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id',
-                        )
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Stop(ShowOne):
+    """Stop container"""
 
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
@@ -128,27 +112,12 @@ class Stop(ShowOne):
         if name:
             container = backend.Container(name)
             container.stop()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id',
-                        )
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Restart(ShowOne):
+    """Restart container"""
 
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
@@ -160,27 +129,12 @@ class Restart(ShowOne):
         if name:
             container = backend.Container(name)
             container.restart()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id',
-                        )
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Remove(ShowOne):
+    """Remove container"""
 
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
@@ -192,35 +146,20 @@ class Remove(ShowOne):
         if name:
             container = backend.Container(name)
             container.remove()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id',
-                        )
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class List(Lister):
     """Show a list of Containers.
-    The 'Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id' are printed by default.
+       The 'Name', 'Created', 'Started', 'IP', 'Tag',
+       'Docker-id' are printed by default.
     """
 
     log = logging.getLogger(__name__)
 
     def take_action(self, parsed_args):
-        cf = model.ConfigFile()
+        cf = model.Template()
         columns = ('Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id')
         l = ()
         for n in cf.services_keys:
@@ -243,20 +182,4 @@ class Show(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
 
-        columns = ('Name',
-                   'Created',
-                   'Started',
-                   'IP',
-                   'Tag',
-                   'Docker-id',
-                   )
-
-        b = backend.Container(name)
-        data = (name,
-                b.created,
-                b.started,
-                b.ip,
-                b.tag,
-                b.id)
-
-        return columns, data
+        return get_container_info(name)

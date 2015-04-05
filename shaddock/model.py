@@ -16,30 +16,42 @@
 #    under the License.
 
 import yaml
-from configparser import ConfigParser
+from oslo_config import cfg
 
-class ConfigFile(object):
+OPTS = [
+    cfg.StrOpt('template_dir',
+               default='/var/lib/shaddock',
+               help='Template directory to use.'),
+    cfg.StrOpt('user',
+               default='shaddock',
+               help='User used to build Docker images.'),
+    cfg.StrOpt('nocache',
+               default='False',
+               help='Build images w/o cache.')
+]
+
+CONF = cfg.CONF
+CONF.register_opts(OPTS)
+CONF.register_cli_opts(OPTS)
+
+class Template(object):
 
     def __init__(self):
-        config = ConfigParser()
-        config.read('/etc/panama.conf')
-        self.docker_url = config.get('DEFAULT', 'docker_url')
-        self.template_dir = config.get('DEFAULT', 'template_dir')
-        self.docker_version = str(config.get('DEFAULT', 'docker_version'))
-        self.user = config.get('DEFAULT', 'user')
+        self.template_dir = CONF.template_dir
+        self.user = CONF.user
 
-        services_dic = open('%s/conf/services.yml' % self.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % CONF.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
         self.services_keys = services_dic.keys()
 
-        config_dic = open('%s/conf/configuration.yml' % self.template_dir, "r")
+        config_dic = open('%s/etc/configuration.yml' % CONF.template_dir, "r")
         config_dic = config_dic.read()
         config_dic = yaml.load(config_dic)
         self.template_vars = config_dic.get('template_vars')
 
 
-class Dico(object):
+class ContainerConfig(object):
 
     def __init__(self, service_name):
         self.name = service_name
@@ -55,16 +67,17 @@ class Dico(object):
         self.network_mode = self.dictionary.get('network_mode')
 
     def make_service_dictionary(self):
-        configfile = ConfigFile()
+        template = Template()
 
-        services_dic = open('%s/conf/services.yml' % configfile.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % CONF.template_dir,
+                            "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
 
         ports = None
         volumes = None
 
-        for service in configfile.services_keys:
+        for service in template.services_keys:
             if service.lower() == self.name:
                 service_info = services_dic.get(self.name, None)
                 ports = service_info.get('ports')
@@ -74,8 +87,9 @@ class Dico(object):
 
         service_dic = {}
 
-        service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
-        service_dic['path'] = '%s/template/%s' % (configfile.template_dir, self.name)
+        service_dic['tag'] = '%s/%s' % (CONF.user, self.name)
+        service_dic['path'] = '%s/template/%s' % (CONF.template_dir,
+                                                  self.name)
 
         ports_list = []
         ports_bind_dico = {}
@@ -104,21 +118,22 @@ class Dico(object):
 
         return service_dic
 
-        #  Final dictionary should be like:
+        #  Dictionary should be like:
         #  'glance': {
-        #      'tag': '%s/osglance' % (user), 
+        #      'tag': '%s/osglance' % (user),
         #      'path': '%s/glance/' % (path),
         #      'ports': [(9292, 'tcp')],
         #      'port_bindings': {9292: ('0.0.0.0', 9292)},
-        #      'confs': {'HOST_NAME': host_name, 
-        #                'MYSQL_DB': mysql_host, 
-        #                'MYSQL_USER': mysql_user, 
-        #                'MYSQL_PASSWORD': mysql_pass, 
-        #                'RABBITMQ_HOST': rabbitmq_host, 
-        #                'RABBITMQ_PASSWORD': rabbitmq_password, 
+        #      'confs': {'HOST_NAME': host_name,
+        #                'MYSQL_DB': mysql_host,
+        #                'MYSQL_USER': mysql_user,
+        #                'MYSQL_PASSWORD': mysql_pass,
+        #                'RABBITMQ_HOST': rabbitmq_host,
+        #                'RABBITMQ_PASSWORD': rabbitmq_password,
         #                'GLANCE_DBPASS': glance_pass
         #               },
         #      'volumes': ['/var/log/supervisor'],
-        #      'binds': {'/var/log/panama/glance': {'bind': '/var/log/supervisor', 'ro': False}},
+        #      'binds': {'/var/log/shaddock/glance':
+        #                   {'bind': '/var/log/supervisor', 'ro': False}},
         #      'privileged': False
         #      },

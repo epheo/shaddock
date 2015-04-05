@@ -16,66 +16,81 @@
 #    under the License.
 
 import docker
-from panama import view, model
 import json
+from shaddock import model
+from oslo_config import cfg
 
+
+DOCKER_OPTS = [
+     cfg.StrOpt('docker_host',
+                default='unix://var/run/docker.sock',
+                help='IP/hostname to the Docker API.'),
+     cfg.StrOpt('docker_version',
+                default=1.12,
+                help='Version of the Docker API.')
+]
+
+CONF = cfg.CONF
+CONF.register_opts(DOCKER_OPTS)
+CONF.register_cli_opts(DOCKER_OPTS)
 
 class Image(object):
 
     def __init__(self, service_name):
         self.name = service_name
-        self.dico = model.Dico(self.name)
-        self.configfile = model.ConfigFile()
+        self.containerconfig = model.ContainerConfig(self.name)
+        self.template = model.Template()
 
-        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version=self.configfile.docker_version,
+        self.dockerapi = docker.Client(base_url=CONF.docker_host,
+                                       version=CONF.docker_version,
                                        timeout=10)
 
-    def build(self, nocache):
-        if self.dico.tag is not None:
-            for line in self.dockerapi.build(path=self.dico.path,
-                                             tag=self.dico.tag,
-                                             nocache=nocache):
-                jsonstream =  json.loads(line.decode())
+    def build(self):
+        if self.containerconfig.tag is not None:
+            for line in self.dockerapi.build(path=self.containerconfig.path,
+                                             tag=self.containerconfig.tag,
+                                             nocache=CONF.nocache):
+                jsonstream = json.loads(line.decode())
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
-                if not error == None:
+                if error is not None:
                     print(error)
-                if not stream == None:
+                if stream is not None:
                     print(stream)
-
 
         else:
             print("Unrecognized service name")
 
     def create(self):
-        self.dockerapi.create_container(image=self.dico.tag,
-                                        name=self.name,
-                                        detach=False,
-                                        ports=self.dico.ports,
-                                        environment=self.configfile.template_vars,
-                                        volumes=self.dico.volumes,
-                                        hostname=self.dico.name)
+        c_id = self.dockerapi.create_container(
+            image=self.containerconfig.tag,
+            name=self.name,
+            detach=False,
+            ports=self.containerconfig.ports,
+            environment=self.template.template_vars,
+            volumes=self.containerconfig.volumes,
+            hostname=self.containerconfig.name)
+
+        return c_id
 
 
 class Container(object):
 
     def __init__(self, service_name):
         self.name = service_name
-        self.dico = model.Dico(self.name)
-        self.tag = self.dico.tag
-        if self.dico.privileged:
-            self.privileged = self.dico.privileged
+        self.containerconfig = model.ContainerConfig(self.name)
+        self.tag = self.containerconfig.tag
+        if self.containerconfig.privileged:
+            self.privileged = self.containerconfig.privileged
         else:
             self.privileged = None
-        if self.dico.network_mode:
-            self.network_mode = self.dico.network_mode
+        if self.containerconfig.network_mode:
+            self.network_mode = self.containerconfig.network_mode
         else:
             self.network_mode = 'bridge'
-        self.configfile = model.ConfigFile()
 
-        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version=self.configfile.docker_version,
+        self.dockerapi = docker.Client(base_url=CONF.docker_host,
+                                       version=CONF.docker_version,
                                        timeout=60)
         info = self.get_info()
         self.id = info.get('id')
@@ -84,16 +99,26 @@ class Container(object):
         self.started = info.get('started')
         self.created = info.get('created')
 
-
     def start(self):
         if self.started is False and self.created is True:
             print('Starting %s ...' % self.tag)
-
             self.dockerapi.start(container=self.id,
-                                 binds=self.dico.binds,
-                                 port_bindings=self.dico.port_bindings,
+                                 binds=self.containerconfig.binds,
+                                 port_bindings=self.containerconfig.port_bindings,
                                  privileged=self.privileged,
                                  network_mode=self.network_mode)
+        elif self.created is False:
+            print('Creating image %s ...' % self.tag)
+            image = Image(self.name)
+            c_id = image.create()
+            if c_id:
+                print('Starting container ...')
+                self.dockerapi.start(container=c_id,
+                                     binds=self.containerconfig.binds,
+                                     port_bindings=self.containerconfig.port_bindings,
+                                     privileged=self.privileged,
+                                     network_mode=self.network_mode)
+
         return True
 
     def stop(self):
@@ -120,7 +145,8 @@ class Container(object):
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             try:
-                c_id = [item['Id'] for item in containers_list if self.tag in item['Image']][0]
+                c_id = [item['Id'] for item in containers_list
+                        if self.tag in item['Image']][0]
             except IndexError:
                 c_id = None
 
