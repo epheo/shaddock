@@ -25,8 +25,8 @@ def names_list(self):
         names_list.append(service.lower())
     return names_list
 
-def build_all():
-    for name in names_list():
+def build_all(self):
+    for name in self.names_list():
         image = backend.Image(name)
         image.build()
 
