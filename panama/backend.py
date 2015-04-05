@@ -88,7 +88,6 @@ class Container(object):
             self.network_mode = self.dico.network_mode
         else:
             self.network_mode = 'bridge'
-        self.configfile = model.ConfigFile()
 
         self.dockerapi = docker.Client(base_url=CONF.docker_host,
                                        version=CONF.docker_version,

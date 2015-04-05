@@ -18,13 +18,6 @@
 import yaml
 from oslo_config import cfg
 
-
-docker_group = cfg.OptGroup(name='docker',
-                            title='Docker options')
-
-
-
-
 OPTS = [
     cfg.StrOpt('template_dir',
                default='/var/lib/panama',
@@ -37,12 +30,11 @@ OPTS = [
 CONF = cfg.CONF
 CONF.register_opts(OPTS)
 
+
 class ConfigFile(object):
 
     def __init__(self):
-        self.docker_url = CONF.docker_host
         self.template_dir = CONF.template_dir
-        self.docker_version = str(CONF.docker_version)
         self.user = CONF.user
 
         services_dic = open('%s/etc/services.yml' % CONF.template_dir, "r")
@@ -123,7 +115,7 @@ class Dico(object):
 
         return service_dic
 
-        #  Final dictionary should be like:
+        #  Dictionary should be like:
         #  'glance': {
         #      'tag': '%s/osglance' % (user),
         #      'path': '%s/glance/' % (path),

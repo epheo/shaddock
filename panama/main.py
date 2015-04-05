@@ -20,12 +20,12 @@ import logging
 import sys
 
 
-class PanamaApp(App):
+class PanamaCli(App):
 
     log = logging.getLogger(__name__)
 
     def __init__(self):
-        super(PanamaApp, self).__init__(
+        super(PanamaCli, self).__init__(
             description='Panama shell',
             version='0.2',
             command_manager=CommandManager('panama.cli'),
@@ -44,7 +44,7 @@ class PanamaApp(App):
 
 
 def main(argv=sys.argv[1:]):
-    myapp = PanamaApp()
+    myapp = PanamaCli()
     return myapp.run(argv)
 
 

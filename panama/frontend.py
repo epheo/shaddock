@@ -62,6 +62,7 @@ class Build(Command):
             image = backend.Image(name)
             image.build(nocache)
         elif name is 'all':
+            print('Here I will build all the containers for you.')
             raise NotImplementedError
         return True
 
@@ -95,12 +96,6 @@ class Start(ShowOne):
         if name:
             container = backend.Container(name)
             container.start()
-#           else:
-#                image = backend.Image(name)
-#                c_id = image.create()
-#                if c_id:
-#                    container = backend.Container(name)
-#                    container.start()
 
         return get_container_info(name)
 
@@ -153,7 +148,7 @@ class Remove(ShowOne):
             container = backend.Container(name)
             container.remove()
 
-            return get_container_info(name)
+        return get_container_info(name)
 
 
 class List(Lister):
