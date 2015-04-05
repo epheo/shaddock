@@ -90,21 +90,27 @@ class Start(ShowOne):
         name = parsed_args.name
         if name:
             container = backend.Container(name)
-            container.start()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id')
+            if container.created is True:
+                container.start()
+                container = backend.Container(name)
+                columns = ('Name',
+                           'Created',
+                           'Started',
+                           'IP',
+                           'Tag',
+                           'Docker-id')
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
+                data = (name,
+                        container.created,
+                        container.started,
+                        container.ip,
+                        container.tag,
+                        container.id)
+            else:
+                image = backend.Image(name)
+                c_id = image.create()
+                if c_id:
+                    self.take_action()
 
         return columns, data
 

@@ -62,7 +62,7 @@ class Image(object):
             print("Unrecognized service name")
 
     def create(self):
-        self.dockerapi.create_container(
+        c_id = self.dockerapi.create_container(
             image=self.dico.tag,
             name=self.name,
             detach=False,
@@ -70,6 +70,8 @@ class Image(object):
             environment=self.configfile.template_vars,
             volumes=self.dico.volumes,
             hostname=self.dico.name)
+
+        return c_id
 
 
 class Container(object):
