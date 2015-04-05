@@ -51,10 +51,11 @@ class Build(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+
         if name is not None:
             if name == 'all':
                 print('Here I will build all the containers for you.')
-                self.scheduler.build_all()
+                scheduler.build_all(self)
             else:
                 image = backend.Image(name)
                 image.build()
