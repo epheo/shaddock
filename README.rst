@@ -17,8 +17,8 @@ Common commands are:
     - show [service_name]
     - remove [service_name]
 
-Installation
-------------
+QuickStart
+----------
 
 Docker installation
 '''''''''''''''''''
@@ -43,7 +43,7 @@ Shaddock template installation
 
 
 Configuration
--------------
+'''''''''''''
 
 	- /var/lib/shaddock/services.yaml
 	- /var/lib/shaddock/configuration.yaml
@@ -54,6 +54,19 @@ All the configurations (passwords, users, etc.) are in *configuration.yaml*
 Both are in YAML: http://www.yaml.org/
 
 In order to use Shaddock with a distant server or on Mac OS with boot2docker you can change the address in configuration.yaml
+
+Launch a simple OpenStack platform
+''''''''''''''''''''''''''''''''''
+shaddock
+<shaddock> build all
+<shaddock> start rabbitmq
+<shaddock> start mysql
+<shaddock> start keystone
+<shaddock> start seed
+<shaddock> start nova
+<shaddock> start glance
+<shaddock> start horizon
+
 
 INFORMATIONS
 ------------
