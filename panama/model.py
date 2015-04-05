@@ -22,7 +22,7 @@ from oslo_config import cfg
 docker_group = cfg.OptGroup(name='docker',
                             title='Docker options')
 
-docker_opts = [
+DOCKER_OPTS = [
      cfg.StrOpt('host',
                 default='unix://var/run/docker.sock',
                 help='IP/hostname to the Docker API.'),
@@ -32,7 +32,7 @@ docker_opts = [
 ]
 
 
-opts = [
+OPTS = [
     cfg.StrOpt('template_dir',
                default='/var/lib/panama',
                help='Template directory to use.'),
@@ -41,19 +41,17 @@ opts = [
                help='User used to build Docker images.')
 ]
 
+CONF = cfg.CONF
+CONF.register_opts(DOCKER_OPTS)
+CONF.register_opts(OPTS)
 
 class ConfigFile(object):
 
-    def __init__(self, conf):
-        self.conf = conf
-        self.conf.register_opts(opts)
-        self.conf.register_group(docker_group)
-        self.conf.register_opts(docker_opts, group='docker')
-
-        self.docker_url = conf.docker.host
-        self.template_dir = conf.template_dir
-        self.docker_version = str(conf.docker.version)
-        self.user = conf.user
+    def __init__(self):
+        self.docker_url = CONF.docker.host
+        self.template_dir = CONF.template_dir
+        self.docker_version = str(CONF.docker.version)
+        self.user = CONF.user
 
         services_dic = open('%s/etc/services.yml' % self.template_dir, "r")
         services_dic = services_dic.read()
