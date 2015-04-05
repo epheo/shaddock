@@ -61,6 +61,7 @@ Launch a simple OpenStack platform
 Build all the images and start the services
 
 .. code:: bash
+
     <shaddock> build all
     <shaddock> start rabbitmq
     <shaddock> start mysql
