@@ -51,13 +51,16 @@ class Build(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        if name is not None:
+            if name == 'all':
+                print('Here I will build all the containers for you.')
+                scheduler.build_all()
+            elif:
+                image = backend.Image(name)
+                image.build()
+        else:
+            print('Please specify a name or all')
 
-        if name is not 'all' and name is not None:
-            image = backend.Image(name)
-            image.build()
-        elif name is 'all':
-            print('Here I will build all the containers for you.')
-            scheduler.build_all()
         return True
 
 
