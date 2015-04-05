@@ -54,7 +54,7 @@ class Build(Command):
         if name is not None:
             if name == 'all':
                 print('Here I will build all the containers for you.')
-                scheduler.build_all()
+                self.scheduler.build_all()
             else:
                 image = backend.Image(name)
                 image.build()
