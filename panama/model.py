@@ -22,14 +22,7 @@ from oslo_config import cfg
 docker_group = cfg.OptGroup(name='docker',
                             title='Docker options')
 
-DOCKER_OPTS = [
-     cfg.StrOpt('docker_host',
-                default='unix://var/run/docker.sock',
-                help='IP/hostname to the Docker API.'),
-     cfg.StrOpt('docker_version',
-                default=1.12,
-                help='Version of the Docker API.')
-]
+
 
 
 OPTS = [
@@ -42,7 +35,6 @@ OPTS = [
 ]
 
 CONF = cfg.CONF
-CONF.register_opts(DOCKER_OPTS)
 CONF.register_opts(OPTS)
 
 class ConfigFile(object):
@@ -53,12 +45,12 @@ class ConfigFile(object):
         self.docker_version = str(CONF.docker_version)
         self.user = CONF.user
 
-        services_dic = open('%s/etc/services.yml' % self.template_dir, "r")
+        services_dic = open('%s/etc/services.yml' % CONF.template_dir, "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
         self.services_keys = services_dic.keys()
 
-        config_dic = open('%s/etc/configuration.yml' % self.template_dir, "r")
+        config_dic = open('%s/etc/configuration.yml' % CONF.template_dir, "r")
         config_dic = config_dic.read()
         config_dic = yaml.load(config_dic)
         self.template_vars = config_dic.get('template_vars')
@@ -82,7 +74,7 @@ class Dico(object):
     def make_service_dictionary(self):
         configfile = ConfigFile()
 
-        services_dic = open('%s/etc/services.yml' % configfile.template_dir,
+        services_dic = open('%s/etc/services.yml' % CONF.template_dir,
                             "r")
         services_dic = services_dic.read()
         services_dic = yaml.load(services_dic)
@@ -100,8 +92,8 @@ class Dico(object):
 
         service_dic = {}
 
-        service_dic['tag'] = '%s/%s' % (configfile.user, self.name)
-        service_dic['path'] = '%s/template/%s' % (configfile.template_dir,
+        service_dic['tag'] = '%s/%s' % (CONF.user, self.name)
+        service_dic['path'] = '%s/template/%s' % (CONF.template_dir,
                                                   self.name)
 
         ports_list = []

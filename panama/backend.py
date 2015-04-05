@@ -16,8 +16,22 @@
 #    under the License.
 
 import docker
-from panama import model
 import json
+from panama import model
+from oslo_config import cfg
+
+
+DOCKER_OPTS = [
+     cfg.StrOpt('docker_host',
+                default='unix://var/run/docker.sock',
+                help='IP/hostname to the Docker API.'),
+     cfg.StrOpt('docker_version',
+                default=1.12,
+                help='Version of the Docker API.')
+]
+
+CONF = cfg.CONF
+CONF.register_opts(DOCKER_OPTS)
 
 
 class Image(object):
@@ -27,8 +41,8 @@ class Image(object):
         self.dico = model.Dico(self.name)
         self.configfile = model.ConfigFile()
 
-        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version=self.configfile.docker_version,
+        self.dockerapi = docker.Client(base_url=CONF.docker_host,
+                                       version=CONF.docker_version,
                                        timeout=10)
 
     def build(self, nocache):
@@ -74,8 +88,8 @@ class Container(object):
             self.network_mode = 'bridge'
         self.configfile = model.ConfigFile()
 
-        self.dockerapi = docker.Client(base_url=self.configfile.docker_url,
-                                       version=self.configfile.docker_version,
+        self.dockerapi = docker.Client(base_url=CONF.docker_host,
+                                       version=CONF.docker_version,
                                        timeout=60)
         info = self.get_info()
         self.id = info.get('id')
