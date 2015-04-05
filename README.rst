@@ -58,7 +58,7 @@ In order to use Shaddock with a distant server or on Mac OS with boot2docker you
 Launch a simple OpenStack platform
 ''''''''''''''''''''''''''''''''''
 
-::
+Build all the images and start the services::
     shaddock
     <shaddock> build all
     <shaddock> start rabbitmq
