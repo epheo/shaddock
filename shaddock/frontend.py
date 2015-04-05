@@ -55,7 +55,7 @@ class Build(Command):
             if name == 'all':
                 print('Here I will build all the containers for you.')
                 scheduler.build_all()
-            elif:
+            else:
                 image = backend.Image(name)
                 image.build()
         else:
