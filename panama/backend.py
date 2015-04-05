@@ -103,12 +103,23 @@ class Container(object):
     def start(self):
         if self.started is False and self.created is True:
             print('Starting %s ...' % self.tag)
-
             self.dockerapi.start(container=self.id,
                                  binds=self.dico.binds,
                                  port_bindings=self.dico.port_bindings,
                                  privileged=self.privileged,
                                  network_mode=self.network_mode)
+        elif self.created is False:
+            print('Creating image %s ...' % self.tag)
+            image = Image(self.name)
+            c_id = image.create()
+            if c_id:
+                print('Starting container ...')
+                self.dockerapi.start(container=c_id,
+                                     binds=self.dico.binds,
+                                     port_bindings=self.dico.port_bindings,
+                                     privileged=self.privileged,
+                                     network_mode=self.network_mode)
+
         return True
 
     def stop(self):

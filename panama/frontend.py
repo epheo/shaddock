@@ -22,6 +22,25 @@ from cliff.show import ShowOne
 from panama import backend, model
 
 
+def get_container_info(name):
+    container = backend.Container(name)
+    columns = ('Name',
+               'Created',
+               'Started',
+               'IP',
+               'Tag',
+               'Docker-id')
+
+    data = (name,
+            container.created,
+            container.started,
+            container.ip,
+            container.tag,
+            container.id)
+
+    return columns, data
+
+
 class Build(Command):
     """Build new container"""
 
@@ -60,22 +79,7 @@ class Create(ShowOne):
         if name:
             image = backend.Image(name)
             image.create()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id')
-
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Start(ShowOne):
@@ -90,30 +94,15 @@ class Start(ShowOne):
         name = parsed_args.name
         if name:
             container = backend.Container(name)
-            if container.created is 'True':
-                container.start()
-                container = backend.Container(name)
-                columns = ('Name',
-                           'Created',
-                           'Started',
-                           'IP',
-                           'Tag',
-                           'Docker-id')
+            container.start()
+#           else:
+#                image = backend.Image(name)
+#                c_id = image.create()
+#                if c_id:
+#                    container = backend.Container(name)
+#                    container.start()
 
-                data = (name,
-                        container.created,
-                        container.started,
-                        container.ip,
-                        container.tag,
-                        container.id)
-            else:
-                image = backend.Image(name)
-                c_id = image.create()
-                if c_id:
-                    self.take_action()
-
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Stop(ShowOne):
@@ -129,22 +118,8 @@ class Stop(ShowOne):
         if name:
             container = backend.Container(name)
             container.stop()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id')
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Restart(ShowOne):
@@ -160,22 +135,8 @@ class Restart(ShowOne):
         if name:
             container = backend.Container(name)
             container.restart()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id')
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-        return columns, data
+        return get_container_info(name)
 
 
 class Remove(ShowOne):
@@ -191,22 +152,8 @@ class Remove(ShowOne):
         if name:
             container = backend.Container(name)
             container.remove()
-            container = backend.Container(name)
-            columns = ('Name',
-                       'Created',
-                       'Started',
-                       'IP',
-                       'Tag',
-                       'Docker-id')
 
-            data = (name,
-                    container.created,
-                    container.started,
-                    container.ip,
-                    container.tag,
-                    container.id)
-
-        return columns, data
+            return get_container_info(name)
 
 
 class List(Lister):
@@ -241,20 +188,4 @@ class Show(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
 
-        columns = ('Name',
-                   'Created',
-                   'Started',
-                   'IP',
-                   'Tag',
-                   'Docker-id',
-                   )
-
-        b = backend.Container(name)
-        data = (name,
-                b.created,
-                b.started,
-                b.ip,
-                b.tag,
-                b.id)
-
-        return columns, data
+        return get_container_info(name)
