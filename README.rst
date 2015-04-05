@@ -35,8 +35,8 @@ or
     sudo python setupy.py install
 
 
-Shaddock template installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OpenStack template installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reference template for an OpenStack platform
 
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
@@ -60,8 +60,7 @@ Launch a simple OpenStack platform
 
 Build all the images and start the services
 
-.. code:: yaml
-    shaddock
+.. code:: bash
     <shaddock> build all
     <shaddock> start rabbitmq
     <shaddock> start mysql
