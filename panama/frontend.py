@@ -90,7 +90,7 @@ class Start(ShowOne):
         name = parsed_args.name
         if name:
             container = backend.Container(name)
-            if container.created is True:
+            if container.created is 'True':
                 container.start()
                 container = backend.Container(name)
                 columns = ('Name',
@@ -111,6 +111,7 @@ class Start(ShowOne):
                 c_id = image.create()
                 if c_id:
                     self.take_action()
+
 
         return columns, data
 
