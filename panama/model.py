@@ -24,12 +24,15 @@ OPTS = [
                help='Template directory to use.'),
     cfg.StrOpt('user',
                default='panama',
-               help='User used to build Docker images.')
+               help='User used to build Docker images.'),
+    cfg.StrOpt('nocache',
+               default='False',
+               help='Build images w/o cache.')
 ]
 
 CONF = cfg.CONF
 CONF.register_opts(OPTS)
-
+CONF.register_cli_opts(OPTS)
 
 class ConfigFile(object):
 

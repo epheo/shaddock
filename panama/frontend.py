@@ -47,20 +47,14 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
-        parser.add_argument('--no-cache',
-                            help='Build the container without cache')
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        if parsed_args.no_cache:
-            nocache = True
-        else:
-            nocache = False
 
         if name is not 'all' and name is not None:
             image = backend.Image(name)
-            image.build(nocache)
+            image.build()
         elif name is 'all':
             print('Here I will build all the containers for you.')
             raise NotImplementedError

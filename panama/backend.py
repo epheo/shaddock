@@ -32,7 +32,7 @@ DOCKER_OPTS = [
 
 CONF = cfg.CONF
 CONF.register_opts(DOCKER_OPTS)
-
+CONF.register_cli_opts(DOCKER_OPTS)
 
 class Image(object):
 
@@ -45,11 +45,11 @@ class Image(object):
                                        version=CONF.docker_version,
                                        timeout=10)
 
-    def build(self, nocache):
+    def build(self):
         if self.dico.tag is not None:
             for line in self.dockerapi.build(path=self.dico.path,
                                              tag=self.dico.tag,
-                                             nocache=nocache):
+                                             nocache=CONF.nocache):
                 jsonstream = json.loads(line.decode())
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
