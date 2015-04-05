@@ -57,15 +57,17 @@ In order to use Shaddock with a distant server or on Mac OS with boot2docker you
 
 Launch a simple OpenStack platform
 ''''''''''''''''''''''''''''''''''
-shaddock
-<shaddock> build all
-<shaddock> start rabbitmq
-<shaddock> start mysql
-<shaddock> start keystone
-<shaddock> start seed
-<shaddock> start nova
-<shaddock> start glance
-<shaddock> start horizon
+
+.. code:: bash
+    shaddock
+    <shaddock> build all
+    <shaddock> start rabbitmq
+    <shaddock> start mysql
+    <shaddock> start keystone
+    <shaddock> start seed
+    <shaddock> start nova
+    <shaddock> start glance
+    <shaddock> start horizon
 
 
 INFORMATIONS
