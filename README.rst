@@ -82,5 +82,7 @@ Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you 
 
 References
 ~~~~~~~~~~
-Docker-py API Documentation: http://docker-py.readthedocs.org/
-OpenStack Official Documentation: http://docs.openstack.org/
+
+    Docker-py API Documentation: http://docker-py.readthedocs.org/
+
+    OpenStack Official Documentation: http://docs.openstack.org/
