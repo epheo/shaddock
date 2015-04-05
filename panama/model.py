@@ -26,7 +26,7 @@ DOCKER_OPTS = [
      cfg.StrOpt('docker_host',
                 default='unix://var/run/docker.sock',
                 help='IP/hostname to the Docker API.'),
-     cfg.IntOpt('docker_version',
+     cfg.StrOpt('docker_version',
                 default=1.12,
                 help='Version of the Docker API.')
 ]
