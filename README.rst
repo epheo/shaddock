@@ -5,7 +5,7 @@ Shaddock provides a platform deployed in http://docker.com containers following 
 
 Usage
 -----
-A basic infrastructure template can be found in [Shaddock-template](https://github.com/Epheo/shaddock-template) repository.
+A basic infrastructure template can be found in the Shaddock OpenStack template repository: https://github.com/epheo/shaddock-openstack
 This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
 
 Common commands are:
@@ -24,6 +24,7 @@ Docker installation
 '''''''''''''''''''
 https://docs.docker.com/installation/
 
+
 Shaddock installation
 '''''''''''''''''''
 
@@ -33,26 +34,26 @@ or
 
     sudo python setupy.py install
 
+
 Shaddock template installation
 ''''''''''''''''''''''''''''
 (For an OpenStack platform)
 
-    git clone https://github.com/Epheo/shaddock-template /var/lib/shaddock/
+    git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
 
 
 Configuration
 -------------
 
-	services.yaml
-
-	configuration.yaml
+	- /var/lib/shaddock/services.yaml
+	- /var/lib/shaddock/configuration.yaml
 
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
-Both are in [YAML](http://www.yaml.org/)
+Both are in YAML: http://www.yaml.org/
 
-In order to use Shaddock with a distant server or on **Mac OS** with boot2docker you can change the address in configuration.yaml
+In order to use Shaddock with a distant server or on Mac OS with boot2docker you can change the address in configuration.yaml
 
 INFORMATIONS
 ------------
@@ -67,4 +68,5 @@ Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you 
 
 References
 ''''''''''
-    [Docker-py API Documentation](https://github.com/docker/docker-py/blob/master/README.md)
+Docker-py API Documentation: http://docker-py.readthedocs.org/
+OpenStack Official Documentation: http://docs.openstack.org/
