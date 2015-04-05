@@ -18,20 +18,18 @@
 from shaddock import model, backend
 
 
-def names_list(self):
-    template = model.Template()
-    names_list = []
-    for service in template.services_keys:
-        names_list.append(service.lower())
-    return names_list
-
-def build_all(self):
-    for name in self.names_list():
-        image = backend.Image(name)
-        image.build()
-
-
 class Scheduler(object):
+
+    def __init__(self):
+        template = model.Template()
+        self.names_list = []
+        for service in template.services_keys:
+            self.names_list.append(service.lower())
+
+    def build_all(self):
+        for name in self.names_list:
+            image = backend.Image(name)
+            image.build()
 
     def order_by_priority(self):
         raise NotImplementedError
