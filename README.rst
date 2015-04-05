@@ -62,14 +62,15 @@ Build all the images and start the services
 
 .. code:: bash
 
-    <shaddock> build all
-    <shaddock> start rabbitmq
-    <shaddock> start mysql
-    <shaddock> start keystone
-    <shaddock> start seed
-    <shaddock> start nova
-    <shaddock> start glance
-    <shaddock> start horizon
+    shaddock
+    (shaddock) build all
+    (shaddock) start rabbitmq
+    (shaddock) start mysql
+    (shaddock) start keystone
+    (shaddock) start seed
+    (shaddock) start nova
+    (shaddock) start glance
+    (shaddock) start horizon
 
 
 INFORMATIONS
