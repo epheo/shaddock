@@ -48,6 +48,7 @@ class Build(Command):
 
 
 class Create(ShowOne):
+    """Create new container"""
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
@@ -78,6 +79,7 @@ class Create(ShowOne):
 
 
 class Start(ShowOne):
+    """Start new container"""
 
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
@@ -108,6 +110,7 @@ class Start(ShowOne):
 
 
 class Stop(ShowOne):
+    """Stop container"""
 
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
@@ -138,6 +141,7 @@ class Stop(ShowOne):
 
 
 class Restart(ShowOne):
+    """Restart container"""
 
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
@@ -168,6 +172,7 @@ class Restart(ShowOne):
 
 
 class Remove(ShowOne):
+    """Remove container"""
 
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
