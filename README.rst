@@ -1,6 +1,6 @@
-Shaddock
+**Shaddock**
 ============
-Shaddock provides a platform deployed in .. _Docker: http://docker.com containers following a predefined template (like a basic .. _OpenStack: http://openstack.org infrastructure.)
+Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
 
 
 Usage
@@ -21,12 +21,12 @@ QuickStart
 ----------
 
 Docker installation
-'''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~
 https://docs.docker.com/installation/
 
 
 Shaddock installation
-'''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~
 
     sudo pip install shaddock
 
@@ -36,14 +36,14 @@ or
 
 
 Shaddock template installation
-''''''''''''''''''''''''''''
-(For an OpenStack platform)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reference template for an OpenStack platform
 
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
 
 
 Configuration
-'''''''''''''
+~~~~~~~~~~~~~
 
 	- /var/lib/shaddock/services.yaml
 	- /var/lib/shaddock/configuration.yaml
@@ -51,14 +51,16 @@ Configuration
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
-Both are in YAML: http://www.yaml.org/
+Note: Both are in YAML: http://www.yaml.org/
 
 In order to use Shaddock with a distant server or on Mac OS with boot2docker you can change the address in configuration.yaml
 
 Launch a simple OpenStack platform
-''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Build all the images and start the services::
+Build all the images and start the services
+
+.. code:: yaml
     shaddock
     <shaddock> build all
     <shaddock> start rabbitmq
@@ -73,15 +75,11 @@ Build all the images and start the services::
 INFORMATIONS
 ------------
 
-Contributing
-''''''''''''
-I'm really interested in any advice, idea, help, or contribution.
-
 License
-'''''''
+~~~~~~~
 Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 References
-''''''''''
+~~~~~~~~~~
 Docker-py API Documentation: http://docker-py.readthedocs.org/
 OpenStack Official Documentation: http://docs.openstack.org/
