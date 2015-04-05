@@ -23,10 +23,10 @@ docker_group = cfg.OptGroup(name='docker',
                             title='Docker options')
 
 DOCKER_OPTS = [
-     cfg.StrOpt('host',
+     cfg.StrOpt('docker_host',
                 default='unix://var/run/docker.sock',
                 help='IP/hostname to the Docker API.'),
-     cfg.IntOpt('version',
+     cfg.IntOpt('docker_version',
                 default=1.12,
                 help='Version of the Docker API.')
 ]
@@ -48,9 +48,9 @@ CONF.register_opts(OPTS)
 class ConfigFile(object):
 
     def __init__(self):
-        self.docker_url = CONF.docker.host
+        self.docker_url = CONF.docker_host
         self.template_dir = CONF.template_dir
-        self.docker_version = str(CONF.docker.version)
+        self.docker_version = str(CONF.docker_version)
         self.user = CONF.user
 
         services_dic = open('%s/etc/services.yml' % self.template_dir, "r")
