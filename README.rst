@@ -73,13 +73,13 @@ Common commands are:
 
 .. code:: bash
 
-    build [service_name]
-    create [service_name]
-    start [service_name]
-    stop [service_name]
-    list
-    show [service_name]
-    remove [service_name]
+    (shaddock) build [service_name] [all]
+    (shaddock) create [service_name]
+    (shaddock) start [service_name]
+    (shaddock) stop [service_name]
+    (shaddock) list
+    (shaddock) show [service_name]
+    (shaddock) remove [service_name]
 
 
 INFORMATIONS
