@@ -26,11 +26,15 @@ OpenStack template installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reference template for an OpenStack platform
 
+.. code:: bash
+
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
 
 
 Configuration
 ~~~~~~~~~~~~~
+
+.. code:: bash
 
 	/var/lib/shaddock/services.yaml
 	/var/lib/shaddock/configuration.yaml
@@ -66,13 +70,16 @@ A basic infrastructure template can be found in the Shaddock OpenStack template 
 This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
 
 Common commands are:
-    - build [service_name]
-    - create [service_name]
-    - start [service_name]
-    - stop [service_name]
-    - list
-    - show [service_name]
-    - remove [service_name]
+
+.. code:: bash
+
+    build [service_name]
+    create [service_name]
+    start [service_name]
+    stop [service_name]
+    list
+    show [service_name]
+    remove [service_name]
 
 
 INFORMATIONS
