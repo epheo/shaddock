@@ -33,18 +33,22 @@ Reference template for an OpenStack platform
 
 Configuration
 ~~~~~~~~~~~~~
-
-.. code:: bash
-
-	/var/lib/shaddock/services.yaml
-	/var/lib/shaddock/configuration.yaml
-
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
 Note: Both are in YAML: http://www.yaml.org/
 
-In order to use Shaddock with a distant server or on Mac OS with boot2docker you can change the address in configuration.yaml
+.. code:: bash
+
+	/var/lib/shaddock/etc/services.yaml
+	/var/lib/shaddock/etc/configuration.yaml
+
+General shaddock configuration is in:
+
+.. code:: bash
+
+        /etc/shaddock/shaddock.conf
+
 
 Launch a simple OpenStack platform
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
