@@ -184,6 +184,7 @@ class Show(ShowOne):
 
         return get_container_info(name)
 
+
 class Logs(Command):
     """Display logs of a container"""
 
