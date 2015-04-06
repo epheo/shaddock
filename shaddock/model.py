@@ -80,10 +80,13 @@ class ContainerConfig(object):
         for service in template.services_keys:
             if service.lower() == self.name:
                 service_info = services_dic.get(self.name, None)
-                ports = service_info.get('ports')
-                volumes = service_info.get('volumes')
-                privileged = service_info.get('privileged')
-                network_mode = service_info.get('network_mode')
+                if service_info:
+                    ports = service_info.get('ports')
+                    volumes = service_info.get('volumes')
+                    privileged = service_info.get('privileged')
+                    network_mode = service_info.get('network_mode')
+                else:
+                    ports, volumes, privileged, network_mode = None
 
         service_dic = {}
 
