@@ -136,11 +136,19 @@ class Container(object):
         self.dockerapi.restart(self.id)
 
     def return_logs(self):
-        logs = self.dockerapi.logs(container=self.id,
-                                   stderr=True,
-                                   stdout=True,
-                                   stream=False)
-        print(logs)
+        if self.containerconfig.tag is not None:
+            for line in self.dockerapi.logs(container=self.id,
+                                            stderr=True,
+                                            stdout=True,
+                                            stream=True)
+                jsonstream = json.loads(line.decode())
+                stream = jsonstream.get('stream')
+                error = jsonstream.get('error')
+                if error is not None:
+                    print(error)
+                if stream is not None:
+                    print(stream)
+        
         return logs
 
     def get_info(self):
