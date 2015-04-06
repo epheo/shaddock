@@ -36,12 +36,12 @@ Configuration
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
-Note: Both are in YAML: http://www.yaml.org/
-
 .. code:: bash
 
 	/var/lib/shaddock/etc/services.yaml
 	/var/lib/shaddock/etc/configuration.yaml
+
+Note: Both are in YAML http://www.yaml.org/
 
 General shaddock configuration is in:
 
