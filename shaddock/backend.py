@@ -135,6 +135,14 @@ class Container(object):
     def restart(self):
         self.dockerapi.restart(self.id)
 
+    def return_logs(self):
+        logs = self.dockerapi.logs(container=self.id,
+                                   stderr=True,
+                                   stdout=True,
+                                   stream=False)
+        print(logs)
+        return logs
+
     def get_info(self):
         info = {}
         info['id'] = None

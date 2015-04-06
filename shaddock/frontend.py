@@ -183,3 +183,17 @@ class Show(ShowOne):
         name = parsed_args.name
 
         return get_container_info(name)
+
+class Logs(Command):
+    """Display logs of a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Logs, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default='.')
+        return parser
+
+    def take_action(self, parsed_args):
+        name = parsed_args.name
+        container = backend.Container(name)
+        container.return_logs()
+        return True

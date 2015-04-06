@@ -14,13 +14,13 @@ Shaddock installation
 
 .. code:: bash
 
-    sudo pip install shaddock
+    sudo python setupy.py install
 
 or
 
 .. code:: bash
 
-    sudo python setupy.py install
+    sudo pip install shaddock
 
 OpenStack template installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,6 +84,7 @@ Common commands are:
     (shaddock) list
     (shaddock) show [service_name]
     (shaddock) remove [service_name]
+    (shaddock) logs [service_name]
 
 
 INFORMATIONS
