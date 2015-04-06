@@ -25,7 +25,7 @@ DOCKER_OPTS = [
      cfg.StrOpt('docker_host',
                 default='unix://var/run/docker.sock',
                 help='IP/hostname to the Docker API.'),
-     cfg.StrOpt('docker_version',
+     cfg.FloatOpt('docker_version',
                 default=1.12,
                 help='Version of the Docker API.')
 ]
@@ -42,7 +42,7 @@ class Image(object):
         self.template = model.Template()
 
         self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=CONF.docker_version,
+                                       version=str(CONF.docker_version),
                                        timeout=10)
 
     def build(self):
@@ -90,7 +90,7 @@ class Container(object):
             self.network_mode = 'bridge'
 
         self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=CONF.docker_version,
+                                       version=str(CONF.docker_version),
                                        timeout=60)
         info = self.get_info()
         self.id = info.get('id')
@@ -134,6 +134,16 @@ class Container(object):
 
     def restart(self):
         self.dockerapi.restart(self.id)
+
+    def return_logs(self):
+        if self.containerconfig.tag is not None:
+            for line in self.dockerapi.logs(container=self.id,
+                                            stderr=False,
+                                            stdout=True,
+                                            stream=True):
+                print(line)
+
+        return True
 
     def get_info(self):
         info = {}

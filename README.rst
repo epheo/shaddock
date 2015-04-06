@@ -14,13 +14,13 @@ Shaddock installation
 
 .. code:: bash
 
-    sudo pip install shaddock
+    sudo python setupy.py install
 
 or
 
 .. code:: bash
 
-    sudo python setupy.py install
+    sudo pip install shaddock
 
 OpenStack template installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,18 +33,22 @@ Reference template for an OpenStack platform
 
 Configuration
 ~~~~~~~~~~~~~
-
-.. code:: bash
-
-	/var/lib/shaddock/services.yaml
-	/var/lib/shaddock/configuration.yaml
-
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
-Note: Both are in YAML: http://www.yaml.org/
+.. code:: bash
 
-In order to use Shaddock with a distant server or on Mac OS with boot2docker you can change the address in configuration.yaml
+	/var/lib/shaddock/etc/services.yaml
+	/var/lib/shaddock/etc/configuration.yaml
+
+Note: Both are in YAML http://www.yaml.org/
+
+General shaddock configuration is in:
+
+.. code:: bash
+
+        /etc/shaddock/shaddock.conf
+
 
 Launch a simple OpenStack platform
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,6 +84,7 @@ Common commands are:
     (shaddock) list
     (shaddock) show [service_name]
     (shaddock) remove [service_name]
+    (shaddock) logs [service_name]
 
 
 INFORMATIONS

@@ -27,7 +27,7 @@ class ShaddockCli(App):
     def __init__(self):
         super(ShaddockCli, self).__init__(
             description='Shaddock shell',
-            version='0.2',
+            version='0.3.2',
             command_manager=CommandManager('shaddock.cli'),
             )
 
@@ -44,8 +44,8 @@ class ShaddockCli(App):
 
 
 def main(argv=sys.argv[1:]):
-    myapp = ShaddockCli()
-    return myapp.run(argv)
+    sha = ShaddockCli()
+    return sha.run(argv)
 
 
 if __name__ == '__main__':
