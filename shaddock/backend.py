@@ -140,7 +140,7 @@ class Container(object):
             for line in self.dockerapi.logs(container=self.id,
                                             stderr=True,
                                             stdout=True,
-                                            stream=True)
+                                            stream=True):
                 jsonstream = json.loads(line.decode())
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
@@ -148,7 +148,7 @@ class Container(object):
                     print(error)
                 if stream is not None:
                     print(stream)
-        
+
         return logs
 
     def get_info(self):
