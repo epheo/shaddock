@@ -1,21 +1,6 @@
 **Shaddock**
 ============
-Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure.)
-
-
-Usage
------
-A basic infrastructure template can be found in the Shaddock OpenStack template repository: https://github.com/epheo/shaddock-openstack
-This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
-
-Common commands are:
-    - build [service_name]
-    - create [service_name]
-    - start [service_name]
-    - stop [service_name]
-    - list
-    - show [service_name]
-    - remove [service_name]
+Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure)
 
 QuickStart
 ----------
@@ -24,16 +9,18 @@ Docker installation
 ~~~~~~~~~~~~~~~~~~~
 https://docs.docker.com/installation/
 
-
 Shaddock installation
 ~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: bash
 
     sudo pip install shaddock
 
 or
 
-    sudo python setupy.py install
+.. code:: bash
 
+    sudo python setupy.py install
 
 OpenStack template installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,8 +32,8 @@ Reference template for an OpenStack platform
 Configuration
 ~~~~~~~~~~~~~
 
-	- /var/lib/shaddock/services.yaml
-	- /var/lib/shaddock/configuration.yaml
+	/var/lib/shaddock/services.yaml
+	/var/lib/shaddock/configuration.yaml
 
 The general architecture of the platform is defined in *services.yaml*
 All the configurations (passwords, users, etc.) are in *configuration.yaml*
@@ -73,6 +60,21 @@ Build all the images and start the services
     (shaddock) start horizon
 
 
+Usage
+-----
+A basic infrastructure template can be found in the Shaddock OpenStack template repository: https://github.com/epheo/shaddock-openstack
+This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
+
+Common commands are:
+    - build [service_name]
+    - create [service_name]
+    - start [service_name]
+    - stop [service_name]
+    - list
+    - show [service_name]
+    - remove [service_name]
+
+
 INFORMATIONS
 ------------
 
@@ -83,6 +85,6 @@ Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you 
 References
 ~~~~~~~~~~
 
-    Docker-py API Documentation: http://docker-py.readthedocs.org/
+Docker-py API Documentation: http://docker-py.readthedocs.org/
 
-    OpenStack Official Documentation: http://docs.openstack.org/
+OpenStack Official Documentation: http://docs.openstack.org/
