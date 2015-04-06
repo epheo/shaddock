@@ -44,8 +44,8 @@ class ShaddockCli(App):
 
 
 def main(argv=sys.argv[1:]):
-    myapp = ShaddockCli()
-    return myapp.run(argv)
+    sha = ShaddockCli()
+    return sha.run(argv)
 
 
 if __name__ == '__main__':

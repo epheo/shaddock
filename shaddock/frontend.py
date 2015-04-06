@@ -197,4 +197,5 @@ class Logs(Command):
         name = parsed_args.name
         container = backend.Container(name)
         container.return_logs()
+
         return True
