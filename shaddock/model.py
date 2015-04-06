@@ -86,7 +86,7 @@ class ContainerConfig(object):
                     privileged = service_info.get('privileged')
                     network_mode = service_info.get('network_mode')
                 else:
-                    ports, volumes, privileged, network_mode = None
+                    ports = volumes = privileged = network_mode = None
 
         service_dic = {}
 
