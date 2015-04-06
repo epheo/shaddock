@@ -138,12 +138,12 @@ class Container(object):
     def return_logs(self):
         if self.containerconfig.tag is not None:
             for line in self.dockerapi.logs(container=self.id,
-                                            stderr=True,
+                                            stderr=False,
                                             stdout=True,
                                             stream=True):
                 print(line)
 
-        return logs
+        return True
 
     def get_info(self):
         info = {}
