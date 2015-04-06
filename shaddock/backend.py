@@ -141,13 +141,7 @@ class Container(object):
                                             stderr=True,
                                             stdout=True,
                                             stream=True):
-                jsonstream = json.loads(line.decode())
-                stream = jsonstream.get('stream')
-                error = jsonstream.get('error')
-                if error is not None:
-                    print(error)
-                if stream is not None:
-                    print(stream)
+                print(line)
 
         return logs
 
