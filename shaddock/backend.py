@@ -18,31 +18,18 @@
 import docker
 import json
 from shaddock import model
-from oslo_config import cfg
 
-
-DOCKER_OPTS = [
-     cfg.StrOpt('docker_host',
-                default='unix://var/run/docker.sock',
-                help='IP/hostname to the Docker API.'),
-     cfg.FloatOpt('docker_version',
-                default=1.12,
-                help='Version of the Docker API.')
-]
-
-CONF = cfg.CONF
-CONF.register_opts(DOCKER_OPTS)
-CONF.register_cli_opts(DOCKER_OPTS)
 
 class Image(object):
 
-    def __init__(self, service_name):
-        self.name = service_name
+    def __init__(self, name, docker_host, docker_version):
+        self.name = name
         self.containerconfig = model.ContainerConfig(self.name)
         self.template = model.Template()
-
-        self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=str(CONF.docker_version),
+        self.docker_host = docker_host
+        self.docker_version = docker_version
+        self.dockerapi = docker.Client(base_url=self.docker_host,
+                                       version=str(self.docker_version),
                                        timeout=10)
 
     def build(self, nocache):
@@ -76,7 +63,7 @@ class Image(object):
 
 class Container(object):
 
-    def __init__(self, service_name):
+    def __init__(self, service_name, docker_host, docker_version):
         self.name = service_name
         self.containerconfig = model.ContainerConfig(self.name)
         self.tag = self.containerconfig.tag
@@ -88,16 +75,18 @@ class Container(object):
             self.network_mode = self.containerconfig.network_mode
         else:
             self.network_mode = 'bridge'
-
-        self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=str(CONF.docker_version),
-                                       timeout=60)
+        self.docker_host = docker_host
+        self.docker_version = docker_version
+        self.dockerapi = docker.Client(base_url=self.docker_host,
+                                       version=str(self.docker_version),
+                                       timeout=10)
         info = self.get_info()
         self.id = info.get('id')
         self.ip = info.get('ip')
         self.hostname = info.get('hostname')
         self.started = info.get('started')
         self.created = info.get('created')
+
 
     def start(self):
         if self.started is False and self.created is True:
@@ -109,7 +98,7 @@ class Container(object):
                                  network_mode=self.network_mode)
         elif self.created is False:
             print('Creating image %s ...' % self.tag)
-            image = Image(self.name)
+            image = Image(self.name, self.docker_host, self.docker_version)
             c_id = image.create()
             if c_id:
                 print('Starting container ...')
