@@ -36,13 +36,13 @@ CONF.register_cli_opts(DOCKER_OPTS)
 
 class Image(object):
 
-    def __init__(self, service_name):
-        self.name = service_name
+    def __init__(self, name, docker_host, docker_version):
+        self.name = name
         self.containerconfig = model.ContainerConfig(self.name)
         self.template = model.Template()
 
-        self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=str(CONF.docker_version),
+        self.dockerapi = docker.Client(base_url=docker_host,
+                                       version=str(docker_version),
                                        timeout=10)
 
     def build(self, nocache):

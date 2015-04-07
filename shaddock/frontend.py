@@ -95,6 +95,9 @@ class Build(Command):
     def take_action(self, parsed_args):
         name = parsed_args.name
         nocache = parsed_args.no_cache
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
+
 
         if name:
             if name == 'all':
@@ -102,7 +105,9 @@ class Build(Command):
                 schedul = scheduler.Scheduler()
                 schedul.build_all()
             else:
-                image = backend.Image(name)
+                image = backend.Image(name=name,
+                                      docker_host=docker_host,
+                                      docker_version=docker_version)
                 image.build(nocache)
         else:
             print('Please specify a name or all')
