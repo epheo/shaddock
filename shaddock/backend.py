@@ -122,9 +122,9 @@ class Container(object):
     def return_logs(self):
         if self.containerconfig.tag is not None:
             for line in self.dockerapi.logs(container=self.id,
-                                            stderr=False,
+                                            stderr=True,
                                             stdout=True,
-                                            stream=True):
+                                            stream=False):
                 print(line)
 
         return True
