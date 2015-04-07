@@ -19,7 +19,7 @@ from cliff.app import App
 from cliff.commandmanager import CommandManager
 import shaddock.frontend
 from cliff.help import HelpAction, HelpCommand
-from shaddock.common.openstack import cliutils as c
+from shaddock.openstack.common import cliutils as c
 import logging
 import sys
 
