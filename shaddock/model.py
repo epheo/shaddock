@@ -43,22 +43,22 @@ def get_service_dict(template_dir=CONF.template_dir):
 
 def get_vars_dict(template_dir=CONF.template_dir):
     with open('{}/etc/configuration.yml'.format(template_dir)) as f:
-        vars_dic = yaml.load(f)
-    return vars_dic.get('template_vars')
+        vars_dict = yaml.load(f)
+    return vars_dict.get('template_vars')
 
 
 class ContainerConfig():
     def __init__(self, service_name):
         self.name = service_name
 
-        services_dic = get_service_dict(CONF.template_dir)
+        services_dict = get_service_dict(CONF.template_dir)
 
         ports = None
         volumes = None
 
-        for service in services_dic.services_keys:
+        for service in services_dict.services_keys:
             if service.lower() == self.name:
-                service_info = services_dic.get(self.name, None)
+                service_info = services_dict.get(self.name, None)
                 if service_info:
                     ports = service_info.get('ports')
                     volumes = service_info.get('volumes')
@@ -74,27 +74,27 @@ class ContainerConfig():
         self.path = '{}/template/{}'.format(CONF.template_dir, self.name)
 
         ports_list = []
-        ports_bind_dico = {}
+        ports_bind_dict = {}
 
         if ports is not None:
             for port in ports:
                 ports_list.append((port, 'tcp'))
-                ports_bind_dico[port] = ('0.0.0.0', port)
+                ports_bind_dict[port] = ('0.0.0.0', port)
 
         self.ports = ports_list
-        self.port_bindings = ports_bind_dico
+        self.port_bindings = ports_bind_dict
 
         volumes_list = []
-        binds_dico = {}
+        binds_dict = {}
 
         if volumes is not None:
             for volume in volumes.keys():
                 volumes_list.append(volume)
                 bind = volumes.get(volume)
-                binds_dico[bind] = {'bind': volume, 'ro': False}
+                binds_dict[bind] = {'bind': volume, 'ro': False}
 
         self.volumes = volumes_list
-        self.binds = binds_dico
+        self.binds = binds_dict
 
         #  Dictionary should be like:
         #  'glance': {
