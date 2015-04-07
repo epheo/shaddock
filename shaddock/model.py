@@ -55,6 +55,8 @@ class ContainerConfig():
 
         ports = None
         volumes = None
+        privileged = None
+        network_mode = None
 
         for service in services_dict.keys():
             if service.lower() == self.name:
@@ -64,8 +66,6 @@ class ContainerConfig():
                     volumes = service_info.get('volumes')
                     privileged = service_info.get('privileged')
                     network_mode = service_info.get('network_mode')
-                else:
-                    ports = volumes = privileged = network_mode = None
 
         self.privileged = privileged
         self.network_mode = network_mode
