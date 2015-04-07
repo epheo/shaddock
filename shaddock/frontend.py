@@ -15,12 +15,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
 from shaddock import backend, model, scheduler
-from shaddock.openstack.common import cliutils as c
 
 
 class Build(Command):
@@ -212,7 +210,7 @@ class Logs(Command):
 
 
 def get_container_info(self, name, parsed_args):
-    container = backend.Container(name, 
+    container = backend.Container(name,
                                   self.app_args.docker_host,
                                   self.app_args.docker_version)
     columns = ('Name',
@@ -230,5 +228,3 @@ def get_container_info(self, name, parsed_args):
             container.id)
 
     return columns, data
-
-

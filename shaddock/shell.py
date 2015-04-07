@@ -32,8 +32,7 @@ class ShaddockShell(App):
         super(ShaddockShell, self).__init__(
             description='Shaddock shell',
             version='0.3.2',
-            command_manager=CommandManager('shaddock.cli'),
-            )
+            command_manager=CommandManager('shaddock.cli'))
         self._set_shell_commands(self._get_commands())
 
     def configure_logging(self):
@@ -129,11 +128,9 @@ class ShaddockShell(App):
         )
         return parser
 
-
     def initialize_app(self, argv):
         self._clear_shell_commands()
         self._set_shell_commands(self._get_commands())
-
 
     def _set_shell_commands(self, cmds_dict):
         for k, v in cmds_dict.items():

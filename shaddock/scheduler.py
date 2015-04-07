@@ -54,4 +54,3 @@ class Checks(object):
 
     def docker_check(self):
         raise NotImplementedError
-

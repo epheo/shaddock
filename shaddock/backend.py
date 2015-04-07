@@ -99,11 +99,11 @@ class Container(object):
             if c_id:
                 print('Starting container ...')
                 self.dockerapi.start(
-                        container=c_id,
-                        binds=self.containerconfig.binds,
-                        port_bindings=self.containerconfig.port_bindings,
-                        privileged=self.privileged,
-                        network_mode=self.network_mode)
+                    container=c_id,
+                    binds=self.containerconfig.binds,
+                    port_bindings=self.containerconfig.port_bindings,
+                    privileged=self.privileged,
+                    network_mode=self.network_mode)
 
         return True
 
