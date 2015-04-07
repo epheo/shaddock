@@ -86,22 +86,24 @@ class Container(object):
     def start(self):
         if self.started is False and self.created is True:
             print('Starting %s ...' % self.tag)
-            self.dockerapi.start(container=self.id,
-                                 binds=self.containerconfig.binds,
-                                 port_bindings=self.containerconfig.port_bindings,
-                                 privileged=self.privileged,
-                                 network_mode=self.network_mode)
+            self.dockerapi.start(
+                container=self.id,
+                binds=self.containerconfig.binds,
+                port_bindings=self.containerconfig.port_bindings,
+                privileged=self.privileged,
+                network_mode=self.network_mode)
         elif self.created is False:
             print('Creating image %s ...' % self.tag)
             image = Image(self.name, self.docker_host, self.docker_version)
             c_id = image.create()
             if c_id:
                 print('Starting container ...')
-                self.dockerapi.start(container=c_id,
-                                     binds=self.containerconfig.binds,
-                                     port_bindings=self.containerconfig.port_bindings,
-                                     privileged=self.privileged,
-                                     network_mode=self.network_mode)
+                self.dockerapi.start(
+                    container=c_id,
+                    binds=self.containerconfig.binds,
+                    port_bindings=self.containerconfig.port_bindings,
+                    privileged=self.privileged,
+                    network_mode=self.network_mode)
 
         return True
 
@@ -122,9 +124,9 @@ class Container(object):
     def return_logs(self):
         if self.containerconfig.tag is not None:
             logs = self.dockerapi.logs(container=self.id,
-                                            stderr=True,
-                                            stdout=True,
-                                            stream=False)
+                                       stderr=True,
+                                       stdout=True,
+                                       stream=False)
             print(logs)
 
         return True
