@@ -59,7 +59,7 @@ class ContainerConfig(object):
         network_mode = None
 
         for service in services_dict.keys():
-            if self.name in service:
+            if service.lower() == self.name:
                 service_info = services_dict.get(self.name, None)
                 if service_info:
                     ports = service_info.get('ports')

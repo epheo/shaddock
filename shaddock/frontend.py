@@ -208,6 +208,7 @@ class Logs(Command):
 
         return True
 
+
 class Pull(Command):
     """Display logs of a container"""
 
@@ -224,6 +225,7 @@ class Pull(Command):
         container.pull()
 
         return True
+
 
 def get_container_info(self, name, parsed_args):
     container = backend.Container(name,
