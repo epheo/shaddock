@@ -18,21 +18,7 @@
 import docker
 import json
 from shaddock import model
-from oslo_config import cfg
 
-
-DOCKER_OPTS = [
-     cfg.StrOpt('docker_host',
-                default='unix://var/run/docker.sock',
-                help='IP/hostname to the Docker API.'),
-     cfg.FloatOpt('docker_version',
-                default=1.12,
-                help='Version of the Docker API.')
-]
-
-CONF = cfg.CONF
-CONF.register_opts(DOCKER_OPTS)
-CONF.register_cli_opts(DOCKER_OPTS)
 
 class Image(object):
 
