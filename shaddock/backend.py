@@ -40,9 +40,10 @@ class Image(object):
         self.name = name
         self.containerconfig = model.ContainerConfig(self.name)
         self.template = model.Template()
-
-        self.dockerapi = docker.Client(base_url=docker_host,
-                                       version=str(docker_version),
+        self.docker_host = docker_host
+        self.docker_version = docker_version
+        self.dockerapi = docker.Client(base_url=self.docker_host,
+                                       version=str(self.docker_version),
                                        timeout=10)
 
     def build(self, nocache):
@@ -76,7 +77,7 @@ class Image(object):
 
 class Container(object):
 
-    def __init__(self, service_name):
+    def __init__(self, service_name, docker_host, docker_version):
         self.name = service_name
         self.containerconfig = model.ContainerConfig(self.name)
         self.tag = self.containerconfig.tag
@@ -88,16 +89,18 @@ class Container(object):
             self.network_mode = self.containerconfig.network_mode
         else:
             self.network_mode = 'bridge'
-
-        self.dockerapi = docker.Client(base_url=CONF.docker_host,
-                                       version=str(CONF.docker_version),
-                                       timeout=60)
+        self.docker_host = docker_host
+        self.docker_version = docker_version
+        self.dockerapi = docker.Client(base_url=self.docker_host,
+                                       version=str(self.docker_version),
+                                       timeout=10)
         info = self.get_info()
         self.id = info.get('id')
         self.ip = info.get('ip')
         self.hostname = info.get('hostname')
         self.started = info.get('started')
         self.created = info.get('created')
+
 
     def start(self):
         if self.started is False and self.created is True:

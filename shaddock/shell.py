@@ -142,11 +142,6 @@ class ShaddockShell(App):
         self._clear_shell_commands()
         self._set_shell_commands(self._get_commands())
 
-        self.docker_host=self.options.docker_host
-        self.docker_version=self.options.docker_version
-        self.template_dir=self.options.template_dir
-        self.user=self.options.user
-
 
     def _set_shell_commands(self, cmds_dict):
         for k, v in cmds_dict.items():

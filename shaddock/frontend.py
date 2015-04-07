@@ -23,7 +23,9 @@ from shaddock import backend, model, scheduler
 from shaddock.openstack.common import cliutils as c
 
 
-def get_container_info(name):
+def get_container_info(name, parsed_args):
+    docker_host = parsed_args.docker_host
+    docker_version = parsed_args.docker_version
     container = backend.Container(name)
     columns = ('Name',
                'Created',
@@ -123,14 +125,19 @@ class Create(ShowOne):
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         if name:
-            image = backend.Image(name)
+            image = backend.Image(name=name,
+                                  docker_host=docker_host,
+                                  docker_version=docker_version)
             image.create()
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class Start(ShowOne):
@@ -139,15 +146,18 @@ class Start(ShowOne):
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         if name:
-            container = backend.Container(name)
+            container = backend.Container(name, docker_host, docker_version)
             container.start()
 
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class Stop(ShowOne):
@@ -156,15 +166,18 @@ class Stop(ShowOne):
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         if name:
-            container = backend.Container(name)
+            container = backend.Container(name, docker_host, docker_version)
             container.stop()
 
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class Restart(ShowOne):
@@ -173,15 +186,18 @@ class Restart(ShowOne):
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         if name:
-            container = backend.Container(name)
+            container = backend.Container(name, docker_host, docker_version)
             container.restart()
 
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class Remove(ShowOne):
@@ -190,19 +206,22 @@ class Remove(ShowOne):
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         if name:
             if name == 'all':
                 print('Removing all the services...')
                 schedul = scheduler.Scheduler()
-                schedul.remove_all()
+                schedul.remove_all(docker_host, docker_version)
             else:
-                container = backend.Container(name)
+                container = backend.Container(name, docker_host, docker_version)
                 container.remove()
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class List(Lister):
@@ -210,15 +229,19 @@ class List(Lister):
        The 'Name', 'Created', 'Started', 'IP', 'Tag',
        'Docker-id' are printed by default.
     """
-
-    log = logging.getLogger(__name__)
+    def get_parser(self, prog_name):
+        parser = super(Remove, self).get_parser(prog_name)
+        add_arguments(parser)
+        return parser
 
     def take_action(self, parsed_args):
+        docker_host = parsed_args.docker_host
+        docker_version = parsed_args.docker_version
         cf = model.Template()
         columns = ('Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id')
         l = ()
         for n in cf.services_keys:
-            b = backend.Container(n)
+            b = backend.Container(n, docker_host, docker_version)
             line = (n, b.created, b.started, b.ip, b.tag, b.id)
             l = l + (line, )
         return columns, l
@@ -227,17 +250,16 @@ class List(Lister):
 class Show(ShowOne):
     "Show details about a container"
 
-    log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
         parser = super(Show, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-
-        return get_container_info(name)
+        return get_container_info(name, parsed_args)
 
 
 class Logs(Command):
@@ -246,6 +268,7 @@ class Logs(Command):
     def get_parser(self, prog_name):
         parser = super(Logs, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):

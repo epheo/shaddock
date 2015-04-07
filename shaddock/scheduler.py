@@ -31,9 +31,9 @@ class Scheduler(object):
             image = backend.Image(name, docker_host, docker_version)
             image.build(nocache)
 
-    def remove_all(self):
+    def remove_all(self, docker_host, docker_version):
         for name in self.names_list:
-            container = backend.Container(name)
+            container = backend.Container(name, docker_host, docker_version)
             container.remove()
 
     def order_by_priority(self):
