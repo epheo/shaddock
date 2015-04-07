@@ -62,7 +62,7 @@ class Build(Command):
         name = parsed_args.name
         nocache = parsed_args.no_cache
 
-        if name is not None:
+        if name:
             if name == 'all':
                 print('Building all the services...')
                 schedul = scheduler.Scheduler()
@@ -154,9 +154,13 @@ class Remove(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
         if name:
-            container = backend.Container(name)
-            container.remove()
-
+            if name == 'all':
+                print('Removing all the services...')
+                schedul = scheduler.Scheduler()
+                schedul.remove_all()
+            else:
+                container = backend.Container(name)
+                container.remove()
         return get_container_info(name)
 
 
