@@ -16,7 +16,7 @@
 #    under the License.
 
 import yaml
-from oslo_config import cfg
+from oslo.config import cfg
 
 OPTS = [
     cfg.StrOpt('template_dir',
