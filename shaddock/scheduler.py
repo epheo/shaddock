@@ -26,10 +26,10 @@ class Scheduler(object):
         for service in template.services_keys:
             self.names_list.append(service.lower())
 
-    def build_all(self):
+    def build_all(self, nocache, docker_host, docker_version):
         for name in self.names_list:
-            image = backend.Image(name)
-            image.build()
+            image = backend.Image(name, docker_host, docker_version)
+            image.build(nocache)
 
     def remove_all(self):
         for name in self.names_list:

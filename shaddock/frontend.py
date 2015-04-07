@@ -103,7 +103,9 @@ class Build(Command):
             if name == 'all':
                 print('Building all the services...')
                 schedul = scheduler.Scheduler()
-                schedul.build_all()
+                schedul.build_all(nocache=False,
+                                  docker_host=docker_host,
+                                  docker_version=docker_version)
             else:
                 image = backend.Image(name=name,
                                       docker_host=docker_host,
