@@ -47,7 +47,7 @@ def get_vars_dict(template_dir=CONF.template_dir):
     return vars_dict.get('template_vars')
 
 
-class ContainerConfig():
+class ContainerConfig(object):
     def __init__(self, service_name):
         self.name = service_name
 
