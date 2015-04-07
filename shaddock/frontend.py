@@ -47,19 +47,27 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument(
+            '--no-cache',
+            action='store_true',
+            dest='no_cache',
+            default='False',
+            help='Build images w/o cache.'
+        )
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
+        nocache = parsed_args.no_cache
 
-        if name is not None:
+        if name:
             if name == 'all':
                 print('Building all the services...')
                 schedul = scheduler.Scheduler()
                 schedul.build_all()
             else:
                 image = backend.Image(name)
-                image.build()
+                image.build(nocache)
         else:
             print('Please specify a name or all')
 
@@ -144,9 +152,13 @@ class Remove(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
         if name:
-            container = backend.Container(name)
-            container.remove()
-
+            if name == 'all':
+                print('Removing all the services...')
+                schedul = scheduler.Scheduler()
+                schedul.remove_all()
+            else:
+                container = backend.Container(name)
+                container.remove()
         return get_container_info(name)
 
 

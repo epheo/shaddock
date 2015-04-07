@@ -45,11 +45,11 @@ class Image(object):
                                        version=str(CONF.docker_version),
                                        timeout=10)
 
-    def build(self):
+    def build(self, nocache):
         if self.containerconfig.tag is not None:
             for line in self.dockerapi.build(path=self.containerconfig.path,
                                              tag=self.containerconfig.tag,
-                                             nocache=CONF.nocache):
+                                             nocache=nocache):
                 jsonstream = json.loads(line.decode())
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')

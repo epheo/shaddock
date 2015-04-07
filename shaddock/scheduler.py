@@ -31,6 +31,11 @@ class Scheduler(object):
             image = backend.Image(name)
             image.build()
 
+    def remove_all(self):
+        for name in self.names_list:
+            container = backend.Container(name)
+            container.remove()
+
     def order_by_priority(self):
         raise NotImplementedError
 
