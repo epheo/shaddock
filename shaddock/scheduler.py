@@ -20,10 +20,8 @@ from shaddock import model, backend
 
 class Scheduler(object):
     def __init__(self):
-        services_dict = model.get_services_dict()
-        self.names_list = []
-        for service in services_dict.keys():
-            self.names_list.append(service.lower())
+        self.names_list = [svc.lower() for svc in
+                           model.get_services_dict().keys()]
 
     def build_all(self, nocache, docker_host, docker_version):
         for name in self.names_list:
@@ -54,4 +52,3 @@ class Checks(object):
 
     def docker_check(self):
         raise NotImplementedError
-
