@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+from shaddock.api import client
 from cliff.app import App
 from cliff.commandmanager import CommandManager
 import shaddock.frontend
@@ -142,18 +143,11 @@ class ShaddockShell(App):
         self._clear_shell_commands()
         self._set_shell_commands(self._get_commands())
 
-        #print(self.options.docker_host)
+        self.docker_host=self.options.docker_host
+        self.docker_version=self.options.docker_version
+        self.template_dir=self.options.template_dir
+        self.user=self.options.user
 
-#        self.client = shaddock.frontend.client(mistral_url=self.options.mistral_url,
-#                                    username=self.options.username,
-#                                    api_key=self.options.password,
-#                                    project_name=self.options.tenant_name,
-#                                    auth_url=self.options.auth_url,
-#                                    project_id=self.options.tenant_id,
-#                                    endpoint_type='publicURL',
-#                                    service_type='workflow',
-#                                    auth_token=self.options.token,
-#                                    cacert=self.options.cacert)
 
     def _set_shell_commands(self, cmds_dict):
         for k, v in cmds_dict.items():

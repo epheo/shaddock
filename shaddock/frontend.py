@@ -61,6 +61,7 @@ class Build(Command):
     def take_action(self, parsed_args):
         name = parsed_args.name
         nocache = parsed_args.no_cache
+
         if name is not None:
             if name == 'all':
                 print('Building all the services...')
