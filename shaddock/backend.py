@@ -98,7 +98,7 @@ class Container(object):
                                  network_mode=self.network_mode)
         elif self.created is False:
             print('Creating image %s ...' % self.tag)
-            image = Image(self.name)
+            image = Image(self.name, self.docker_host, self.docker_version)
             c_id = image.create()
             if c_id:
                 print('Starting container ...')

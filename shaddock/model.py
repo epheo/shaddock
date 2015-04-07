@@ -22,7 +22,7 @@ OPTS = [
     cfg.StrOpt('template_dir',
                default='/var/lib/shaddock',
                help='Template directory to use.'),
-    cfg.StrOpt('user',  
+    cfg.StrOpt('user',
                default='shaddock',
                help='User used to build Docker images.'),
     cfg.StrOpt('nocache',
