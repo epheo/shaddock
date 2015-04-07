@@ -17,8 +17,8 @@
 import argparse
 from cliff.app import App
 from cliff.commandmanager import CommandManager
-import shaddock.frontend
 from cliff.help import HelpAction
+import shaddock.frontend
 from shaddock.openstack.common import cliutils as c
 import logging
 import sys

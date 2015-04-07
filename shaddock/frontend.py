@@ -50,7 +50,7 @@ class Build(Command):
         parser.add_argument('name', nargs='?', default='.')
         parser.add_argument(
             '--no-cache',
-            action='store',
+            action='store_true',
             dest='no_cache',
             default=c.env('DOCKER_NOCACHE',
                           default='False'),
