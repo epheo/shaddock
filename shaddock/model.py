@@ -34,92 +34,67 @@ CONF = cfg.CONF
 CONF.register_opts(OPTS)
 CONF.register_cli_opts(OPTS)
 
-class Template(object):
 
-    def __init__(self):
-        self.template_dir = CONF.template_dir
-        self.user = CONF.user
-
-        services_dic = open('%s/etc/services.yml' % CONF.template_dir, "r")
-        services_dic = services_dic.read()
-        services_dic = yaml.load(services_dic)
-        self.services_keys = services_dic.keys()
-
-        config_dic = open('%s/etc/configuration.yml' % CONF.template_dir, "r")
-        config_dic = config_dic.read()
-        config_dic = yaml.load(config_dic)
-        self.template_vars = config_dic.get('template_vars')
+def get_services_dict(template_dir=CONF.template_dir):
+    with open('{}/etc/services.yml'.format(template_dir)) as f:
+        services_dict = yaml.load(f)
+    return services_dict
 
 
-class ContainerConfig(object):
+def get_vars_dict(template_dir=CONF.template_dir):
+    with open('{}/etc/configuration.yml'.format(template_dir)) as f:
+        vars_dict = yaml.load(f)
+    return vars_dict.get('template_vars')
 
+
+class ContainerConfig():
     def __init__(self, service_name):
         self.name = service_name
-        self.dictionary = self.make_service_dictionary()
-        self.tag = self.dictionary.get('tag')
-        self.path = self.dictionary.get('path')
-        self.ports = self.dictionary.get('ports')
-        self.port_bindings = self.dictionary.get('port_bindings')
-        self.config = self.dictionary.get('confs')
-        self.volumes = self.dictionary.get('volumes')
-        self.binds = self.dictionary.get('binds')
-        self.privileged = self.dictionary.get('privileged')
-        self.network_mode = self.dictionary.get('network_mode')
 
-    def make_service_dictionary(self):
-        template = Template()
-
-        services_dic = open('%s/etc/services.yml' % CONF.template_dir,
-                            "r")
-        services_dic = services_dic.read()
-        services_dic = yaml.load(services_dic)
+        services_dict = get_services_dict(CONF.template_dir)
 
         ports = None
         volumes = None
+        privileged = None
+        network_mode = None
 
-        for service in template.services_keys:
+        for service in services_dict.keys():
             if service.lower() == self.name:
-                service_info = services_dic.get(self.name, None)
+                service_info = services_dict.get(self.name, None)
                 if service_info:
                     ports = service_info.get('ports')
                     volumes = service_info.get('volumes')
                     privileged = service_info.get('privileged')
                     network_mode = service_info.get('network_mode')
-                else:
-                    ports = volumes = privileged = network_mode = None
 
-        service_dic = {}
+        self.privileged = privileged
+        self.network_mode = network_mode
 
-        service_dic['tag'] = '%s/%s' % (CONF.user, self.name)
-        service_dic['path'] = '%s/template/%s' % (CONF.template_dir,
-                                                  self.name)
+        self.tag = '{}/{}'.format(CONF.user, self.name)
+        self.path = '{}/template/{}'.format(CONF.template_dir, self.name)
 
         ports_list = []
-        ports_bind_dico = {}
+        ports_bind_dict = {}
 
         if ports is not None:
             for port in ports:
                 ports_list.append((port, 'tcp'))
-                ports_bind_dico[port] = ('0.0.0.0', port)
+                ports_bind_dict[port] = ('0.0.0.0', port)
 
-        service_dic['ports'] = ports_list
-        service_dic['port_bindings'] = ports_bind_dico
+        self.ports = ports_list
+        self.port_bindings = ports_bind_dict
 
         volumes_list = []
-        binds_dico = {}
+        binds_dict = {}
 
         if volumes is not None:
             for volume in volumes.keys():
                 volumes_list.append(volume)
                 bind = volumes.get(volume)
-                binds_dico[bind] = {'bind': volume, 'ro': False}
+                binds_dict[bind] = {'bind': volume, 'ro': False}
 
-            service_dic['volumes'] = volumes_list
-            service_dic['binds'] = binds_dico
-            service_dic['privileged'] = privileged
-            service_dic['network_mode'] = network_mode
-
-        return service_dic
+        self.volumes = volumes_list
+        self.binds = binds_dict
 
         #  Dictionary should be like:
         #  'glance': {
