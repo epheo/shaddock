@@ -127,14 +127,6 @@ class ShaddockShell(App):
                           default='/var/lib/shaddock'),
             help='Template directory to use. (Env: SHDK_TEMPLATE_DIR)'
         )
-        parser.add_argument(
-            '--user',
-            action='store',
-            dest='user',
-            default=c.env('SHDK_USER',
-                          default='shaddock'),
-            help='User used to build Docker images. (Env: SHDK_USER)'
-        )
         return parser
 
 

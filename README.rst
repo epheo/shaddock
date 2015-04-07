@@ -1,6 +1,7 @@
 **Shaddock**
 ============
-Shaddock provides a platform deployed in http://docker.com containers following a predefined template (like a basic http://openstack.org infrastructure)
+Shaddock provides a platform deployed in http://docker.com containers following
+a predefined template (like an http://openstack.org infrastructure)
 
 QuickStart
 ----------
@@ -33,8 +34,8 @@ Reference template for an OpenStack platform
 
 Configuration
 ~~~~~~~~~~~~~
-The general architecture of the platform is defined in *services.yaml*
-All the configurations (passwords, users, etc.) are in *configuration.yaml*
+The general architecture of the platform is defined in *infrastructure.yaml*
+All the configurations (passwords, users, etc) are in *configuration.yaml*
 
 .. code:: bash
 
@@ -43,11 +44,22 @@ All the configurations (passwords, users, etc.) are in *configuration.yaml*
 
 Note: Both are in YAML http://www.yaml.org/
 
-General shaddock configuration is in:
+General shaddock options are:
 
 .. code:: bash
 
-        /etc/shaddock/shaddock.conf
+    --docker-host DOCKER_HOST
+                        IP/hostname to the Docker server API. 
+                        (Env: DOCKER_HOST)
+                        Here: 'unix://var/run/docker.sock' by default.
+
+    --docker-version DOCKER_VERSION
+                        Docker API version number (Env: DOCKER_VERSION)
+                        Here: '1.12' by default.
+
+    --template-dir TEMPLATE_DIR
+                        Template directory to use. (Env: SHDK_TEMPLATE_DIR)
+                        Here: '/var/lib/shaddock' by default.
 
 
 Launch a simple OpenStack platform
@@ -70,8 +82,10 @@ Build all the images and start the services
 
 Usage
 -----
-A basic infrastructure template can be found in the Shaddock OpenStack template repository: https://github.com/epheo/shaddock-openstack
-This template deploy a basic OpenStack infrastructure. You can/should edit it in **/var/lib/shaddock**
+A basic infrastructure template can be found in the Shaddock OpenStack template
+repository: https://github.com/epheo/shaddock-openstack
+This template deploy a basic OpenStack infrastructure. You can/should edit it 
+in **/var/lib/shaddock**
 
 Common commands are:
 
@@ -92,7 +106,9 @@ INFORMATIONS
 
 License
 ~~~~~~~
-Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You may obtain a
+copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
 References
 ~~~~~~~~~~

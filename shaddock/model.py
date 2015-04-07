@@ -36,7 +36,7 @@ CONF.register_cli_opts(OPTS)
 
 
 def get_services_dict(template_dir=CONF.template_dir):
-    with open('{}/etc/services.yml'.format(template_dir)) as f:
+    with open('{}/etc/infrastructure.yml'.format(template_dir)) as f:
         services_dict = yaml.load(f)
     return services_dict
 
