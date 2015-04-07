@@ -18,7 +18,7 @@ import argparse
 from cliff.app import App
 from cliff.commandmanager import CommandManager
 import shaddock.frontend
-from cliff.help import HelpAction, HelpCommand
+from cliff.help import HelpAction
 from shaddock.openstack.common import cliutils as c
 import logging
 import sys
@@ -34,7 +34,7 @@ class ShaddockShell(App):
             version='0.3.2',
             command_manager=CommandManager('shaddock.cli'),
             )
-
+        self._set_shell_commands(self._get_commands())
 
     def configure_logging(self):
         super(ShaddockShell, self).configure_logging()
@@ -105,7 +105,7 @@ class ShaddockShell(App):
         parser.add_argument(
             '--docker-host',
             action='store',
-            dest='docker-host',
+            dest='docker_host',
             default=c.env('DOCKER_HOST',
                           default='unix://var/run/docker.sock'),
             help='IP/hostname to the Docker API.'
@@ -113,23 +113,16 @@ class ShaddockShell(App):
         parser.add_argument(
             '--docker-version',
             action='store',
-            dest='docker-version',
+            dest='docker_version',
             default=c.env('DOCKER_VERSION',
                           default='1.12'),
             help='Docker API version number (Env: DOCKER_VERSION)'
         )
-        parser.add_argument(
-            '--no-cache',
-            action='store',
-            dest='no-cache',
-            default=c.env('DOCKER_NOCACHE',
-                          default='False'),
-            help='Build images w/o cache. (Env: DOCKER_NOCACHE)'
-        )
+
         parser.add_argument(
             '--template-dir',
             action='store',
-            dest='template-dir',
+            dest='template_dir',
             default=c.env('SHDK_TEMPLATEDIR',
                           default='/var/lib/shaddock'),
             help='Template directory to use. (Env: SHDK_TEMPLATE_DIR)'
@@ -148,6 +141,8 @@ class ShaddockShell(App):
     def initialize_app(self, argv):
         self._clear_shell_commands()
         self._set_shell_commands(self._get_commands())
+
+        #print(self.options.docker_host)
 
 #        self.client = shaddock.frontend.client(mistral_url=self.options.mistral_url,
 #                                    username=self.options.username,

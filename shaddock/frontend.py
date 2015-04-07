@@ -19,6 +19,7 @@ import logging
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
+from shaddock.openstack.common import cliutils as c
 from shaddock import backend, model, scheduler
 
 
@@ -47,11 +48,19 @@ class Build(Command):
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument(
+            '--no-cache',
+            action='store',
+            dest='no_cache',
+            default=c.env('DOCKER_NOCACHE',
+                          default='False'),
+            help='Build images w/o cache. (Env: DOCKER_NOCACHE)'
+        )
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-
+        nocache = parsed_args.no_cache
         if name is not None:
             if name == 'all':
                 print('Building all the services...')
@@ -59,7 +68,7 @@ class Build(Command):
                 schedul.build_all()
             else:
                 image = backend.Image(name)
-                image.build()
+                image.build(nocache)
         else:
             print('Please specify a name or all')
 
