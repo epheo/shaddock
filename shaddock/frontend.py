@@ -20,6 +20,7 @@ from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
 from shaddock import backend, model, scheduler
+from shaddock.openstack.common import cliutils as c
 
 
 def get_container_info(name):
@@ -40,6 +41,40 @@ def get_container_info(name):
 
     return columns, data
 
+def add_arguments(parser):
+    parser.add_argument(
+        '--docker-host',
+        action='store',
+        dest='docker_host',
+        default=c.env('DOCKER_HOST',
+                      default='unix://var/run/docker.sock'),
+        help='IP/hostname to the Docker API.  (Env: DOCKER_HOST)'
+    )
+    parser.add_argument(
+        '--docker-version',
+        action='store',
+        dest='docker_version',
+        default=c.env('DOCKER_VERSION',
+                      default='1.12'),
+        help='Docker API version number (Env: DOCKER_VERSION)'
+    )
+
+    parser.add_argument(
+        '--template-dir',
+        action='store',
+        dest='template_dir',
+        default=c.env('SHDK_TEMPLATEDIR',
+                      default='/var/lib/shaddock'),
+        help='Template directory to use. (Env: SHDK_TEMPLATE_DIR)'
+    )
+    parser.add_argument(
+        '--user',
+        action='store',
+        dest='user',
+        default=c.env('SHDK_USER',
+                      default='shaddock'),
+        help='User used to build Docker images. (Env: SHDK_USER)'
+    )
 
 class Build(Command):
     """Build new container"""
@@ -54,6 +89,7 @@ class Build(Command):
             default='False',
             help='Build images w/o cache.'
         )
+        add_arguments(parser)
         return parser
 
     def take_action(self, parsed_args):
