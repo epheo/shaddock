@@ -208,6 +208,22 @@ class Logs(Command):
 
         return True
 
+class Pull(Command):
+    """Display logs of a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Pull, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default='.')
+        return parser
+
+    def take_action(self, parsed_args):
+        name = parsed_args.name
+        container = backend.Container(name,
+                                      self.app_args.docker_host,
+                                      self.app_args.docker_version)
+        container.pull()
+
+        return True
 
 def get_container_info(self, name, parsed_args):
     container = backend.Container(name,
