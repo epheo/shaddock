@@ -21,11 +21,9 @@ from shaddock import model
 
 
 class Image(object):
-
     def __init__(self, name, docker_host, docker_version):
         self.name = name
         self.containerconfig = model.ContainerConfig(self.name)
-        self.template = model.Template()
         self.docker_host = docker_host
         self.docker_version = docker_version
         self.dockerapi = docker.Client(base_url=self.docker_host,
@@ -44,7 +42,6 @@ class Image(object):
                     print(error)
                 if stream is not None:
                     print(stream)
-
         else:
             print("Unrecognized service name")
 
@@ -54,7 +51,7 @@ class Image(object):
             name=self.name,
             detach=False,
             ports=self.containerconfig.ports,
-            environment=self.template.template_vars,
+            environment=model.get_vars_dict(),
             volumes=self.containerconfig.volumes,
             hostname=self.containerconfig.name)
 
@@ -62,7 +59,6 @@ class Image(object):
 
 
 class Container(object):
-
     def __init__(self, service_name, docker_host, docker_version):
         self.name = service_name
         self.containerconfig = model.ContainerConfig(self.name)
@@ -86,7 +82,6 @@ class Container(object):
         self.hostname = info.get('hostname')
         self.started = info.get('started')
         self.created = info.get('created')
-
 
     def start(self):
         if self.started is False and self.created is True:
