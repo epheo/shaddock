@@ -230,7 +230,7 @@ class List(Lister):
        'Docker-id' are printed by default.
     """
     def get_parser(self, prog_name):
-        parser = super(Remove, self).get_parser(prog_name)
+        parser = super(List, self).get_parser(prog_name)
         add_arguments(parser)
         return parser
 
