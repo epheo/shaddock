@@ -26,7 +26,7 @@ from shaddock.openstack.common import cliutils as c
 def get_container_info(name, parsed_args):
     docker_host = parsed_args.docker_host
     docker_version = parsed_args.docker_version
-    container = backend.Container(name)
+    container = backend.Container(name, docker_host, docker_version)
     columns = ('Name',
                'Created',
                'Started',
