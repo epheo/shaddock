@@ -56,7 +56,7 @@ class ContainerConfig():
         ports = None
         volumes = None
 
-        for service in services_dict.services_keys:
+        for service in services_dict.keys():
             if service.lower() == self.name:
                 service_info = services_dict.get(self.name, None)
                 if service_info:
