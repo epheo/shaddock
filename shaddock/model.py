@@ -35,7 +35,7 @@ CONF.register_opts(OPTS)
 CONF.register_cli_opts(OPTS)
 
 
-def get_service_dict(template_dir=CONF.template_dir):
+def get_services_dict(template_dir=CONF.template_dir):
     with open('{}/etc/services.yml'.format(template_dir)) as f:
         services_dict = yaml.load(f)
     return services_dict
@@ -51,7 +51,7 @@ class ContainerConfig():
     def __init__(self, service_name):
         self.name = service_name
 
-        services_dict = get_service_dict(CONF.template_dir)
+        services_dict = get_services_dict(CONF.template_dir)
 
         ports = None
         volumes = None
