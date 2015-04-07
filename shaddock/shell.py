@@ -165,7 +165,7 @@ class ShaddockShell(App):
             self.command_manager.add_command(k, v)
 
     @staticmethod
-    def _get_commands(self):
+    def _get_commands():
         return {
             'build': shaddock.frontend.Build,
             'create': shaddock.frontend.Create,
