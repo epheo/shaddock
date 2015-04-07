@@ -108,7 +108,7 @@ class ShaddockShell(App):
             dest='docker_host',
             default=c.env('DOCKER_HOST',
                           default='unix://var/run/docker.sock'),
-            help='IP/hostname to the Docker API.'
+            help='IP/hostname to the Docker API.  (Env: DOCKER_HOST)'
         )
         parser.add_argument(
             '--docker-version',

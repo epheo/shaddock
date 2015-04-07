@@ -19,7 +19,6 @@ import logging
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from shaddock.openstack.common import cliutils as c
 from shaddock import backend, model, scheduler
 
 
@@ -52,9 +51,8 @@ class Build(Command):
             '--no-cache',
             action='store_true',
             dest='no_cache',
-            default=c.env('DOCKER_NOCACHE',
-                          default='False'),
-            help='Build images w/o cache. (Env: DOCKER_NOCACHE)'
+            default='False',
+            help='Build images w/o cache.'
         )
         return parser
 
