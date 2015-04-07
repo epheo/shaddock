@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import argparse
-from shaddock.api import client
 from cliff.app import App
 from cliff.commandmanager import CommandManager
 import shaddock.frontend
