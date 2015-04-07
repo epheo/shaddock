@@ -239,7 +239,7 @@ class List(Lister):
         docker_version = parsed_args.docker_version
         columns = ('Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id')
         l = ()
-        for n in model.get_services_dict.keys():
+        for n in model.get_services_dict().keys():
             b = backend.Container(n, docker_host, docker_version)
             line = (n, b.created, b.started, b.ip, b.tag, b.id)
             l = l + (line, )
