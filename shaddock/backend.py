@@ -18,6 +18,7 @@
 import docker
 import json
 from shaddock import model
+import sys
 
 
 class Image(object):
@@ -39,9 +40,9 @@ class Image(object):
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
                 if error is not None:
-                    print(error)
+                    print(error.rstrip())
                 if stream is not None:
-                    print(stream)
+                    print(stream.rstrip())
         else:
             print("Unrecognized service name")
 
@@ -123,15 +124,27 @@ class Container(object):
 
     def return_logs(self):
         if self.containerconfig.tag is not None:
-            for line in self.dockerapi.logs(
-                                       container=self.id,
-                                       stderr=True,
-                                       stdout=True,
-                                       stream=True):
+
+            # "Fix" in order to not use the stream generator in Python2
+            if (sys.version_info > (3, 0)):
                 try:
-                    print(str(line))
+                    for line in self.dockerapi.logs(
+                                           container=self.id,
+                                           stderr=True,
+                                           stdout=True,
+                                           timestamps=False,
+                                           stream=True):
+                        print(line.decode('utf-8').rstrip())
                 except (KeyboardInterrupt, SystemExit):
                     return True
+            else:
+
+                line = self.dockerapi.logs(container=self.id,
+                                           stderr=True,
+                                           stdout=True,
+                                           timestamps=False,
+                                           stream=False)
+                print(line)
 
     def pull(self):
         for line in self.dockerapi.pull(self.tag, stream=True):
@@ -148,7 +161,7 @@ class Container(object):
         if containers_list:
             try:
                 c_id = [item['Id'] for item in containers_list
-                        if self.tag in item['Image']][0]
+                        if self.tag in str(item['Image'])][0]
             except IndexError:
                 c_id = None
 
