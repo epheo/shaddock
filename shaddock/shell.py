@@ -147,7 +147,8 @@ class ShaddockShell(App):
             'restart': shaddock.frontend.Restart,
             'remove': shaddock.frontend.Remove,
             'list': shaddock.frontend.List,
-            'show': shaddock.frontend.Show
+            'show': shaddock.frontend.Show,
+            'pull': shaddock.frontend.Pull
         }
 
     def _clear_shell_commands(self):
