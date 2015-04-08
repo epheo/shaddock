@@ -128,7 +128,7 @@ class Container(object):
                                        stderr=True,
                                        stdout=True,
                                        stream=True):
-                print(json.dumps(json.loads(str(line)), indent=4))
+                print(line)
 
     def pull(self):
         for line in self.dockerapi.pull(self.tag, stream=True):
