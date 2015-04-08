@@ -82,13 +82,29 @@ repository: https://github.com/epheo/shaddock-openstack
 This template deploy a basic OpenStack infrastructure. You can/should edit it 
 in **/var/lib/shaddock**
 
-Common commands are:
+The structures describe the deployed containers.
+
+.. code:: yaml
+
+    - image: shaddock/rabbitmq
+      priority: 10
+      ports:
+        - 5672
+        - 15672
+      volumes:
+        '/data/log': '/var/lib/rabbitmq/log'
+        '/data/mnesia': '/var/lib/rabbitmq/mnesia'
+      depend-on: None
+
+
+The containers stored in this yaml file can be launched via the command line or
+the interactive shell
 
 .. code:: bash
 
     usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
-                [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
-                [--template-dir TEMPLATE_DIR]
+                    [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
+                    [--template-dir TEMPLATE_DIR]
 
 
 .. code:: bash
