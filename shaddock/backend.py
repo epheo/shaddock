@@ -128,12 +128,6 @@ class Container(object):
                                        stderr=True,
                                        stdout=True,
                                        stream=True):
-                print(line)
-            for line in self.dockerapi.logs(
-                                       container=self.id,
-                                       stderr=True,
-                                       stdout=True,
-                                       stream=True):
                 try:
                     print(line)
                 except (KeyboardInterrupt, SystemExit):
