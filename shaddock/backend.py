@@ -18,6 +18,7 @@
 import docker
 import json
 from shaddock import model
+import sys
 
 
 class Image(object):
@@ -123,16 +124,27 @@ class Container(object):
 
     def return_logs(self):
         if self.containerconfig.tag is not None:
-            try:
-                for line in self.dockerapi.logs(
-                                       container=self.id,
-                                       stderr=True,
-                                       stdout=True,
-                                       timestamps=False,
-                                       stream=True):
-                    print(line.decode('utf-8').rstrip())
-            except (KeyboardInterrupt, SystemExit):
-                return True
+
+            # "Fix" in order to not use the stream generator in Python2
+            if (sys.version_info > (3, 0)):
+                try:
+                    for line in self.dockerapi.logs(
+                                           container=self.id,
+                                           stderr=True,
+                                           stdout=True,
+                                           timestamps=False,
+                                           stream=True):
+                        print(line.decode('utf-8').rstrip())
+                except (KeyboardInterrupt, SystemExit):
+                    return True
+            else:
+
+                line = self.dockerapi.logs(container=self.id,
+                                           stderr=True,
+                                           stdout=True,
+                                           timestamps=False,
+                                           stream=False)
+                print(line)
 
     def pull(self):
         for line in self.dockerapi.pull(self.tag, stream=True):
