@@ -161,7 +161,7 @@ class Container(object):
         if containers_list:
             try:
                 c_id = [item['Id'] for item in containers_list
-                        if self.tag in item['Image']][0]
+                        if self.tag in str(item['Image'])][0]
             except IndexError:
                 c_id = None
 
