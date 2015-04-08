@@ -20,7 +20,7 @@ Shaddock installation
 
 OpenStack template installation and configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Reference template for an OpenStack platform
+Reference template for an OpenStack platform:
 
 .. code:: bash
 
