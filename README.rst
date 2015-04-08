@@ -34,7 +34,7 @@ All the configurations (passwords, users, etc) are in *configuration.yaml*
 
 .. code:: bash
 
-	/var/lib/shaddock/etc/services.yaml
+	/var/lib/shaddock/etc/infrastructure.yaml
 	/var/lib/shaddock/etc/configuration.yaml
 
 Note: Both are in YAML http://www.yaml.org/
@@ -86,14 +86,24 @@ Common commands are:
 
 .. code:: bash
 
-    (shaddock) build [service_name] [all]
-    (shaddock) create [service_name]
-    (shaddock) start [service_name]
-    (shaddock) stop [service_name]
-    (shaddock) list
-    (shaddock) show [service_name]
-    (shaddock) remove [service_name]
-    (shaddock) logs [service_name]
+    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
+                [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
+                [--template-dir TEMPLATE_DIR]
+
+
+.. code:: bash
+
+    Commands:
+      build    [name] all    Build a new (or all the) container(s).
+      create   [name]        Create a new container
+      list                   Show a list of Containers and details.
+      logs     [name]        Display logs of a container
+      remove   [name] all    Remove a (or all the) container(s).
+      restart  [name]        Restart a container
+      show     [name]        Show details about a container
+      start    [name]        Start new container
+      stop     [name]        Stop container
+      pull     [name]        Pull a Docker image
 
 
 INFORMATIONS
