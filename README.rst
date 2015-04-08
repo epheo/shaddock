@@ -43,19 +43,15 @@ Structures example of *infratructure.yaml*:
 
 .. code:: yaml
 
-    - image: shaddock/nova
-      priority: 40
+    - image: shaddock/rabbitmq
+      priority: 10
       ports:
-        - 8774
-        - 8775
+        - 5672
+        - 15672
       volumes:
-        '/var/log/nova': '/var/log/shaddock/nova'
-      privileged: True
-      depend-on:
-        keystone:
-         - tcp: 5000
-         - tcp: 35357
-         - state: running
+        '/data/log': '/var/lib/rabbitmq/log'
+        '/data/mnesia': '/var/lib/rabbitmq/mnesia'
+      depend-on: None
 
 
 Launch a simple OpenStack platform
