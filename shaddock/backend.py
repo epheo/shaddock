@@ -131,8 +131,6 @@ class Container(object):
                 try:
                     print(line)
                 except (KeyboardInterrupt, SystemExit):
-                    raise
-                except:
                     return True
 
     def pull(self):
