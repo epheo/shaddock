@@ -206,7 +206,6 @@ class Logs(Command):
                                       self.app_args.docker_version)
         container.return_logs()
 
-        return True
 
 
 class Pull(Command):
