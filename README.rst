@@ -43,7 +43,8 @@ Structures example of *infratructure.yaml*:
 
 .. code:: yaml
 
-    - image: shaddock/rabbitmq
+    - name: rabbitmq01
+      image: shaddock/rabbitmq
       priority: 10
       ports:
         - 5672
@@ -98,17 +99,17 @@ the interactive shell.
 .. code:: bash
 
     usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
-                    --docker-host DOCKER_HOST
+                    [--docker-host DOCKER_HOST]     
                                         IP/hostname to the Docker server API.
                                         Default: 'unix://var/run/docker.sock'
                                         (Env: DOCKER_HOST)
 
-                    --docker-version DOCKER_VERSION
+                    [--docker-version DOCKER_VERSION]  
                                         Docker API version number
                                         Default: '1.12'
                                         (Env: DOCKER_VERSION)
 
-                    --template-dir TEMPLATE_DIR
+                    [--template-dir TEMPLATE_DIR]    
                                         Template directory to use.
                                         Default: '/var/lib/shaddock'
                                         (Env: SHDK_TEMPLATE_DIR)
