@@ -100,18 +100,17 @@ the interactive shell.
     usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
                     --docker-host DOCKER_HOST
                                         IP/hostname to the Docker server API.
-                                        Here: 'unix://var/run/docker.sock' by
-                                        default.
+                                        Default: 'unix://var/run/docker.sock'
                                         (Env: DOCKER_HOST)
 
                     --docker-version DOCKER_VERSION
                                         Docker API version number
-                                        Here: '1.12' by default.
+                                        Default: '1.12'
                                         (Env: DOCKER_VERSION)
 
                     --template-dir TEMPLATE_DIR
                                         Template directory to use.
-                                        Here: '/var/lib/shaddock' by default.
+                                        Default: '/var/lib/shaddock'
                                         (Env: SHDK_TEMPLATE_DIR)
 
 INFORMATIONS
