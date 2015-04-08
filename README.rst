@@ -17,11 +17,6 @@ Shaddock installation
 
     sudo python setupy.py install
 
-or
-
-.. code:: bash
-
-    sudo pip install shaddock
 
 OpenStack template installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
