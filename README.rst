@@ -18,8 +18,8 @@ Shaddock installation
     sudo python setupy.py install
 
 
-OpenStack template installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OpenStack template installation and configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reference template for an OpenStack platform
 
 .. code:: bash
@@ -27,8 +27,6 @@ Reference template for an OpenStack platform
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
 
 
-Configuration
-~~~~~~~~~~~~~
 The general architecture of the platform is defined in *infrastructure.yaml*
 All the configurations (passwords, users, etc) are in *configuration.yaml*
 
@@ -37,24 +35,27 @@ All the configurations (passwords, users, etc) are in *configuration.yaml*
 	/var/lib/shaddock/etc/infrastructure.yaml
 	/var/lib/shaddock/etc/configuration.yaml
 
-Note: Both are in YAML http://www.yaml.org/
 
-General shaddock options are:
+This template contain the main modules of an OpenStack infrastructure. You
+can/should edit it and add your Dockerfiles or images.
 
-.. code:: bash
+Structures example of *infratructure.yaml*:
 
-    --docker-host DOCKER_HOST
-                        IP/hostname to the Docker server API. 
-                        (Env: DOCKER_HOST)
-                        Here: 'unix://var/run/docker.sock' by default.
+.. code:: yaml
 
-    --docker-version DOCKER_VERSION
-                        Docker API version number (Env: DOCKER_VERSION)
-                        Here: '1.12' by default.
-
-    --template-dir TEMPLATE_DIR
-                        Template directory to use. (Env: SHDK_TEMPLATE_DIR)
-                        Here: '/var/lib/shaddock' by default.
+    - image: shaddock/nova
+      priority: 40
+      ports:
+        - 8774
+        - 8775
+      volumes:
+        '/var/log/nova': '/var/log/shaddock/nova'
+      privileged: True
+      depend-on:
+        keystone:
+         - tcp: 5000
+         - tcp: 35357
+         - state: running
 
 
 Launch a simple OpenStack platform
@@ -77,34 +78,10 @@ Build all the images and start the services
 
 Usage
 -----
-A basic infrastructure template can be found in the Shaddock OpenStack template
-repository: https://github.com/epheo/shaddock-openstack
-This template deploy a basic OpenStack infrastructure. You can/should edit it 
-in **/var/lib/shaddock**
-
-The structures describe the deployed containers.
-
-.. code:: yaml
-
-    - image: shaddock/rabbitmq
-      priority: 10
-      ports:
-        - 5672
-        - 15672
-      volumes:
-        '/data/log': '/var/lib/rabbitmq/log'
-        '/data/mnesia': '/var/lib/rabbitmq/mnesia'
-      depend-on: None
 
 
 The containers stored in this yaml file can be launched via the command line or
-the interactive shell
-
-.. code:: bash
-
-    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
-                    [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
-                    [--template-dir TEMPLATE_DIR]
+the interactive shell.
 
 
 .. code:: bash
@@ -121,6 +98,25 @@ the interactive shell
       stop     [name]        Stop container
       pull     [name]        Pull a Docker image
 
+
+.. code:: bash
+
+    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
+                    --docker-host DOCKER_HOST
+                                        IP/hostname to the Docker server API.
+                                        Here: 'unix://var/run/docker.sock' by
+                                        default.
+                                        (Env: DOCKER_HOST)
+
+                    --docker-version DOCKER_VERSION
+                                        Docker API version number
+                                        Here: '1.12' by default.
+                                        (Env: DOCKER_VERSION)
+
+                    --template-dir TEMPLATE_DIR
+                                        Template directory to use.
+                                        Here: '/var/lib/shaddock' by default.
+                                        (Env: SHDK_TEMPLATE_DIR)
 
 INFORMATIONS
 ------------
