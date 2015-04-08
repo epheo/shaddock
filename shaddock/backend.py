@@ -39,9 +39,9 @@ class Image(object):
                 stream = jsonstream.get('stream')
                 error = jsonstream.get('error')
                 if error is not None:
-                    print(error)
+                    print(error.rstrip())
                 if stream is not None:
-                    print(stream)
+                    print(stream.rstrip())
         else:
             print("Unrecognized service name")
 
@@ -130,7 +130,7 @@ class Container(object):
                                        stdout=True,
                                        timestamps=False,
                                        stream=True):
-                    print(line.decode('utf-8'))
+                    print(line.decode('utf-8').rstrip())
             except (KeyboardInterrupt, SystemExit):
                 return True
 
