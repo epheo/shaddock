@@ -123,16 +123,16 @@ class Container(object):
 
     def return_logs(self):
         if self.containerconfig.tag is not None:
-            for line in self.dockerapi.logs(
+            try:
+                for line in self.dockerapi.logs(
                                        container=self.id,
                                        stderr=True,
                                        stdout=True,
                                        timestamps=False,
                                        stream=True):
-                try:
                     print(line.decode('utf-8'))
-                except (KeyboardInterrupt, SystemExit):
-                    return True
+            except (KeyboardInterrupt, SystemExit):
+                return True
 
     def pull(self):
         for line in self.dockerapi.pull(self.tag, stream=True):
