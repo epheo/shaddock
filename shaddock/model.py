@@ -16,85 +16,86 @@
 #    under the License.
 
 import yaml
-from oslo.config import cfg
+import re
 
-OPTS = [
-    cfg.StrOpt('template_dir',
-               default='/var/lib/shaddock',
-               help='Template directory to use.'),
-    cfg.StrOpt('user',
-               default='shaddock',
-               help='User used to build Docker images.'),
-    cfg.StrOpt('nocache',
-               default='False',
-               help='Build images w/o cache.')
-]
-
-CONF = cfg.CONF
-CONF.register_opts(OPTS)
-CONF.register_cli_opts(OPTS)
+TEMPLATE_DIR = '/var/lib/shaddock'
 
 
-def get_services_dict(template_dir=CONF.template_dir):
-    with open('{}/etc/infrastructure.yml'.format(template_dir)) as f:
-        services_dict = yaml.load(f)
-    return services_dict
+class TemplateFileError(Exception):
+    pass
 
 
-def get_vars_dict(template_dir=CONF.template_dir):
-    with open('{}/etc/configuration.yml'.format(template_dir)) as f:
+def get_services_list(template_dir=TEMPLATE_DIR):
+    with open('{}/infrastructure.yml'.format(template_dir)) as f:
+        services_list = yaml.load(f)
+    return services_list
+
+
+def get_vars_dict(template_dir=TEMPLATE_DIR):
+    with open('{}/configuration.yml'.format(template_dir)) as f:
         vars_dict = yaml.load(f)
     return vars_dict.get('template_vars')
 
 
 class ContainerConfig(object):
-    def __init__(self, service_name):
-        self.name = service_name
+    def __init__(self, name):
+        # This one matches anything in the form of "something/something"
+        # with something beeing anything not containing slashs or spaces.
+        if re.match("^[^\s/]+/[^\s/]+$", name):
+            self.tag = name
+        else:
+            self.construct(name)
 
-        services_dict = get_services_dict(CONF.template_dir)
+    def construct(self, name):
+        services_list = get_services_list()
+        try:
+            service = [svc for svc in services_list if
+                       svc['name'] == name]
+            if len(service) > 1:
+                raise TemplateFileError(
+                    "There is more than one definition matching"
+                    " name: {} in your infrastrucure.yml".format(name))
+            service = service[0]
+        except IndexError:
+            raise TemplateFileError(
+                "There is no container definition containing"
+                " name: {} in your infrastrucure.yml".format(name))
+        except KeyError:
+            raise TemplateFileError(
+                "At least one container definition in your"
+                " infrastructure.yml is missing the name property")
 
-        ports = None
-        volumes = None
-        privileged = None
-        network_mode = None
+        self.name = name
+        try:
+            self.tag = service['image']
+        except KeyError:
+            raise TemplateFileError(
+                "Container definition of: {} in your infrastructure.yml is"
+                " missing the image property".format(name))
 
-        for service in services_dict.keys():
-            if service.lower() == self.name:
-                service_info = services_dict.get(self.name, None)
-                if service_info:
-                    ports = service_info.get('ports')
-                    volumes = service_info.get('volumes')
-                    privileged = service_info.get('privileged')
-                    network_mode = service_info.get('network_mode')
+        self.privileged = service.get('privileged')
+        self.network_mode = service.get('network_mode')
+        self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
 
-        self.privileged = privileged
-        self.network_mode = network_mode
-
-        self.tag = '{}/{}'.format(CONF.user, self.name)
-        self.path = '{}/template/{}'.format(CONF.template_dir, self.name)
-
+        ports = service.get('ports')
         ports_list = []
         ports_bind_dict = {}
-
         if ports is not None:
             for port in ports:
                 ports_list.append((port, 'tcp'))
                 ports_bind_dict[port] = ('0.0.0.0', port)
-
         self.ports = ports_list
         self.port_bindings = ports_bind_dict
 
-        volumes_list = []
-        binds_dict = {}
-
-        if volumes is not None:
-            for volume in volumes.keys():
-                volumes_list.append(volume)
-                bind = volumes.get(volume)
+        self.volumes = []
+        self.binds = {}
+        tpl_volumes = service.get('volumes')
+        if tpl_volumes is not None:
+            for volume in tpl_volumes:
+                vol = list(volume.keys())[0]
+                self.volumes.append(vol)
+                self.binds.update({vol: {'bind': }})
                 binds_dict[bind] = {'bind': volume, 'ro': False}
-
-        self.volumes = volumes_list
-        self.binds = binds_dict
 
         #  Dictionary should be like:
         #  'glance': {
