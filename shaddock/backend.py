@@ -127,9 +127,10 @@ class Container(object):
                                        container=self.id,
                                        stderr=True,
                                        stdout=True,
+                                       timestamps=False,
                                        stream=True):
                 try:
-                    print(str(line))
+                    print(line.decode('utf-8'))
                 except (KeyboardInterrupt, SystemExit):
                     return True
 
