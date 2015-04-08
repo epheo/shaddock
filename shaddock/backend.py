@@ -129,7 +129,7 @@ class Container(object):
                                        stdout=True,
                                        stream=True):
                 try:
-                    print(line)
+                    print(str(line))
                 except (KeyboardInterrupt, SystemExit):
                     return True
 
