@@ -26,13 +26,13 @@ class TemplateFileError(Exception):
 
 
 def get_services_list(template_dir=TEMPLATE_DIR):
-    with open('{}/infrastructure.yml'.format(template_dir)) as f:
+    with open('{}/infrastructure.yaml'.format(template_dir)) as f:
         services_list = yaml.load(f)
     return services_list
 
 
 def get_vars_dict(template_dir=TEMPLATE_DIR):
-    with open('{}/configuration.yml'.format(template_dir)) as f:
+    with open('{}/configuration.yaml'.format(template_dir)) as f:
         vars_dict = yaml.load(f)
     return vars_dict.get('template_vars')
 
@@ -54,12 +54,12 @@ class ContainerConfig(object):
             if len(service) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"
-                    " name: {} in your infrastrucure.yml".format(name))
+                    " 'name: {}' in your infrastrucure.yml".format(name))
             service = service[0]
         except IndexError:
             raise TemplateFileError(
                 "There is no container definition containing"
-                " name: {} in your infrastrucure.yml".format(name))
+                " 'name: {}' in your infrastrucure.yml".format(name))
         except KeyError:
             raise TemplateFileError(
                 "At least one container definition in your"
@@ -70,12 +70,16 @@ class ContainerConfig(object):
             self.tag = service['image']
         except KeyError:
             raise TemplateFileError(
-                "Container definition of: {} in your infrastructure.yml is"
+                "Container definition of: '{}' in your infrastructure.yml is"
                 " missing the image property".format(name))
 
         self.privileged = service.get('privileged')
-        self.network_mode = service.get('network_mode')
         self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
+
+        try:
+            self.network_mode = service['network_mode']
+        except KeyError:
+            self.network_mode = 'bridge'
 
         self.ports = []
         self.ports_bindings = {}

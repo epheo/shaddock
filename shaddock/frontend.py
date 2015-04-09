@@ -169,11 +169,11 @@ class List(Lister):
     def take_action(self, parsed_args):
         columns = ('Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-id')
         l = ()
-        for name in model.get_services_dict().keys():
-            b = backend.Container(name,
+        for svc in model.get_services_list():
+            b = backend.Container(svc['name'],
                                   self.app_args.docker_host,
                                   self.app_args.docker_version)
-            line = (name, b.created, b.started, b.ip, b.tag, b.id)
+            line = (svc['name'], b.created, b.started, b.ip, b.tag, b.id)
             l = l + (line, )
         return columns, l
 
@@ -205,7 +205,6 @@ class Logs(Command):
                                       self.app_args.docker_host,
                                       self.app_args.docker_version)
         container.return_logs()
-
 
 
 class Pull(Command):
