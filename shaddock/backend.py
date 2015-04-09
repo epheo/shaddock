@@ -70,6 +70,7 @@ class Container(object):
         self.created = info['created']
 
     def create(self):
+        print('Creating container: {}'.format(self.name))
         c_id = self.dockerapi.create_container(
             image=self.cfg.tag,
             name=self.name,
