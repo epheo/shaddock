@@ -20,19 +20,17 @@ from shaddock import model, backend
 
 class Scheduler(object):
     def __init__(self):
-        services_dict = model.get_services_dict()
-        self.names_list = []
-        for service in services_dict.keys():
-            self.names_list.append(service.lower())
+        self.services_list = model.get_services_list()
 
     def build_all(self, nocache, docker_host, docker_version):
-        for name in self.names_list:
-            image = backend.Image(name, docker_host, docker_version)
+        for svc in self.services_list:
+            image = backend.Image(svc['name'], docker_host, docker_version)
             image.build(nocache)
 
     def remove_all(self, docker_host, docker_version):
-        for name in self.names_list:
-            container = backend.Container(name, docker_host, docker_version)
+        for svc in self.services_list:
+            container = backend.Container(svc['name'], docker_host,
+                                          docker_version)
             container.remove()
 
     def order_by_priority(self):
