@@ -43,16 +43,11 @@ class Image(object):
             if stream is not None:
                 print(stream.rstrip())
 
-    def create(self):
-        c_id = self.dockerapi.create_container(
-            image=self.cfg.tag,
-            name=self.name,
-            detach=False,
-            ports=self.cfg.ports,
-            environment=model.get_vars_dict(),
-            volumes=self.cfg.volumes,
-            hostname=self.cfg.name)
-        return c_id
+    def pull(self):
+        print("Pulling image:"),
+        for line in self.dockerapi.pull(self.cfg.tag, stream=True):
+            tick = '*'
+            print(tick),
 
 
 class Container(object):
@@ -74,12 +69,23 @@ class Container(object):
         self.started = info['started']
         self.created = info['created']
 
+    def create(self):
+        c_id = self.dockerapi.create_container(
+            image=self.cfg.tag,
+            name=self.name,
+            detach=False,
+            ports=self.cfg.ports,
+            environment=model.get_vars_dict(),
+            volumes=self.cfg.volumes,
+            hostname=self.cfg.name)
+        return c_id
+
     def start(self):
         if self.created is False:
             print('Creating container: {}'.format(self.name))
-            image = Image(self.input_name, self.docker_host,
-                          self.docker_version)
-            self.id = image.create()
+            container = Container(self.input_name, self.docker_host,
+                                  self.docker_version)
+            self.id = container.create()
         print('Starting container: {}'.format(self.name))
         self.dockerapi.start(container=self.id,
                              binds=self.cfg.binds,
@@ -125,9 +131,7 @@ class Container(object):
                                            stream=False)
                 print(line)
 
-    def pull(self):
-        for line in self.dockerapi.pull(self.tag, stream=True):
-            print(json.dumps(json.loads(line), indent=4))
+
 
     def get_info(self):
         info = {}
