@@ -69,10 +69,10 @@ class Create(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
         if name:
-            image = backend.Image(name,
+            container = backend.Container(name,
                                   self.app_args.docker_host,
                                   self.app_args.docker_version)
-            image.create()
+            container.create()
         return get_container_info(self, name, parsed_args)
 
 
@@ -217,10 +217,10 @@ class Pull(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        container = backend.Container(name,
-                                      self.app_args.docker_host,
-                                      self.app_args.docker_version)
-        container.pull()
+        image = backend.Image(name,
+                              self.app_args.docker_host,
+                              self.app_args.docker_version)
+        image.pull()
 
         return True
 
