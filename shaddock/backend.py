@@ -131,8 +131,6 @@ class Container(object):
                                            stream=False)
                 print(line)
 
-
-
     def get_info(self):
         info = {}
         info['id'] = None
@@ -143,8 +141,9 @@ class Container(object):
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             try:
+                # One item contains "Names": ["/realname"]
                 c_id = [item['Id'] for item in containers_list
-                        if self.tag in str(item['Image'])][0]
+                        if "/" + self.name == str(item['Names'][0])][0]
             except IndexError:
                 c_id = None
 
