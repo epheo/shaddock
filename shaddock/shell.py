@@ -19,8 +19,8 @@ from cliff.app import App
 from cliff.commandmanager import CommandManager
 from cliff.help import HelpAction
 import shaddock.frontend
-from shaddock.openstack.common import cliutils as c
 import logging
+import os
 import sys
 
 
@@ -40,6 +40,17 @@ class ShaddockShell(App):
         logging.getLogger('iso8601').setLevel(logging.WARNING)
         if self.options.verbose_level <= 1:
             logging.getLogger('requests').setLevel(logging.WARNING)
+
+    def env(self, *args, **kwargs):
+        """Returns the first environment variable set.
+
+        If all are empty, defaults to '' or keyword arg `default`.
+        """
+        for arg in args:
+            value = os.environ.get(arg)
+            if value:
+                return value
+        return kwargs.get('default', '')
 
     def build_option_parser(self, description, version,
                             argparse_kwargs=None):
@@ -105,16 +116,16 @@ class ShaddockShell(App):
             '--docker-host',
             action='store',
             dest='docker_host',
-            default=c.env('DOCKER_HOST',
-                          default='unix://var/run/docker.sock'),
+            default=self.env('DOCKER_HOST',
+                             default='unix://var/run/docker.sock'),
             help='IP/hostname to the Docker API.  (Env: DOCKER_HOST)'
         )
         parser.add_argument(
             '--docker-version',
             action='store',
             dest='docker_version',
-            default=c.env('DOCKER_VERSION',
-                          default='1.12'),
+            default=self.env('DOCKER_VERSION',
+                             default='1.12'),
             help='Docker API version number (Env: DOCKER_VERSION)'
         )
 
@@ -122,8 +133,8 @@ class ShaddockShell(App):
             '--template-dir',
             action='store',
             dest='template_dir',
-            default=c.env('SHDK_TEMPLATEDIR',
-                          default='/var/lib/shaddock'),
+            default=self.env('SHDK_TEMPLATEDIR',
+                             default='/var/lib/shaddock'),
             help='Template directory to use. (Env: SHDK_TEMPLATE_DIR)'
         )
         return parser
