@@ -41,7 +41,7 @@ class Scheduler(object):
             container = backend.Container(svc['name'], docker_host,
                                           docker_version)
             container.start()
-            time.sleep(150)
+            time.sleep(60)
 
     def remove_all(self, docker_host, docker_version):
         for svc in reversed(self.services_list):

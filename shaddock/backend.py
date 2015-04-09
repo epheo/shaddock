@@ -83,7 +83,6 @@ class Container(object):
 
     def start(self):
         if self.created is False:
-            print('Creating container: {}'.format(self.name))
             container = Container(self.input_name, self.docker_host,
                                   self.docker_version)
             self.id = container.create()
