@@ -16,25 +16,44 @@
 #    under the License.
 
 from shaddock import model, backend
+from operator import itemgetter
+import time
 
 
 class Scheduler(object):
     def __init__(self):
         self.services_list = model.get_services_list()
+        self.services_list.sort(key=itemgetter('priority'))
 
     def build_all(self, nocache, docker_host, docker_version):
         for svc in self.services_list:
             image = backend.Image(svc['name'], docker_host, docker_version)
             image.build(nocache)
 
-    def remove_all(self, docker_host, docker_version):
+    def create_all(self, docker_host, docker_version):
         for svc in self.services_list:
+            container = backend.Container(svc['name'], docker_host,
+                                          docker_version)
+            container.create()
+
+    def start_all(self, docker_host, docker_version):
+        for svc in self.services_list:
+            container = backend.Container(svc['name'], docker_host,
+                                          docker_version)
+            container.start()
+            time.sleep(150)
+
+    def remove_all(self, docker_host, docker_version):
+        for svc in reversed(self.services_list):
             container = backend.Container(svc['name'], docker_host,
                                           docker_version)
             container.remove()
 
-    def order_by_priority(self):
-        raise NotImplementedError
+    def stop_all(self, docker_host, docker_version):
+        for svc in reversed(self.services_list):
+            container = backend.Container(svc['name'], docker_host,
+                                          docker_version)
+            container.start()
 
     def wait(self):
         raise NotImplementedError
