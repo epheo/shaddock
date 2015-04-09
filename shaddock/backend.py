@@ -57,6 +57,8 @@ class Image(object):
 
 class Container(object):
     def __init__(self, service_name, docker_host, docker_version):
+        # input_name can ba a tag or a name
+        self.input_name = service_name
         self.cfg = model.ContainerConfig(service_name)
         self.tag = self.cfg.tag
         self.name = self.cfg.name
@@ -75,7 +77,8 @@ class Container(object):
     def start(self):
         if self.created is False:
             print('Creating container: {}'.format(self.name))
-            image = Image(self.cfg.name, self.docker_host, self.docker_version)
+            image = Image(self.input_name, self.docker_host,
+                          self.docker_version)
             self.id = image.create()
         print('Starting container: {}'.format(self.name))
         self.dockerapi.start(container=self.id,

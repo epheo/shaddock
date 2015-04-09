@@ -43,6 +43,14 @@ class ContainerConfig(object):
         # with something beeing anything not containing slashs or spaces.
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.tag = name
+            self.name = name.split('/')[1]
+            self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
+            self.ports = None
+            self.ports_bindings = None
+            self.volumes = None
+            self.binds = None
+            self.network_mode = 'bridge'
+            self.privileged = None
         else:
             self.__construct(name)
 
@@ -109,7 +117,7 @@ class ContainerConfig(object):
         #      'tag': 'shaddock/nova',
         #      'path': '/var/lib/shaddock/images/shaddock/nova',
         #      'ports': [(8774, 'tcp'), (8775, 'tcp')],
-        #      'port_bindings': {8774: ('0.0.0.0', 8774),
+        #      'ports_bindings': {8774: ('0.0.0.0', 8774),
         #                        8775: ('0.0.0.0', 8775)},
         #      'volumes': ['/var/log/nova'],
         #      'binds': {'/var/log/nova':
