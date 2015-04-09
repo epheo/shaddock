@@ -44,9 +44,9 @@ class ContainerConfig(object):
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.tag = name
         else:
-            self.construct(name)
+            self.__construct(name)
 
-    def construct(self, name):
+    def __construct(self, name):
         services_list = get_services_list()
         try:
             service = [svc for svc in services_list if
@@ -77,42 +77,39 @@ class ContainerConfig(object):
         self.network_mode = service.get('network_mode')
         self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
 
+        self.ports = []
+        self.ports_bindings = {}
         ports = service.get('ports')
-        ports_list = []
-        ports_bind_dict = {}
         if ports is not None:
             for port in ports:
-                ports_list.append((port, 'tcp'))
-                ports_bind_dict[port] = ('0.0.0.0', port)
-        self.ports = ports_list
-        self.port_bindings = ports_bind_dict
+                self.ports.append((port, 'tcp'))
+                self.ports_bindings[port] = ('0.0.0.0', port)
 
         self.volumes = []
         self.binds = {}
         tpl_volumes = service.get('volumes')
         if tpl_volumes is not None:
-            for volume in tpl_volumes:
-                vol = list(volume.keys())[0]
-                self.volumes.append(vol)
-                self.binds.update({vol: {'bind': }})
-                binds_dict[bind] = {'bind': volume, 'ro': False}
+            try:
+                for volume in tpl_volumes:
+                    self.volumes.append(volume['mount'])
+                    self.binds[volume['mount']] = {'bind': volume['host_dir'],
+                                                   'ro': False}
+            except KeyError:
+                raise TemplateFileError(
+                    "A container's volume definition in your"
+                    " infrastructure.yml is missing the mount or host_dir"
+                    " property")
 
-        #  Dictionary should be like:
-        #  'glance': {
-        #      'tag': '%s/osglance' % (user),
-        #      'path': '%s/glance/' % (path),
-        #      'ports': [(9292, 'tcp')],
-        #      'port_bindings': {9292: ('0.0.0.0', 9292)},
-        #      'confs': {'HOST_NAME': host_name,
-        #                'MYSQL_DB': mysql_host,
-        #                'MYSQL_USER': mysql_user,
-        #                'MYSQL_PASSWORD': mysql_pass,
-        #                'RABBITMQ_HOST': rabbitmq_host,
-        #                'RABBITMQ_PASSWORD': rabbitmq_password,
-        #                'GLANCE_DBPASS': glance_pass
-        #               },
-        #      'volumes': ['/var/log/supervisor'],
-        #      'binds': {'/var/log/shaddock/glance':
-        #                   {'bind': '/var/log/supervisor', 'ro': False}},
-        #      'privileged': False
+        #  The returned object will look like:
+        #      'name': 'nova',
+        #      'tag': 'shaddock/nova',
+        #      'path': '/var/lib/shaddock/images/shaddock/nova',
+        #      'ports': [(8774, 'tcp'), (8775, 'tcp')],
+        #      'port_bindings': {8774: ('0.0.0.0', 8774),
+        #                        8775: ('0.0.0.0', 8775)},
+        #      'volumes': ['/var/log/nova'],
+        #      'binds': {'/var/log/nova':
+        #                {'bind': '/var/log/shaddock/nova', 'ro': False}},
+        #      'privileged': True,
+        #      'network_mode': None
         #      },
