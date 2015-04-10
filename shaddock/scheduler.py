@@ -45,9 +45,11 @@ class Scheduler(object):
             container = backend.Container(svc['name'], docker_host,
                                           docker_version)
             checks = svc.get('depends-on', [])
-            for check in checks:
-                self.do_check(check)
-            container.start()
+            if len(checks) > 0:
+                print("Running checks before starting: {}".format(svc['name']))
+                for check in checks:
+                    self.do_check(check)
+                container.start()
 
     def remove_all(self, docker_host, docker_version):
         for svc in reversed(self.services_list):
