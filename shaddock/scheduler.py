@@ -49,7 +49,7 @@ class Scheduler(object):
                 print("Running checks before starting: {}".format(svc['name']))
                 for check in checks:
                     self.do_check(check)
-                container.start()
+            container.start()
 
     def remove_all(self, docker_host, docker_version):
         for svc in reversed(self.services_list):
