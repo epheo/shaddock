@@ -46,7 +46,7 @@ class Scheduler(object):
                                           docker_version)
             checks = svc.get('depends-on', [])
             for check in checks:
-                self.do_checks(check)
+                self.do_check(check)
             container.start()
 
     def remove_all(self, docker_host, docker_version):
