@@ -244,21 +244,24 @@ class Pull(Command):
 
 
 def get_container_info(self, name, parsed_args):
-    container = backend.Container(name,
-                                  self.app_args.docker_host,
-                                  self.app_args.docker_version)
-    columns = ('Name',
-               'Created',
-               'Started',
-               'IP',
-               'Tag',
-               'Docker-id')
+    if name == 'all':
+        exit(1)
+    else:
+        container = backend.Container(name,
+                                      self.app_args.docker_host,
+                                      self.app_args.docker_version)
+        columns = ('Name',
+                   'Created',
+                   'Started',
+                   'IP',
+                   'Tag',
+                   'Docker-id')
 
-    data = (name,
-            container.created,
-            container.started,
-            container.ip,
-            container.tag,
-            container.id)
+        data = (name,
+                container.created,
+                container.started,
+                container.ip,
+                container.tag,
+                container.id)
 
     return columns, data
