@@ -54,7 +54,6 @@ class Build(Command):
                 image.build(nocache)
         else:
             print('Please specify a name or all')
-
         return True
 
 
@@ -103,7 +102,6 @@ class Start(ShowOne):
                                               self.app_args.docker_host,
                                               self.app_args.docker_version)
                 container.start()
-
         return get_container_info(self, name, parsed_args)
 
 
@@ -128,7 +126,6 @@ class Stop(ShowOne):
                                               self.app_args.docker_host,
                                               self.app_args.docker_version)
                 container.stop()
-
         return get_container_info(self, name, parsed_args)
 
 
@@ -143,11 +140,16 @@ class Restart(ShowOne):
     def take_action(self, parsed_args):
         name = parsed_args.name
         if name:
-            container = backend.Container(name,
-                                          self.app_args.docker_host,
-                                          self.app_args.docker_version)
-            container.restart()
-
+            if name == 'all':
+                print('Restarting all containers...')
+                schedul = scheduler.Scheduler()
+                schedul.restart_all(self.app_args.docker_host,
+                                    self.app_args.docker_version)
+            else:
+                container = backend.Container(name,
+                                              self.app_args.docker_host,
+                                              self.app_args.docker_version)
+                container.restart()
         return get_container_info(self, name, parsed_args)
 
 
@@ -239,7 +241,6 @@ class Pull(Command):
                               self.app_args.docker_host,
                               self.app_args.docker_version)
         image.pull()
-
         return True
 
 
@@ -260,5 +261,4 @@ def get_container_info(self, name, parsed_args):
             container.ip,
             container.tag,
             container.id)
-
     return columns, data

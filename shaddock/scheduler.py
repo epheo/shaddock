@@ -61,6 +61,10 @@ class Scheduler(object):
                                           docker_version)
             container.stop()
 
+    def restart_all(self, docker_host, docker_version):
+        self.stop_all(docker_host, docker_version)
+        self.start_all(docker_host, docker_version)
+
     def do_check(self, check, retry=None):
         if retry is None:
             retry = check.get('retry', 5)
