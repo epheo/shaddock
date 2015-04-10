@@ -6,6 +6,16 @@ a predefined template (like an http://openstack.org infrastructure)
 QuickStart
 ----------
 
+.. code:: bash
+
+    git clone https://github.com/epheo/shaddock
+    git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
+    cd shaddock && sudo python setupy.py install
+    cd /var/lib/shaddock/ && ./set_ip.sh && cd -
+    shaddock build all
+    shaddock start all
+
+
 Docker installation
 ~~~~~~~~~~~~~~~~~~~
 https://docs.docker.com/installation/
@@ -15,6 +25,7 @@ Shaddock installation
 
 .. code:: bash
 
+    git clone https://github.com/epheo/shaddock
     sudo python setupy.py install
 
 
@@ -43,16 +54,22 @@ Structures example of *infratructure.yaml*:
 
 .. code:: yaml
 
-    - name: rabbitmq01
-      image: shaddock/rabbitmq
-      priority: 10
+    - name: nova
+      image: shaddock/nova
+      priority: 40
       ports:
-        - 5672
-        - 15672
+        - 8774
+        - 8775
       volumes:
-        '/data/log': '/var/lib/rabbitmq/log'
-        '/data/mnesia': '/var/lib/rabbitmq/mnesia'
-      depend-on: None
+        - mount: /var/log/nova
+          host_dir: /var/log/shaddock/nova
+      privileged: True
+      depends-on:
+        - {name: seed, status: stopped}
+        - {name: mysql, port: 3306}
+        - {name: rabbitmq, port: 5672}
+        - {name: keystone, port: 5000, get: '/v2.0'}
+        - {name: keystone, port: 35357, get: '/v2.0'}
 
 
 Launch a simple OpenStack platform
@@ -62,20 +79,12 @@ Build all the images and start the services
 
 .. code:: bash
 
-    shaddock
-    (shaddock) build all
-    (shaddock) start rabbitmq
-    (shaddock) start mysql
-    (shaddock) start keystone
-    (shaddock) start seed
-    (shaddock) start nova
-    (shaddock) start glance
-    (shaddock) start horizon
+    shaddock build all
+    shaddock start all
 
 
 Usage
 -----
-
 
 The containers stored in this yaml file can be launched via the command line or
 the interactive shell.

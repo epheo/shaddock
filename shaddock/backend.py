@@ -140,6 +140,7 @@ class Container(object):
         info['hostname'] = None
         info['started'] = False
         info['created'] = False
+        info['status'] = 'Stopped'
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             try:
@@ -156,6 +157,8 @@ class Container(object):
                 info['id'] = c_id
                 info['ip'] = network['IPAddress']
                 info['hostname'] = config['Hostname']
+                info['status'] = [item['Status'] for item in containers_list
+                                  if item['Id'] == c_id ][0]
                 info['created'] = True
                 if info.get('ip'):
                     info['started'] = True
