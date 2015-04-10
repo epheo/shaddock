@@ -63,11 +63,13 @@ class Container(object):
                                        version=str(self.docker_version),
                                        timeout=10)
         info = self.get_info()
-        self.id = info['id']
-        self.ip = info['ip']
-        self.hostname = info['hostname']
-        self.started = info['started']
-        self.created = info['created']
+        for attr in info.keys():
+            setattr(self, attr, info[attr])
+        # self.id = info['id']
+        # self.ip = info['ip']
+        # self.hostname = info['hostname']
+        # self.started = info['started']
+        # self.created = info['created']
 
     def create(self):
         print('Creating container: {}'.format(self.name))
@@ -95,13 +97,13 @@ class Container(object):
 
     def stop(self):
         if self.started is True:
-            print('Stopping container: {}'.format(self.tag))
+            print('Stopping container: {}'.format(self.name))
             self.dockerapi.stop(self.id)
 
     def remove(self):
         self.stop()
         if self.created is True:
-            print('Removing container: {}'.format(self.id))
+            print('Removing container: {}'.format(self.name))
             self.dockerapi.remove_container(self.id)
 
     def restart(self):
