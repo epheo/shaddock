@@ -27,6 +27,7 @@ class Scheduler(object):
     def __init__(self):
         self.services_list = model.get_services_list()
         self.services_list.sort(key=itemgetter('priority'))
+        self.checker = Checks()
 
     def build_all(self, nocache, docker_host, docker_version):
         for svc in self.services_list:
@@ -43,8 +44,10 @@ class Scheduler(object):
         for svc in self.services_list:
             container = backend.Container(svc['name'], docker_host,
                                           docker_version)
+            checks = svc.get('depends-on', [])
+            for check in checks:
+                self.do_checks(check)
             container.start()
-            time.sleep(60)
 
     def remove_all(self, docker_host, docker_version):
         for svc in reversed(self.services_list):
@@ -58,8 +61,20 @@ class Scheduler(object):
                                           docker_version)
             container.stop()
 
-    def wait(self):
-        raise NotImplementedError
+    def do_check(self, check, retry=None):
+        if retry is None:
+            retry = check.get('retry', 5)
+        elif retry == 0:
+            raise CheckError("The following check ran it's maximum amount of"
+                             " retry and is still returning "
+                             " False:".format(str(check)))
+        print("Running check: {}".format(str(check)))
+        if self.checker.run(check):
+            pass
+        else:
+            retry -= 1
+            time.sleep(check.get('sleep', 10))
+            self.do_check(check, retry)
 
 
 class Checks(object):
@@ -168,3 +183,7 @@ class Checks(object):
         except:
             ret = False
         return ret
+
+
+class CheckError(Exception):
+        pass
