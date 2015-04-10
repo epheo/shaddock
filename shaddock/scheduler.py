@@ -127,6 +127,8 @@ class Checks(object):
                                       self.d_ver)
                 self.param['host'] = c.ip
                 self.param['useproxy'] = False
+                if c.ip is None:
+                    return False
             except:
                 return False
 
