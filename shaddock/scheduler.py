@@ -53,7 +53,7 @@ class Scheduler(object):
         for svc in reversed(self.services_list):
             container = backend.Container(svc['name'], docker_host,
                                           docker_version)
-            container.start()
+            container.stop()
 
     def wait(self):
         raise NotImplementedError
