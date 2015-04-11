@@ -158,7 +158,7 @@ class Container(object):
                 info['ip'] = network['IPAddress']
                 info['hostname'] = config['Hostname']
                 info['status'] = [item['Status'] for item in containers_list
-                                  if item['Id'] == c_id ][0]
+                                  if item['Id'] == c_id][0]
                 info['created'] = True
                 if info.get('ip'):
                     info['started'] = True

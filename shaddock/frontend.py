@@ -194,7 +194,7 @@ class List(Lister):
             b = backend.Container(svc['name'],
                                   self.app_args.docker_host,
                                   self.app_args.docker_version)
-            line = (svc['name'], b.created, b.started, b.ip, b.tag, b.id,
+            line = (svc['name'], b.created, b.started, b.ip, b.tag, b.id[:12],
                     b.status)
             l = l + (line, )
         return columns, l
