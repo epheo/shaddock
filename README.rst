@@ -45,8 +45,8 @@ All the configurations (passwords, users, etc) are in *configuration.yaml*
 
 .. code:: bash
 
-	/var/lib/shaddock/etc/infrastructure.yaml
-	/var/lib/shaddock/etc/configuration.yaml
+	/var/lib/shaddock/infrastructure.yaml
+	/var/lib/shaddock/configuration.yaml
 
 
 This template contain the main modules of an OpenStack infrastructure. You
