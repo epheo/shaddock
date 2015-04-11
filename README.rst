@@ -6,6 +6,7 @@ a predefined template (like an http://openstack.org infrastructure)
 QuickStart
 ----------
 
+
 .. code:: bash
 
     # Copy an OpenStack template
@@ -13,12 +14,20 @@ QuickStart
     cd /var/lib/shaddock/ && ./set_ip.sh && cd -
 
     # Run shaddock with Docker:
-    docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
+    git clone https://github.com/epheo/shaddock &&\
+    sudo python setup.py install
 
     # Shell:
     (shaddock) ps
     (shaddock) build all
     (shaddock) start all
+
+**Run from Docker:** (without installation but require the docker API to listen on a tcp port)
+
+.. code:: bash
+
+    # Run shaddock with Docker:
+    docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
 
 
 Docker installation
