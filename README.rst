@@ -6,7 +6,6 @@ a predefined template (like an http://openstack.org infrastructure)
 QuickStart
 ----------
 
-
 .. code:: bash
 
     # Copy an OpenStack template
@@ -22,11 +21,11 @@ QuickStart
     (shaddock) build all
     (shaddock) start all
 
-**Run from Docker:** (without installation but require the docker API to listen on a tcp port)
+**Run the shaddock shell in a container:**
+Without installation but require the docker API to listen on a tcp port.
 
 .. code:: bash
 
-    # Run shaddock with Docker:
     docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
 
 
