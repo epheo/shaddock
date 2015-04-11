@@ -8,10 +8,12 @@ QuickStart
 
 .. code:: bash
 
+    # Installation and Configuration:
     git clone https://github.com/epheo/shaddock
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
     cd shaddock && sudo python setupy.py install
     cd /var/lib/shaddock/ && ./set_ip.sh && cd -
+    # Usage:
     shaddock build all
     shaddock start all
 
