@@ -147,7 +147,8 @@ Help
 
 refs: https://docs.docker.com/reference/api/docker_remote_api/
 
-.. code:bash
+
+.. code:: bash
 
     cat /etc/default/docker.io
     DOCKER_OPTS="-H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock"
