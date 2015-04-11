@@ -8,14 +8,17 @@ QuickStart
 
 .. code:: bash
 
-    # Installation and Configuration:
-    git clone https://github.com/epheo/shaddock
+    # Copy an OpenStack template
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
-    cd shaddock && sudo python setupy.py install
     cd /var/lib/shaddock/ && ./set_ip.sh && cd -
-    # Usage:
-    shaddock build all
-    shaddock start all
+
+    # Run shaddock with Docker:
+    docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
+
+    # Shell:
+    (shaddock) ps
+    (shaddock) build all
+    (shaddock) start all
 
 
 Docker installation
@@ -139,3 +142,14 @@ References
 Docker-py API Documentation: http://docker-py.readthedocs.org/
 
 OpenStack Official Documentation: http://docs.openstack.org/
+
+Help
+~~~~
+
+*Set up the Docker remote API:*
+refs: https://docs.docker.com/reference/api/docker_remote_api/
+
+.. code:bash
+
+    cat /etc/default/docker.io
+    DOCKER_OPTS="-H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock"
