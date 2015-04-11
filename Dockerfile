@@ -7,7 +7,8 @@ MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
 RUN \
      git clone https://github.com/epheo/shaddock &&\
-     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
+     git clone https://github.com/epheo/shaddock-openstack \
+     /var/lib/shaddock/ &&\
      cd shaddock && python setup.py install
 
 VOLUME /var/lib/shaddock
