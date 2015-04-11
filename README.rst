@@ -22,24 +22,13 @@ QuickStart
     (shaddock) start all
 
 **Run the shaddock shell in a container:**
+
 Without installation but require the docker API to listen on a tcp port.
 
 .. code:: bash
 
     docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
 
-
-Docker installation
-~~~~~~~~~~~~~~~~~~~
-https://docs.docker.com/installation/
-
-Shaddock installation
-~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
-
-    git clone https://github.com/epheo/shaddock
-    sudo python setupy.py install
 
 
 OpenStack template installation and configuration
@@ -154,10 +143,16 @@ OpenStack Official Documentation: http://docs.openstack.org/
 Help
 ~~~~
 
-*Set up the Docker remote API:*
+**Set up the Docker remote API:**
+
 refs: https://docs.docker.com/reference/api/docker_remote_api/
 
 .. code:bash
 
     cat /etc/default/docker.io
     DOCKER_OPTS="-H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock"
+
+
+**Docker installation:**
+
+refs: https://docs.docker.com/installation/
