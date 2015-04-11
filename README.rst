@@ -65,7 +65,6 @@ Structures example of *infratructure.yaml*:
       volumes:
         - mount: /var/log/nova
           host_dir: /var/log/shaddock/nova
-      privileged: True
       depends-on:
         - {name: seed, status: stopped}
         - {name: mysql, port: 3306}

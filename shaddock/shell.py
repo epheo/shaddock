@@ -157,8 +157,8 @@ class ShaddockShell(App):
             'stop': shaddock.frontend.Stop,
             'restart': shaddock.frontend.Restart,
             'remove': shaddock.frontend.Remove,
-            'list': shaddock.frontend.List,
-            'show': shaddock.frontend.Show,
+            'ps': shaddock.frontend.List,
+            'info': shaddock.frontend.Show,
             'pull': shaddock.frontend.Pull
         }
 
