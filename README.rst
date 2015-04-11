@@ -96,11 +96,11 @@ the interactive shell.
     Commands:
       build    [name] all    Build a new (or all the) container(s).
       create   [name]        Create a new container
-      list                   Show a list of Containers and details.
+      ps                     Show a list of Containers and details.
       logs     [name]        Display logs of a container
       remove   [name] all    Remove a (or all the) container(s).
       restart  [name]        Restart a container
-      show     [name]        Show details about a container
+      info     [name]        Show details about a container
       start    [name]        Start new container
       stop     [name]        Stop container
       pull     [name]        Pull a Docker image
