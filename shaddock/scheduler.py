@@ -69,7 +69,7 @@ class Scheduler(object):
 
     def do_check(self, check, retry=None):
         if retry is None:
-            retry = check.get('retry', 5)
+            retry = check.get('retry', 15)
         elif retry == 0:
             raise CheckError("The following check ran it's maximum amount of"
                              " retry and is still returning "

@@ -252,7 +252,7 @@ class Pull(Command):
 
 def get_container_info(self, name, parsed_args):
     if name == 'all':
-        exit(1)
+        return True
     else:
         container = backend.Container(name,
                                       self.app_args.docker_host,
