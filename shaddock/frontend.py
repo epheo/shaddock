@@ -263,11 +263,14 @@ def get_container_info(self, name, parsed_args):
                    'IP',
                    'Image',
                    'Docker-id')
-
+        if container.id:
+            c_id = container.id[:12]
+        else:
+            c_id = None
         data = (name,
                 container.created,
                 container.started,
                 container.ip,
                 container.tag,
-                container.id[:12])
+                c_id)
     return columns, data
