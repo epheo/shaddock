@@ -8,13 +8,13 @@ QuickStart
 
 .. code:: bash
 
+    # Install Shaddock:
+    git clone https://github.com/epheo/shaddock &&\
+    sudo python setup.py install
+
     # Copy an OpenStack template
     git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
     cd /var/lib/shaddock/ && ./set_ip.sh && cd -
-
-    # Run shaddock with Docker:
-    git clone https://github.com/epheo/shaddock &&\
-    sudo python setup.py install
 
     # Shell:
     (shaddock) ps
