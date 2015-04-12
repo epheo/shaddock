@@ -194,7 +194,7 @@ class List(Lister):
             b = backend.Container(svc['name'],
                                   self.app_args.docker_host,
                                   self.app_args.docker_version)
-            if b.id is not None:
+            if b.id:
                 c_id = b.id[:12]
             else:
                 c_id = b.id
