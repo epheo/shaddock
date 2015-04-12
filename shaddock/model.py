@@ -104,8 +104,8 @@ class ContainerConfig(object):
             try:
                 for volume in tpl_volumes:
                     self.volumes.append(volume['mount'])
-                    self.binds[volume['mount']] = {'bind': volume['host_dir'],
-                                                   'ro': False}
+                    self.binds[volume['host_dir']] = {'bind': volume['mount'],
+                                                      'ro': False}
             except KeyError:
                 raise TemplateFileError(
                     "A container's volume definition in your"
