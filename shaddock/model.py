@@ -82,7 +82,7 @@ class ContainerConfig(object):
                 " missing the image property".format(name))
 
         self.privileged = service.get('privileged')
-        self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
+        self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag.split(":")[0])
 
         try:
             self.network_mode = service['network_mode']

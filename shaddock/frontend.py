@@ -15,6 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import docker
+import time
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
@@ -187,8 +189,10 @@ class List(Lister):
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Created', 'Started', 'IP', 'Tag', 'Docker-Id',
-                   'Status')
+        columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
+        client = docker.Client(base_url=self.app_args.docker_host,
+                               version=self.app_args.docker_version)
+        images = client.images()
         l = ()
         for svc in model.get_services_list():
             b = backend.Container(svc['name'],
@@ -198,8 +202,16 @@ class List(Lister):
                 c_id = b.id[:12]
             else:
                 c_id = b.id
-            line = (svc['name'], b.created, b.started, b.ip, b.tag, c_id,
-                    b.status)
+
+            try:
+                img_build = [img['Created'] for img in images
+                             if b.tag in img['RepoTags']][0]
+                img_build = time.strftime('%m/%d %H:%M',
+                                          time.localtime(img_build))
+            except IndexError:
+                img_build = None
+
+            line = (svc['name'], b.status, c_id, b.ip, b.tag, img_build)
             l = l + (line, )
         return columns, l
 

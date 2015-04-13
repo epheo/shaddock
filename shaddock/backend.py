@@ -140,15 +140,18 @@ class Container(object):
         info['hostname'] = None
         info['started'] = False
         info['created'] = False
-        info['status'] = 'Uncreated'
+        info['status'] = 'Not Created'
         containers_list = self.dockerapi.containers(all=True)
         if containers_list:
             try:
                 # One item contains "Names": ["/realname"]
-                c_id = [item['Id'] for item in containers_list
-                        if "/" + self.name == str(item['Names'][0])][0]
+                c_id, c_status = [(item['Id'], item['Status'])
+                                  for item in containers_list
+                                  if ("/" + self.name ==
+                                      str(item['Names'][0]))][0]
             except IndexError:
                 c_id = None
+                c_status = 'Not Created'
 
             if c_id:
                 container_info = self.dockerapi.inspect_container(c_id)
@@ -158,7 +161,9 @@ class Container(object):
                 info['id'] = c_id
                 info['ip'] = network['IPAddress']
                 info['hostname'] = config['Hostname']
-                info['status'] = [item['Status'] for item in containers_list
-                                  if item['Id'] == c_id][0]
+                if c_status == "":
+                    info['status'] = 'Created'
+                else:
+                    info['status'] = c_status
                 info['created'] = True
         return info
