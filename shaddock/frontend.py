@@ -259,12 +259,12 @@ class Pull(Command):
             if name == 'all':
                 print('Pulling all containers...')
                 schedul = scheduler.Scheduler()
-                schedul.pull_all(name,
-                                 self.app_args.docker_host,
+                schedul.pull_all(self.app_args.docker_host,
                                  self.app_args.docker_version)
 
         else:
-            image = backend.Image(self.app_args.docker_host,
+            image = backend.Image(name,
+                                  self.app_args.docker_host,
                                   self.app_args.docker_version)
             image.pull()
 
