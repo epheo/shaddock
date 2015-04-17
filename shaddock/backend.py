@@ -44,10 +44,10 @@ class Image(object):
                 print(stream.rstrip())
 
     def pull(self):
-        print("Pulling image:").rstrip(),
+        print("Pulling image:".rstrip('\n')),
         for line in self.dockerapi.pull(self.cfg.tag, stream=True):
             tick = '*'
-            print(tick).rstrip(),
+            print(tick.rstrip('\n')),
 
 
 class Container(object):
