@@ -59,7 +59,7 @@ class Scheduler(object):
 
     def pull_all(self, docker_host, docker_version):
         for svc in self.services_list:
-            image = backend.Images(svc['name'], docker_host, docker_version)
+            image = backend.Image(svc['name'], docker_host, docker_version)
             image.pull()
 
     def stop_all(self, docker_host, docker_version):
