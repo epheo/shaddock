@@ -18,7 +18,7 @@ QuickStart
 
     # Shell:
     (shaddock) ps
-    (shaddock) build all
+    (shaddock) pull all
     (shaddock) start all
 
 **Run the shaddock shell in a container:**
