@@ -57,6 +57,11 @@ class Scheduler(object):
                                           docker_version)
             container.remove()
 
+    def pull_all(self, docker_host, docker_version):
+        for svc in self.services_list:
+            image = backend.Image(svc['name'], docker_host, docker_version)
+            image.pull()
+
     def stop_all(self, docker_host, docker_version):
         for svc in reversed(self.services_list):
             container = backend.Container(svc['name'], docker_host,

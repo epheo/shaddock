@@ -255,11 +255,18 @@ class Pull(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        image = backend.Image(name,
-                              self.app_args.docker_host,
-                              self.app_args.docker_version)
-        image.pull()
-        return True
+        if name:
+            if name == 'all':
+                print('Pulling all containers...')
+                schedul = scheduler.Scheduler()
+                schedul.pull_all(self.app_args.docker_host,
+                                 self.app_args.docker_version)
+
+        else:
+            image = backend.Image(name,
+                                  self.app_args.docker_host,
+                                  self.app_args.docker_version)
+            image.pull()
 
 
 def get_container_info(self, name, parsed_args):
