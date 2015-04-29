@@ -103,7 +103,7 @@ the interactive shell.
       info     [name]        Show details about a container
       start    [name]        Start new container
       stop     [name]        Stop container
-      pull     [name]        Pull a Docker image
+      pull     [name] all    Pull a (or all the) Docker image
 
 
 .. code:: bash
