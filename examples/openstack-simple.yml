@@ -1,0 +1,133 @@
+################################################
+## SHADDOCK: Services Architecture Definition ##
+################################################
+
+- name: rabbitmq
+  image: shaddock/rabbitmq:latest
+  priority: 10
+  ports:
+    - 5672
+    - 15672
+  volumes:
+    - mount: /data/log
+      host_dir: /var/log/shaddock/rabbitmq/log
+
+
+- name: mysql
+  image: shaddock/mysql:latest
+  priority: 20
+  ports:
+    - 3306
+  volumes:
+    - mount: /var/log/mysql
+      host_dir: /var/log/shaddock/mysql
+
+
+- name: keystone
+  image: shaddock/keystone:latest
+  priority: 30
+  ports:
+    - 35357
+    - 5000
+  volumes:
+    - mount: /var/log/keystone
+      host_dir: /var/log/shaddock/keystone
+  depends-on:
+    - {name: mysql, port: 3306}
+
+
+- name: seed
+  image: shaddock/seed:latest
+  priority: 35
+  depends-on:
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+
+
+- name: nova
+  image: shaddock/nova:latest
+  priority: 40
+  ports:
+    - 8774
+  volumes:
+    - mount: /var/log/nova
+      host_dir: /var/log/shaddock/nova
+  privileged: True
+  depends-on:
+    - {name: seed, status: stopped}
+    - {name: mysql, port: 3306}
+    - {name: rabbitmq, port: 5672}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+
+
+- name: glance
+  image: shaddock/glance:latest
+  priority: 50
+  ports:
+    - 9292
+    - 4324
+  volumes:
+    # - mount: /var/log/glance
+      # host_dir: /var/log/shaddock/glance
+  depends-on:
+    - {name: seed, status: stopped}
+    - {name: mysql, port: 3306}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+
+
+- name: horizon
+  image: shaddock/horizon:latest
+  priority: 60
+  ports:
+    - 80
+    - 11211
+  volumes:
+    - mount: /var/log/horizon
+      host_dir: /var/log/shaddock/horizon
+  depends-on:
+    - {name: seed, status: stopped}
+    - {name: mysql, port: 3306}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+
+
+- name: qemu
+  image: shaddock/qemu:latest
+  ports:
+    - 8775
+  volumes:
+    - mount: /var/log/nova
+      host_dir: /var/log/shaddock/compute
+  privileged: True
+  network_mode: host
+  priority: 90
+  depends-on:
+    - {name: nova}
+
+
+#     - {name: nova, status: stopped}
+#     - {name: nova, port: 8774, type: tcp}
+#     - {name: nova, port: 8774, state: down, type: tcp}
+#     - {host: google.com, port: 8774, state: down, type: tcp}
+#     - {name: nova, type: http, get: '/v2.0', port: 5000, code: 200}
+#     - {host: google.com, type: http, get: '/v2.0', port: 5000, code: 200}
+#     - {host: 127.0.0.1, type: http, get: '/', code: 200, useproxy: False }
+#     - {name: nova, sleep: 20} # defaults to 10
+#     - {name: nova, retry: 10} # defaults to 5
+
+# - name: mistral
+  # image: shaddock/mistral:latest
+  # ports:
+    # - 8989
+  # priority: 90
+  # volumes:
+    # - mount: /var/log/supervisor
+      # host_dir: /var/log/shaddock/mistral
+  # depends-on:
+    # - {name: seed, status: stopped}
+    # - {name: mysql, port: 3306}
+    # - {name: keystone, port: 5000, get: '/v2.0'}
+    # - {name: keystone, port: 35357, get: '/v2.0'}
+

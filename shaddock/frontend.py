@@ -182,7 +182,7 @@ class List(Lister):
 
         images = client.images()
         l = ()
-        for svc in model.get_services_list():
+        for svc in model.get_services_list(self.app_args):
             b = backend.Container(svc['name'],
                                   self.app_args)
             if b.id:

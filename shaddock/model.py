@@ -39,7 +39,7 @@ class ContainerConfig(object):
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.tag = name
             self.name = name.split('/')[1]
-            self.path = '{}/{}'.format(images_dir, self.tag)
+            self.path = '{}/{}'.format(self.images_dir, self.tag)
             self.ports = None
             self.ports_bindings = None
             self.volumes = None
