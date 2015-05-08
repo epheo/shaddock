@@ -36,8 +36,6 @@ class ContainerConfig(object):
     def __init__(self, name, app_args):
         self.app_args = app_args
         self.images_dir = self.app_args.images_dir
-        if self.images_dir is None:
-            raise NameError("You should specify an image directory with -d")
         # This one matches anything in the form of "something/something"
         # with something beeing anything not containing slashs or spaces.
         if re.match("^[^\s/]+/[^\s/]+$", name):
