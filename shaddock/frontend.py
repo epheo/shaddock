@@ -253,7 +253,7 @@ class Pull(Command):
 
 def get_container_info(self, name, parsed_args):
     if name == 'all':
-        exit(0)
+        return 'Shaddock', 'All'
     else:
         container = backend.Container(name, self.app_args)
         columns = ('Name',
