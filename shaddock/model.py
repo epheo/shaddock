@@ -25,6 +25,8 @@ class TemplateFileError(Exception):
 
 def get_services_list(app_args):
     template_file = app_args.template_file
+    if template_file is None:
+        raise NameError("You should specify a template file with -f")
     with open(template_file) as f:
         services_list = yaml.load(f)
     return services_list
@@ -34,6 +36,8 @@ class ContainerConfig(object):
     def __init__(self, name, app_args):
         self.app_args = app_args
         self.images_dir = self.app_args.images_dir
+        if self.images_dir is None:
+            raise NameError("You should specify an image directory with -d")
         # This one matches anything in the form of "something/something"
         # with something beeing anything not containing slashs or spaces.
         if re.match("^[^\s/]+/[^\s/]+$", name):
