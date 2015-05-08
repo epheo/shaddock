@@ -72,8 +72,8 @@ Structure example of a template file:
 Usage
 -----
 
-The containers stored in this yaml file can be launched via the command line or
-the interactive shell.
+.. code:: bash
+    shaddock --help
 
 
 .. code:: raw
