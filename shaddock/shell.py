@@ -133,7 +133,7 @@ class ShaddockShell(App):
             action='store',
             dest='template_file',
             default=self.env('TEMPLATE_FILE',
-                             default='/var/lib/shaddock/infrastructure.yaml'),
+                             default=False),
             help='Template file to use. (Env: TEMPLATE_FILE)'
         )
         parser.add_argument(
@@ -141,7 +141,7 @@ class ShaddockShell(App):
             action='store',
             dest='images_dir',
             default=self.env('IMAGES_DIR',
-                             default='/var/lib/shaddock/images/'),
+                             default=False),
             help=('Directory to build Docker images from.'
                   '(Env: IMAGES_DIR)')
         )
