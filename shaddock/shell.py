@@ -128,14 +128,21 @@ class ShaddockShell(App):
                              default='1.12'),
             help='Docker API version number (Env: DOCKER_VERSION)'
         )
-
         parser.add_argument(
-            '--template-dir',
+            '--template-file',
             action='store',
-            dest='template_dir',
-            default=self.env('SHDK_TEMPLATEDIR',
-                             default='/var/lib/shaddock'),
-            help='Template directory to use. (Env: SHDK_TEMPLATE_DIR)'
+            dest='template_file',
+            default=self.env('SHDK_TEMPLATE_FILE',
+                             default='/var/lib/shaddock/infrastructure.yaml'),
+            help='Template file to use. (Env: SHDK_TEMPLATEFILE)'
+        )
+        parser.add_argument(
+            '--images-dir',
+            action='store',
+            dest='images_dir',
+            default=self.env('SHDK_IMAGES_DIR',
+                             default='/var/lib/shaddock/images/'),
+            help='Directory to build Docker images from. (Env: SHDK_IMAGES_DIR)'
         )
         return parser
 

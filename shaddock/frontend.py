@@ -24,7 +24,7 @@ from shaddock import backend, model, scheduler
 
 
 class Build(Command):
-    """Build new container"""
+    """Build a new container"""
 
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
@@ -45,14 +45,11 @@ class Build(Command):
         if name:
             if name == 'all':
                 print('Building all services...')
-                schedul = scheduler.Scheduler()
-                schedul.build_all(nocache,
-                                  self.app_args.docker_host,
-                                  self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.build_all(nocache)
             else:
                 image = backend.Image(name,
-                                      self.app_args.docker_host,
-                                      self.app_args.docker_version)
+                                      self.app_args)
                 image.build(nocache)
         else:
             print('Please specify a name or all')
@@ -60,7 +57,7 @@ class Build(Command):
 
 
 class Create(ShowOne):
-    """Create new container"""
+    """Create a new container"""
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
@@ -72,19 +69,17 @@ class Create(ShowOne):
         if name:
             if name == 'all':
                 print('Creating all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.create_all(self.app_args.docker_host,
-                                   self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.create_all()
             else:
                 container = backend.Container(name,
-                                              self.app_args.docker_host,
-                                              self.app_args.docker_version)
+                                              self.app_args)
                 container.create()
         return get_container_info(self, name, parsed_args)
 
 
 class Start(ShowOne):
-    """Start new container"""
+    """Start a new container"""
 
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
@@ -96,19 +91,17 @@ class Start(ShowOne):
         if name:
             if name == 'all':
                 print('Starting all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.start_all(self.app_args.docker_host,
-                                  self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.start_all()
             else:
                 container = backend.Container(name,
-                                              self.app_args.docker_host,
-                                              self.app_args.docker_version)
+                                              self.app_args)
                 container.start()
         return get_container_info(self, name, parsed_args)
 
 
 class Stop(ShowOne):
-    """Stop container"""
+    """Stop a container"""
 
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
@@ -120,19 +113,17 @@ class Stop(ShowOne):
         if name:
             if name == 'all':
                 print('Stopping all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.stop_all(self.app_args.docker_host,
-                                 self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.stop_all()
             else:
                 container = backend.Container(name,
-                                              self.app_args.docker_host,
-                                              self.app_args.docker_version)
+                                              self.app_args)
                 container.stop()
         return get_container_info(self, name, parsed_args)
 
 
 class Restart(ShowOne):
-    """Restart container"""
+    """Restart a container"""
 
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
@@ -144,19 +135,17 @@ class Restart(ShowOne):
         if name:
             if name == 'all':
                 print('Restarting all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.restart_all(self.app_args.docker_host,
-                                    self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.restart_all()
             else:
                 container = backend.Container(name,
-                                              self.app_args.docker_host,
-                                              self.app_args.docker_version)
+                                              self.app_args)
                 container.restart()
         return get_container_info(self, name, parsed_args)
 
 
 class Remove(ShowOne):
-    """Remove container"""
+    """Remove a container"""
 
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
@@ -168,13 +157,11 @@ class Remove(ShowOne):
         if name:
             if name == 'all':
                 print('Removing all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.remove_all(self.app_args.docker_host,
-                                   self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.remove_all()
             else:
                 container = backend.Container(name,
-                                              self.app_args.docker_host,
-                                              self.app_args.docker_version)
+                                              self.app_args)
                 container.remove()
         return get_container_info(self, name, parsed_args)
 
@@ -192,12 +179,12 @@ class List(Lister):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
         client = docker.Client(base_url=self.app_args.docker_host,
                                version=self.app_args.docker_version)
+
         images = client.images()
         l = ()
         for svc in model.get_services_list():
             b = backend.Container(svc['name'],
-                                  self.app_args.docker_host,
-                                  self.app_args.docker_version)
+                                  self.app_args)
             if b.id:
                 c_id = b.id[:12]
             else:
@@ -230,7 +217,7 @@ class Show(ShowOne):
 
 
 class Logs(Command):
-    """Display logs of a container"""
+    """Display the logs of a container"""
 
     def get_parser(self, prog_name):
         parser = super(Logs, self).get_parser(prog_name)
@@ -239,14 +226,12 @@ class Logs(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        container = backend.Container(name,
-                                      self.app_args.docker_host,
-                                      self.app_args.docker_version)
+        container = backend.Container(name, self.app_args)
         container.return_logs()
 
 
 class Pull(Command):
-    """Display logs of a container"""
+    """Pull a container from the Docker Repository"""
 
     def get_parser(self, prog_name):
         parser = super(Pull, self).get_parser(prog_name)
@@ -258,14 +243,11 @@ class Pull(Command):
         if name:
             if name == 'all':
                 print('Pulling all containers...')
-                schedul = scheduler.Scheduler()
-                schedul.pull_all(self.app_args.docker_host,
-                                 self.app_args.docker_version)
+                schedul = scheduler.Scheduler(self.app_args)
+                schedul.pull_all()
 
         else:
-            image = backend.Image(name,
-                                  self.app_args.docker_host,
-                                  self.app_args.docker_version)
+            image = backend.Image(name, self.app_args)
             image.pull()
 
 
@@ -273,9 +255,7 @@ def get_container_info(self, name, parsed_args):
     if name == 'all':
         return True
     else:
-        container = backend.Container(name,
-                                      self.app_args.docker_host,
-                                      self.app_args.docker_version)
+        container = backend.Container(name, self.app_args)
         columns = ('Name',
                    'Created',
                    'Started',

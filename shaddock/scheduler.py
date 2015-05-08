@@ -24,26 +24,27 @@ import requests
 
 
 class Scheduler(object):
-    def __init__(self):
-        self.services_list = model.get_services_list()
+    def __init__(self, app_args):
+        self.app_args = app_args
+        self.docker_host = app_args.docker_host
+        self.docker_version = app_args.docker_version
+        self.services_list = model.get_services_list(self.app_args)
         self.services_list.sort(key=itemgetter('priority'))
         self.checker = Checks()
 
-    def build_all(self, nocache, docker_host, docker_version):
+    def build_all(self, nocache):
         for svc in self.services_list:
-            image = backend.Image(svc['name'], docker_host, docker_version)
+            image = backend.Image(svc['name'], self.app_args)
             image.build(nocache)
 
-    def create_all(self, docker_host, docker_version):
+    def create_all(self):
         for svc in self.services_list:
-            container = backend.Container(svc['name'], docker_host,
-                                          docker_version)
+            container = backend.Container(svc['name'], self.app_args)
             container.create()
 
-    def start_all(self, docker_host, docker_version):
+    def start_all(self):
         for svc in self.services_list:
-            container = backend.Container(svc['name'], docker_host,
-                                          docker_version)
+            container = backend.Container(svc['name'], self.app_args)
             checks = svc.get('depends-on', [])
             if len(checks) > 0:
                 print("Running checks before starting: {}".format(svc['name']))
@@ -51,26 +52,24 @@ class Scheduler(object):
                     self.do_check(check)
             container.start()
 
-    def remove_all(self, docker_host, docker_version):
+    def remove_all(self):
         for svc in reversed(self.services_list):
-            container = backend.Container(svc['name'], docker_host,
-                                          docker_version)
+            container = backend.Container(svc['name'], self.app_args)
             container.remove()
 
-    def pull_all(self, docker_host, docker_version):
+    def pull_all(self):
         for svc in self.services_list:
-            image = backend.Image(svc['name'], docker_host, docker_version)
+            image = backend.Image(svc['name'], self.app_args)
             image.pull()
 
-    def stop_all(self, docker_host, docker_version):
+    def stop_all(self):
         for svc in reversed(self.services_list):
-            container = backend.Container(svc['name'], docker_host,
-                                          docker_version)
+            container = backend.Container(svc['name'], self.app_args)
             container.stop()
 
-    def restart_all(self, docker_host, docker_version):
-        self.stop_all(docker_host, docker_version)
-        self.start_all(docker_host, docker_version)
+    def restart_all(self):
+        self.stop_all()
+        self.start_all()
 
     def do_check(self, check, retry=None):
         if retry is None:

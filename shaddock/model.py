@@ -18,33 +18,28 @@
 import yaml
 import re
 
-TEMPLATE_DIR = '/var/lib/shaddock'
-
 
 class TemplateFileError(Exception):
     pass
 
 
-def get_services_list(template_dir=TEMPLATE_DIR):
-    with open('{}/infrastructure.yaml'.format(template_dir)) as f:
+def get_services_list(app_args):
+    template_file = app_args.template_file
+    with open(template_file) as f:
         services_list = yaml.load(f)
     return services_list
 
 
-def get_vars_dict(template_dir=TEMPLATE_DIR):
-    with open('{}/configuration.yaml'.format(template_dir)) as f:
-        vars_dict = yaml.load(f)
-    return vars_dict.get('template_vars')
-
-
 class ContainerConfig(object):
-    def __init__(self, name):
+    def __init__(self, name, app_args):
+        self.app_args = app_args
+        self.images_dir = self.app_args.images_dir
         # This one matches anything in the form of "something/something"
         # with something beeing anything not containing slashs or spaces.
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.tag = name
             self.name = name.split('/')[1]
-            self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag)
+            self.path = '{}/{}'.format(images_dir, self.tag)
             self.ports = None
             self.ports_bindings = None
             self.volumes = None
@@ -55,7 +50,7 @@ class ContainerConfig(object):
             self.__construct(name)
 
     def __construct(self, name):
-        services_list = get_services_list()
+        services_list = get_services_list(self.app_args)
         try:
             service = [svc for svc in services_list if
                        svc['name'] == name]
@@ -82,7 +77,8 @@ class ContainerConfig(object):
                 " missing the image property".format(name))
 
         self.privileged = service.get('privileged')
-        self.path = '{}/images/{}'.format(TEMPLATE_DIR, self.tag.split(":")[0])
+        self.env = service.get('env')
+        self.path = '{}/{}'.format(self.images_dir, self.tag.split(":")[0])
 
         try:
             self.network_mode = service['network_mode']

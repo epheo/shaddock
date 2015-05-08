@@ -22,11 +22,12 @@ import sys
 
 
 class Image(object):
-    def __init__(self, name, docker_host, docker_version):
-        self.cfg = model.ContainerConfig(name)
+    def __init__(self, name, app_args):
+        self.app_args = app_args
+        self.docker_host = app_args.docker_host
+        self.docker_version = app_args.docker_version
+        self.cfg = model.ContainerConfig(name, self.app_args)
         self.name = self.cfg.name
-        self.docker_host = docker_host
-        self.docker_version = docker_version
         self.dockerapi = docker.Client(base_url=self.docker_host,
                                        version=str(self.docker_version),
                                        timeout=10)
@@ -54,14 +55,15 @@ class Image(object):
 
 
 class Container(object):
-    def __init__(self, service_name, docker_host, docker_version):
+    def __init__(self, service_name, app_args):
+        self.app_args = app_args
+        self.docker_host = app_args.docker_host
+        self.docker_version = app_args.docker_version
         # input_name can ba a tag or a name
         self.input_name = service_name
-        self.cfg = model.ContainerConfig(service_name)
+        self.cfg = model.ContainerConfig(service_name, self.app_args)
         self.tag = self.cfg.tag
         self.name = self.cfg.name
-        self.docker_host = docker_host
-        self.docker_version = docker_version
         self.dockerapi = docker.Client(base_url=self.docker_host,
                                        version=str(self.docker_version),
                                        timeout=10)
@@ -81,15 +83,14 @@ class Container(object):
             name=self.name,
             detach=False,
             ports=self.cfg.ports,
-            environment=model.get_vars_dict(),
+            environment=self.cfg.env,
             volumes=self.cfg.volumes,
             hostname=self.cfg.name)
         return c_id
 
     def start(self):
         if self.created is False:
-            container = Container(self.input_name, self.docker_host,
-                                  self.docker_version)
+            container = Container(self.input_name, self.app_args)
             self.id = container.create()
         print('Starting container: {}'.format(self.name))
         self.dockerapi.start(container=self.id,
