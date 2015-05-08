@@ -47,7 +47,7 @@
 
 
 - name: seed
-  image: shaddock/seed:juno
+  image: shaddock/seed:latest
   priority: 35
   depends-on:
     - {name: keystone, port: 5000, get: '/v2.0'}
