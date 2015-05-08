@@ -8,15 +8,15 @@ QuickStart
 
 .. code:: bash
 
-    # Install Shaddock:
+    # Installation:
     git clone https://github.com/epheo/shaddock &&\
     sudo python setup.py install
 
-    # Copy an OpenStack template
-    git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
-    cd /var/lib/shaddock/ && ./set_ip.sh && cd -
+    # Configuration
+    cd /examples && ./set_ip.sh openstack.yml
 
-    # Shell:
+    # Usage:
+    shaddock -f examples/openstack.yml
     (shaddock) ps
     (shaddock) pull all
     (shaddock) start all
@@ -27,7 +27,7 @@ Without installation but require the docker API to listen on a tcp port.
 
 .. code:: bash
 
-    docker run --rm -i -v /var/lib/shaddock:/var/lib/shaddock --env DOCKER_HOST="https://<docker_api>:2376" -t shaddock/shaddock
+    docker run --rm -i -v examples:/examples --env DOCKER_HOST="https://<docker_api>:2376" --env TEMPLATE_FILE=/examples/openstack.yml -t shaddock/shaddock
 
 
 
@@ -41,7 +41,6 @@ Reference template for an OpenStack platform:
 
 
 The general architecture of the platform is defined in *infrastructure.yaml*
-All the configurations (passwords, users, etc) are in *configuration.yaml*
 
 .. code:: bash
 
@@ -80,7 +79,7 @@ Build all the images and start the services
 
 .. code:: bash
 
-    shaddock build all
+    shaddock pull all
     shaddock start all
 
 
@@ -94,16 +93,16 @@ the interactive shell.
 .. code:: bash
 
     Commands:
-      build    [name] all    Build a new (or all the) container(s).
+      build    [name] [all]  Build a new (or all the) container(s).
       create   [name]        Create a new container
       ps                     Show a list of Containers and details.
       logs     [name]        Display logs of a container
-      remove   [name] all    Remove a (or all the) container(s).
+      remove   [name] [all]  Remove a (or all the) container(s).
       restart  [name]        Restart a container
       info     [name]        Show details about a container
       start    [name]        Start new container
       stop     [name]        Stop container
-      pull     [name] all    Pull a (or all the) Docker image
+      pull     [name] [all]  Pull a (or all the) Docker image
 
 
 .. code:: bash
