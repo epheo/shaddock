@@ -73,6 +73,7 @@ Usage
 -----
 
 .. code:: bash
+
     shaddock --help
 
 
