@@ -3,7 +3,7 @@
 Shaddock provides a platform deployed in http://docker.com containers following
 a predefined template (like an http://openstack.org infrastructure)
 
-QUICKSTART
+QuickStart
 ----------
 
 .. code:: bash
@@ -69,7 +69,7 @@ Structure example of a template file:
         GLANCE_PASS: panama
 
 
-USAGE
+Usage
 -----
 
 The containers stored in this yaml file can be launched via the command line or
@@ -121,7 +121,7 @@ the interactive shell.
       stop           Stop a container
 
 
-INFORMATIONS
+Informations
 ------------
 
 License
