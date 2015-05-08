@@ -76,14 +76,14 @@ The containers stored in this yaml file can be launched via the command line or
 the interactive shell.
 
 
-.. code:: bash
+.. code:: raw
 
     usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
                     [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
                     [-f TEMPLATE_FILE] [-d IMAGES_DIR]
 
 
-.. code:: bash
+.. code:: raw
 
     optional arguments:
       --version             Show program's version number and exit.
@@ -103,7 +103,7 @@ the interactive shell.
                             IMAGES_DIR)
 
 
-.. code:: bash
+.. code:: raw
 
     Commands:
       build          Build a new container
