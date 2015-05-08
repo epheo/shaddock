@@ -213,12 +213,7 @@ class Show(ShowOne):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-
-        try:
-            result = get_container_info(self, name, parsed_args)
-        except TypeError:
-            exit(0)
-        return result
+        return get_container_info(self, name, parsed_args)
 
 
 class Logs(Command):
@@ -258,7 +253,7 @@ class Pull(Command):
 
 def get_container_info(self, name, parsed_args):
     if name == 'all':
-        return True
+        exit(0)
     else:
         container = backend.Container(name, self.app_args)
         columns = ('Name',
