@@ -2,6 +2,7 @@
 ## SHADDOCK: Services Architecture Definition ##
 ################################################
 
+
 - name: rabbitmq
   image: shaddock/rabbitmq:latest
   priority: 10
@@ -11,6 +12,8 @@
   volumes:
     - mount: /data/log
       host_dir: /var/log/shaddock/rabbitmq/log
+  env:
+    RABBIT_PASS: panama
 
 
 - name: mysql
@@ -21,6 +24,9 @@
   volumes:
     - mount: /var/log/mysql
       host_dir: /var/log/shaddock/mysql
+  env:
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
 
 
 - name: keystone
@@ -34,14 +40,26 @@
       host_dir: /var/log/shaddock/keystone
   depends-on:
     - {name: mysql, port: 3306}
+  env:
+    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_DBPASS: panama
+    ADMIN_TOKEN: panama
 
 
 - name: seed
-  image: shaddock/seed:latest
+  image: shaddock/seed:juno
   priority: 35
   depends-on:
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    ADMIN_TOKEN: panama
+    KEYSTONE_PASS: panama
+    ADMIN_PASS: panama
+    DEMO_PASS: panama
+    EMAIL_DOMAIN: example.org
 
 
 - name: nova
@@ -59,6 +77,15 @@
     - {name: rabbitmq, port: 5672}
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    RABBIT_PASS: panama
+    NOVA_DBPASS: panama
+    NOVA_PASS: panama
 
 
 - name: glance
@@ -75,6 +102,11 @@
     - {name: mysql, port: 3306}
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    GLANCE_DBPASS: panama
+    GLANCE_PASS: panama
 
 
 - name: horizon
@@ -91,7 +123,8 @@
     - {name: mysql, port: 3306}
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
-
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
 
 - name: qemu
   image: shaddock/qemu:latest
@@ -105,6 +138,16 @@
   priority: 90
   depends-on:
     - {name: nova}
+  env:
+    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: <your_ip>
+    HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: <your_ip>
+    RABBIT_PASS: panama
+    NOVA_DBPASS: panama
+    NOVA_PASS: panama
+
 
 
 #     - {name: nova, status: stopped}
