@@ -30,7 +30,7 @@ class Scheduler(object):
         self.docker_version = app_args.docker_version
         self.services_list = model.get_services_list(self.app_args)
         self.services_list.sort(key=itemgetter('priority'))
-        self.checker = Checks()
+        self.checker = Checks(self.app_args)
 
     def build_all(self, nocache):
         for svc in self.services_list:
@@ -88,12 +88,13 @@ class Scheduler(object):
 
 
 class Checks(object):
-    def __init__(self, d_ver='1.12', d_host='unix:///var/run/docker.sock'):
-        self.dockerapi = docker.Client(base_url=d_host,
-                                       version=str(d_ver),
+    def __init__(self, app_args):
+        self.app_args = app_args
+        self.docker_host = app_args.docker_host
+        self.docker_version = app_args.docker_version
+        self.dockerapi = docker.Client(base_url=self.docker_host,
+                                       version=self.docker_version,
                                        timeout=10)
-        self.d_ver = d_ver
-        self.d_host = d_host
 
     def run(self, definition):
         self.param = {}
@@ -127,8 +128,7 @@ class Checks(object):
         # starting).
         if self.param['name'] is not None:
             try:
-                c = backend.Container(self.param['name'], self.d_host,
-                                      self.d_ver)
+                c = backend.Container(self.param['name'], self.app_args)
                 self.param['host'] = c.ip
                 self.param['useproxy'] = False
                 if c.ip is None:
