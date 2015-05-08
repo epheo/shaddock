@@ -92,36 +92,48 @@ the interactive shell.
 
 .. code:: bash
 
-    Commands:
-      build    [name] [all]  Build a new (or all the) container(s).
-      create   [name]        Create a new container
-      ps                     Show a list of Containers and details.
-      logs     [name]        Display logs of a container
-      remove   [name] [all]  Remove a (or all the) container(s).
-      restart  [name]        Restart a container
-      info     [name]        Show details about a container
-      start    [name]        Start new container
-      stop     [name]        Stop container
-      pull     [name] [all]  Pull a (or all the) Docker image
+    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
+                    [--docker-host DOCKER_HOST] [--docker-version DOCKER_VERSION]
+                    [-f TEMPLATE_FILE] [-d IMAGES_DIR]
 
 
 .. code:: bash
 
-    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
-                    [--docker-host DOCKER_HOST]     
-                                        IP/hostname to the Docker server API.
-                                        Default: 'unix://var/run/docker.sock'
-                                        (Env: DOCKER_HOST)
+    optional arguments:
+      --version             Show program's version number and exit.
+      -v, --verbose         Increase verbosity of output. Can be repeated.
+      --log-file LOG_FILE   Specify a file to log output. Disabled by default.
+      -q, --quiet           Suppress output except warnings and errors.
+      -h, --help            Show this help message and exit.
+      --debug               Show tracebacks on errors.
+      --docker-host DOCKER_HOST
+                            IP/hostname to the Docker API. (Env: DOCKER_HOST)
+      --docker-version DOCKER_VERSION
+                            Docker API version number (Env: DOCKER_VERSION)
+      -f TEMPLATE_FILE, --template-file TEMPLATE_FILE
+                            Template file to use. (Env: TEMPLATE_FILE)
+      -d IMAGES_DIR, --images-dir IMAGES_DIR
+                            Directory to build Docker images from.(Env:
+                            IMAGES_DIR)
 
-                    [--docker-version DOCKER_VERSION]  
-                                        Docker API version number
-                                        Default: '1.12'
-                                        (Env: DOCKER_VERSION)
 
-                    [--template-dir TEMPLATE_DIR]    
-                                        Template directory to use.
-                                        Default: '/var/lib/shaddock'
-                                        (Env: SHDK_TEMPLATE_DIR)
+.. code:: bash
+
+    Commands:
+      build          Build a new container
+      create         Create a new container
+      help           print detailed help for another command
+      info           Show details about a container
+      list           Show a list of Containers.
+      logs           Display the logs of a container
+      ps             Show a list of Containers.
+      pull           Pull a container from the Docker Repository
+      remove         Remove a container
+      restart        Restart a container
+      show           Show details about a container
+      start          Start a new container
+      stop           Stop a container
+
 
 INFORMATIONS
 ------------
