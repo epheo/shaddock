@@ -95,8 +95,8 @@
     - 9292
     - 4324
   volumes:
-    # - mount: /var/log/glance
-      # host_dir: /var/log/shaddock/glance
+    - mount: /var/log/glance
+      host_dir: /var/log/shaddock/glance
   depends-on:
     - {name: seed, status: stopped}
     - {name: mysql, port: 3306}

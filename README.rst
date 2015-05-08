@@ -3,13 +3,13 @@
 Shaddock provides a platform deployed in http://docker.com containers following
 a predefined template (like an http://openstack.org infrastructure)
 
-QuickStart
+QUICKSTART
 ----------
 
 .. code:: bash
 
     # Installation:
-    git clone https://github.com/epheo/shaddock &&\
+    git clone https://github.com/epheo/shaddock
     sudo python setup.py install
 
     # Configuration
@@ -31,59 +31,45 @@ Without installation but require the docker API to listen on a tcp port.
 
 
 
-OpenStack template installation and configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Reference template for an OpenStack platform:
+OpenStack template configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can find a reference template for an OpenStack platform in the examples/ directory.
+This template point to OpenStack services Docker images hosted in the public Docker repository.
 
-.. code:: bash
+You can/should of course create your own template file following the same architecture using the needed Docker images.
 
-    git clone https://github.com/epheo/shaddock-openstack /var/lib/shaddock/
+In case you would *build* and use your own images you can specify a directory of Dockerfiles to Shaddock with the '-d' option.
 
-
-The general architecture of the platform is defined in *infrastructure.yaml*
-
-.. code:: bash
-
-	/var/lib/shaddock/infrastructure.yaml
-	/var/lib/shaddock/configuration.yaml
+The directory should follow this hierarchy: directory/user/image/Dockerfile
+You will find the one used in order to build the demonstration OpenStack images at https://github.com/epheo/shaddock-openstack
 
 
-This template contain the main modules of an OpenStack infrastructure. You
-can/should edit it and add your Dockerfiles or images.
-
-Structures example of *infratructure.yaml*:
+Structure example of a template file:
 
 .. code:: yaml
 
-    - name: nova
-      image: shaddock/nova
-      priority: 40
+    - name: glance
+      image: shaddock/glance:latest
+      priority: 50
       ports:
-        - 8774
-        - 8775
+        - 9292
+        - 4324
       volumes:
-        - mount: /var/log/nova
-          host_dir: /var/log/shaddock/nova
+        - mount: /var/log/glance
+          host_dir: /var/log/shaddock/glance
       depends-on:
         - {name: seed, status: stopped}
         - {name: mysql, port: 3306}
-        - {name: rabbitmq, port: 5672}
         - {name: keystone, port: 5000, get: '/v2.0'}
         - {name: keystone, port: 35357, get: '/v2.0'}
+      env:
+        MYSQL_HOST_IP: <your_ip>
+        KEYSTONE_HOST_IP: <your_ip>
+        GLANCE_DBPASS: panama
+        GLANCE_PASS: panama
 
 
-Launch a simple OpenStack platform
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Build all the images and start the services
-
-.. code:: bash
-
-    shaddock pull all
-    shaddock start all
-
-
-Usage
+USAGE
 -----
 
 The containers stored in this yaml file can be launched via the command line or
