@@ -213,7 +213,12 @@ class Show(ShowOne):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        return get_container_info(self, name, parsed_args)
+
+        try:
+            result = get_container_info(self, name, parsed_args)
+        except TypeError:
+            exit(0)
+        return result
 
 
 class Logs(Command):
