@@ -15,7 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import docker as dockerapi
+import docker as dockerpy
 from shaddock import model
 import sys
 
@@ -30,7 +30,7 @@ class Container(object):
         self.cfg = model.ContainerConfig(service_name, self.app_args)
         self.tag = self.cfg.tag
         self.name = self.cfg.name
-        self.dockerapi = dockerapi.Client(base_url=self.docker_host,
+        self.dockerapi = dockerpy.Client(base_url=self.docker_host,
                                        version=str(self.docker_version),
                                        timeout=10)
         info = self.get_info()
