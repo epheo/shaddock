@@ -12,7 +12,7 @@ QuickStart
     git clone https://github.com/epheo/shaddock
     sudo python setup.py install
 
-    # Configuration
+    # Configuration:
     cd /examples && ./set_ip.sh openstack.yml
 
     # Usage:
@@ -58,7 +58,6 @@ Structure example of a template file:
         - mount: /var/log/glance
           host_dir: /var/log/shaddock/glance
       depends-on:
-        - {name: seed, status: stopped}
         - {name: mysql, port: 3306}
         - {name: keystone, port: 5000, get: '/v2.0'}
         - {name: keystone, port: 35357, get: '/v2.0'}

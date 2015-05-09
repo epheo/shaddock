@@ -246,9 +246,13 @@ class Pull(Command):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.pull_all()
 
+            else:
+                image = backend.Image(name, self.app_args)
+                image.pull()
         else:
-            image = backend.Image(name, self.app_args)
-            image.pull()
+            raise IndexError(
+                    "Please specify a name or 'all' for all the "
+                    "infrastructure")
 
 
 def get_container_info(self, name, parsed_args):
