@@ -15,7 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from shaddock import model
+from shaddock import model, checks
 from shaddock.docker import container as dockercontainer
 from shaddock.docker import image as dockerimage
 from operator import itemgetter
@@ -29,7 +29,7 @@ class Scheduler(object):
         self.docker_version = app_args.docker_version
         self.services_list = model.get_services_list(self.app_args)
         self.services_list.sort(key=itemgetter('priority'))
-        self.checker = Checks(self.app_args)
+        self.checker = checks.Checks(self.app_args)
 
     def build_all(self, nocache):
         for svc in self.services_list:
