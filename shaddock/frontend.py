@@ -20,8 +20,9 @@ import time
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from shaddock import backend, model, scheduler
-
+from shaddock import model, scheduler
+from shaddock.docker import container as dockercontainer
+from shaddock.docker import image as dockerimage
 
 class Build(Command):
     """Build a new container"""
@@ -48,7 +49,7 @@ class Build(Command):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.build_all(nocache)
             else:
-                image = backend.Image(name,
+                image = dockerimage.Image(name,
                                       self.app_args)
                 image.build(nocache)
         else:
@@ -72,7 +73,7 @@ class Create(ShowOne):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.create_all()
             else:
-                container = backend.Container(name,
+                container = dockercontainer.Container(name,
                                               self.app_args)
                 container.create()
         else:
@@ -96,7 +97,7 @@ class Start(ShowOne):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.start_all()
             else:
-                container = backend.Container(name,
+                container = dockercontainer.Container(name,
                                               self.app_args)
                 container.start()
         else:
@@ -120,7 +121,7 @@ class Stop(ShowOne):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.stop_all()
             else:
-                container = backend.Container(name,
+                container = dockercontainer.Container(name,
                                               self.app_args)
                 container.stop()
         else:
@@ -144,7 +145,7 @@ class Restart(ShowOne):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.restart_all()
             else:
-                container = backend.Container(name,
+                container = dockercontainer.Container(name,
                                               self.app_args)
                 container.restart()
         else:
@@ -168,7 +169,7 @@ class Remove(ShowOne):
                 schedul = scheduler.Scheduler(self.app_args)
                 schedul.remove_all()
             else:
-                container = backend.Container(name,
+                container = dockercontainer.Container(name,
                                               self.app_args)
                 container.remove()
         else:
@@ -193,7 +194,7 @@ class List(Lister):
         images = client.images()
         l = ()
         for svc in model.get_services_list(self.app_args):
-            b = backend.Container(svc['name'],
+            b = dockercontainer.Container(svc['name'],
                                   self.app_args)
             if b.id:
                 c_id = b.id[:12]
@@ -236,7 +237,7 @@ class Logs(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        container = backend.Container(name, self.app_args)
+        container = dockercontainer.Container(name, self.app_args)
         container.return_logs()
 
 
@@ -257,7 +258,7 @@ class Pull(Command):
                 schedul.pull_all()
 
             else:
-                image = backend.Image(name, self.app_args)
+                image = dockerimage.Image(name, self.app_args)
                 image.pull()
         else:
             raise IndexError
@@ -268,7 +269,7 @@ def get_container_info(self, name, parsed_args):
         columns = ('Name',)
         data = (name,)
     else:
-        container = backend.Container(name, self.app_args)
+        container = dockercontainer.Container(name, self.app_args)
         columns = ('Name',
                    'Created',
                    'Started',

@@ -16,42 +16,8 @@
 #    under the License.
 
 import docker
-import json
 from shaddock import model
 import sys
-
-
-class Image(object):
-    def __init__(self, name, app_args):
-        self.app_args = app_args
-        self.docker_host = app_args.docker_host
-        self.docker_version = app_args.docker_version
-        self.cfg = model.ContainerConfig(name, self.app_args)
-        self.name = self.cfg.name
-        self.dockerapi = docker.Client(base_url=self.docker_host,
-                                       version=str(self.docker_version),
-                                       timeout=10)
-
-    def build(self, nocache):
-        for line in self.dockerapi.build(path=self.cfg.path,
-                                         tag=self.cfg.tag,
-                                         nocache=nocache):
-            jsonstream = json.loads(line.decode())
-            stream = jsonstream.get('stream')
-            error = jsonstream.get('error')
-            if error is not None:
-                print(error.rstrip())
-            if stream is not None:
-                print(stream.rstrip())
-
-    def pull(self):
-        sys.stdout.write("Pulling image %s:" % self.cfg.tag),
-        sys.stdout.flush()
-        for line in self.dockerapi.pull(self.cfg.tag, stream=True):
-            tick = '*'
-            sys.stdout.write(tick)
-            sys.stdout.flush()
-        sys.stdout.write(" [done]\n")
 
 
 class Container(object):
