@@ -15,11 +15,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from shaddock import model, checks
-from shaddock.docker import container as dockercontainer
-from shaddock.docker import image as dockerimage
 from operator import itemgetter
 import time
+
+from shaddock import model, checks
+from shaddock.drivers.docker import container as dockercontainer
+from shaddock.drivers.docker import image as dockerimage
 
 
 class Scheduler(object):
