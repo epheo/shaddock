@@ -17,7 +17,7 @@
 
 from shaddock import model
 from shaddock.docker import container as dockercontainer
-import docker
+import docker as dockerapi
 import socket
 import requests
 
@@ -27,7 +27,7 @@ class Checks(object):
         self.app_args = app_args
         self.docker_host = app_args.docker_host
         self.docker_version = app_args.docker_version
-        self.dockerapi = docker.Client(base_url=self.docker_host,
+        self.dockerapi = dockerapi.Client(base_url=self.docker_host,
                                        version=self.docker_version,
                                        timeout=10)
 
