@@ -22,16 +22,13 @@ import requests
 
 from shaddock import model
 from shaddock.drivers.docker import container as dockercontainer
+from shaddock.drivers.docker import checks as dockerchecks
 
 
 class Checks(object):
     def __init__(self, app_args):
         self.app_args = app_args
-        self.docker_host = app_args.docker_host
-        self.docker_version = app_args.docker_version
-        self.dockerapi = docker.Client(base_url=self.docker_host,
-                                       version=self.docker_version,
-                                       timeout=10)
+
 
     def run(self, definition):
         self.param = {}
@@ -81,23 +78,10 @@ class Checks(object):
             raise model.TemplateFileError("Wrong check definition: "
                                           "{}".format(str(definition)))
 
+
+
     def docker_check(self):
-        try:
-            status = [c['Status'][:2].lower()
-                      for c in self.dockerapi.containers()
-                      if (c['Names'][0][1:] == self.param['name'])][0]
-        except IndexError:
-            status = 'down'
-        if self.param['status'] in ['running', 'up']:
-            if status == 'up':
-                ret = True
-            else:
-                ret = False
-        elif self.param['status'] in ['stopped', 'down']:
-            if status == 'up':
-                ret = False
-            else:
-                ret = True
+        ret = dockerchecks.docker_check(self.app_args, self.param)
         return ret
 
     def port_check(self):
