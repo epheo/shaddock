@@ -52,7 +52,7 @@ class Build(Command):
                                       self.app_args)
                 image.build(nocache)
         else:
-            print('Please specify a name or all')
+            raise IndexError
         return True
 
 
@@ -75,6 +75,8 @@ class Create(ShowOne):
                 container = backend.Container(name,
                                               self.app_args)
                 container.create()
+        else:
+            raise IndexError
         return get_container_info(self, name, parsed_args)
 
 
@@ -97,6 +99,8 @@ class Start(ShowOne):
                 container = backend.Container(name,
                                               self.app_args)
                 container.start()
+        else:
+            raise IndexError
         return get_container_info(self, name, parsed_args)
 
 
@@ -119,6 +123,8 @@ class Stop(ShowOne):
                 container = backend.Container(name,
                                               self.app_args)
                 container.stop()
+        else:
+            raise IndexError
         return get_container_info(self, name, parsed_args)
 
 
@@ -141,6 +147,8 @@ class Restart(ShowOne):
                 container = backend.Container(name,
                                               self.app_args)
                 container.restart()
+        else:
+            raise IndexError
         return get_container_info(self, name, parsed_args)
 
 
@@ -163,6 +171,8 @@ class Remove(ShowOne):
                 container = backend.Container(name,
                                               self.app_args)
                 container.remove()
+        else:
+            raise IndexError
         return get_container_info(self, name, parsed_args)
 
 
@@ -250,9 +260,7 @@ class Pull(Command):
                 image = backend.Image(name, self.app_args)
                 image.pull()
         else:
-            raise IndexError(
-                    "Please specify a name or 'all' for all the "
-                    "infrastructure")
+            raise IndexError
 
 
 def get_container_info(self, name, parsed_args):
