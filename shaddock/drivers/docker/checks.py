@@ -25,3 +25,12 @@ def check(app_args, param):
         else:
             ret = True
     return ret
+
+def list(app_args):
+    docker_host = app_args.docker_host
+    docker_version = app_args.docker_version
+    docker_api = docker.Client(base_url=docker_host,
+                               version=docker_version,
+                               timeout=10)
+
+    return docker_api.images()

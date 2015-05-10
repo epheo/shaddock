@@ -24,6 +24,7 @@ from cliff.show import ShowOne
 from shaddock import model, scheduler
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
+from shaddock.drivers.docker import checks as dockerchecks
 
 
 class Build(Command):
@@ -191,9 +192,7 @@ class List(Lister):
     def take_action(self, parsed_args):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
 
-        images = dockerimage.Image(name,
-                                      self.app_args)
-        imageslist = images.list()
+        imageslist = dockerchecks.list()
 
         l = ()
         for svc in model.get_services_list(self.app_args):

@@ -52,6 +52,3 @@ class Image(object):
             sys.stdout.write(tick)
             sys.stdout.flush()
         sys.stdout.write(" [done]\n")
-
-    def list(self):
-        return self.docker_api.images()
