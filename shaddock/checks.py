@@ -17,7 +17,6 @@
 
 import socket
 
-import docker
 import requests
 
 from shaddock import model

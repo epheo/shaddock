@@ -17,7 +17,6 @@
 
 import time
 
-import docker
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
@@ -191,10 +190,10 @@ class List(Lister):
 
     def take_action(self, parsed_args):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
-        client = docker.Client(base_url=self.app_args.docker_host,
-                               version=self.app_args.docker_version)
 
-        images = client.images()
+        images = dockerimage.Image
+        images = images.list()
+
         l = ()
         for svc in model.get_services_list(self.app_args):
             b = dockercontainer.Container(svc['name'],

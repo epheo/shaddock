@@ -76,6 +76,7 @@ class Container(object):
             print('Removing container: {}'.format(self.name))
             self.dockerapi.remove_container(self.id)
 
+
     def restart(self):
         self.dockerapi.restart(self.id)
 
