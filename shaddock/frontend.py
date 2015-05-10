@@ -191,8 +191,9 @@ class List(Lister):
     def take_action(self, parsed_args):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
 
-        dockerimages = dockerimage.Image
-        images = dockerimages.list()
+        images = dockerimage.Image(name,
+                                      self.app_args)
+        imageslist = images.list()
 
         l = ()
         for svc in model.get_services_list(self.app_args):
@@ -204,7 +205,7 @@ class List(Lister):
                 c_id = b.id
 
             try:
-                img_build = [img['Created'] for img in images
+                img_build = [img['Created'] for img in imageslist
                              if b.tag in img['RepoTags']][0]
                 img_build = time.strftime('%m/%d %H:%M',
                                           time.localtime(img_build))
