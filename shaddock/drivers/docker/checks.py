@@ -1,6 +1,6 @@
 import docker
 
-def docker_check(app_args, param):
+def check(app_args, param):
 
     docker_host = app_args.docker_host
     docker_version = app_args.docker_version

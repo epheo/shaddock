@@ -77,11 +77,8 @@ class Checks(object):
             raise model.TemplateFileError("Wrong check definition: "
                                           "{}".format(str(definition)))
 
-
-
     def docker_check(self):
-        ret = dockerchecks.docker_check(self.app_args, self.param)
-        return ret
+        return dockerchecks.check(self.app_args, self.param)
 
     def port_check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
