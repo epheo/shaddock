@@ -88,7 +88,7 @@
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     RABBIT_PASS: panama
-    NOVA_DBPASS: panama
+    NOVA_DB_PASS: panama
     NOVA_PASS: panama
 
 
