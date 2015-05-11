@@ -42,6 +42,8 @@
     - {name: mysql, port: 3306}
   env:
     MYSQL_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
     KEYSTONE_DBPASS: panama
     ADMIN_TOKEN: panama
 
