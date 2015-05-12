@@ -87,8 +87,9 @@
     KEYSTONE_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
     RABBIT_PASS: panama
-    NOVA_DB_PASS: panama
+    NOVA_DBPASS: panama
     NOVA_PASS: panama
 
 
@@ -111,6 +112,7 @@
     KEYSTONE_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
     GLANCE_DBPASS: panama
     GLANCE_PASS: panama
 
