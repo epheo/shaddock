@@ -112,7 +112,3 @@ class Checks(object):
         except:
             ret = False
         return ret
-
-
-class CheckError(Exception):
-        pass

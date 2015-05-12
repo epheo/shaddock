@@ -42,6 +42,8 @@
     - {name: mysql, port: 3306}
   env:
     MYSQL_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
     KEYSTONE_DBPASS: panama
     ADMIN_TOKEN: panama
 
@@ -83,6 +85,9 @@
     RABBIT_HOST_IP: <your_ip>
     NOVA_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
     RABBIT_PASS: panama
     NOVA_DBPASS: panama
     NOVA_PASS: panama
@@ -105,6 +110,9 @@
   env:
     MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
     GLANCE_DBPASS: panama
     GLANCE_PASS: panama
 

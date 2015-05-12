@@ -86,3 +86,6 @@ class Scheduler(object):
             time.sleep(check.get('sleep', 10))
             self.do_check(check, retry)
 
+
+class CheckError(Exception):
+        pass
