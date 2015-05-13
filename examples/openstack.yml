@@ -84,6 +84,7 @@
     KEYSTONE_HOST_IP: <your_ip>
     RABBIT_HOST_IP: <your_ip>
     NOVA_HOST_IP: <your_ip>
+    HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
@@ -147,15 +148,14 @@
   depends-on:
     - {name: nova}
   env:
-    MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
     RABBIT_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
     HOST_IP: <your_ip>
-    KEYSTONE_HOST_IP: <your_ip>
     RABBIT_PASS: panama
     NOVA_DBPASS: panama
     NOVA_PASS: panama
-
 
 
 #     - {name: nova, status: stopped}
