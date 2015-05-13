@@ -151,6 +151,7 @@
     MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
     RABBIT_HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
     HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
     RABBIT_PASS: panama
