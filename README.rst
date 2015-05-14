@@ -10,10 +10,11 @@ QuickStart
 
     # Installation:
     git clone https://github.com/epheo/shaddock
+    cd shaddock
     sudo python setup.py install
 
     # Configuration:
-    cd /examples && ./set_ip.sh openstack.yml
+    cd examples && ./set_ip.sh openstack.yml
 
     # Usage:
     shaddock -f examples/openstack.yml
