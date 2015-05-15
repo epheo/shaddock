@@ -43,9 +43,9 @@
   env:
     MYSQL_HOST_IP: <your_ip>
     MYSQL_USER: admin
+    ADMIN_TOKEN: panama
     MYSQL_PASSWORD: password
     KEYSTONE_DBPASS: panama
-    ADMIN_TOKEN: panama
 
 
 - name: seed
@@ -55,8 +55,8 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
     ADMIN_TOKEN: panama
     KEYSTONE_PASS: panama
     ADMIN_PASS: panama
@@ -80,16 +80,15 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
-    RABBIT_HOST_IP: <your_ip>
-    NOVA_HOST_IP: <your_ip>
     HOST_IP: <your_ip>
-    KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
+    RABBIT_HOST_IP: <your_ip>
     RABBIT_PASS: panama
+    NOVA_HOST_IP: <your_ip>
     NOVA_DBPASS: panama
     NOVA_PASS: panama
 
@@ -99,7 +98,7 @@
   priority: 50
   ports:
     - 9292
-    - 4324
+    - 9191
   volumes:
     - mount: /var/log/glance
       host_dir: /var/log/shaddock/glance
@@ -109,13 +108,56 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    MYSQL_HOST_IP: <your_ip>
     KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
     GLANCE_DBPASS: panama
     GLANCE_PASS: panama
+
+
+- name: cinder
+  image: shaddock/cinder:latest
+  priority: 51
+  ports:
+    - 8776
+  volumes:
+    - mount: /var/log/cinder
+      host_dir: /var/log/shaddock/cinder
+  depends-on:
+    - {name: seed, status: stopped}
+    - {name: mysql, port: 3306}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
+    RABBIT_HOST_IP: <your_ip>
+    RABBIT_PASS: panama
+    CINDER_DBPASS: panama
+    CINDER_PASS: panama
+
+
+- name: cinder-storage
+  image: shaddock/cinder-storage:latest
+  priority: 60
+  ports:
+    - 80
+    - 11211
+  volumes:
+    - mount: /var/log/cinder-storage
+      host_dir: /var/log/shaddock/cinder-storage
+  depends-on:
+    - {name: nova, port: 8774}
+    - {name: cinder, port: 8776}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
 
 
 - name: horizon
@@ -128,14 +170,14 @@
     - mount: /var/log/horizon
       host_dir: /var/log/shaddock/horizon
   depends-on:
-    - {name: seed, status: stopped}
-    - {name: mysql, port: 3306}
+    - {name: nova, port: 8774}
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
     KEYSTONE_HOST_IP: <your_ip>
 
-- name: qemu
+
+- name: hypervisor
   image: shaddock/qemu:latest
   ports:
     - 8775
@@ -146,39 +188,91 @@
   network_mode: host
   priority: 90
   depends-on:
-    - {name: nova}
+    - {name: nova, port: 8774}
   env:
     KEYSTONE_HOST_IP: <your_ip>
-    RABBIT_HOST_IP: <your_ip>
     MYSQL_HOST_IP: <your_ip>
-    NOVA_HOST_IP: <your_ip>
     HOST_IP: <your_ip>
+    RABBIT_HOST_IP: <your_ip>
     RABBIT_PASS: panama
+    NOVA_HOST_IP: <your_ip>
     NOVA_DBPASS: panama
     NOVA_PASS: panama
+    NOVA_NETWORK: True
+    QEMU: True
 
 
-#     - {name: nova, status: stopped}
-#     - {name: nova, port: 8774, type: tcp}
-#     - {name: nova, port: 8774, state: down, type: tcp}
-#     - {host: google.com, port: 8774, state: down, type: tcp}
-#     - {name: nova, type: http, get: '/v2.0', port: 5000, code: 200}
-#     - {host: google.com, type: http, get: '/v2.0', port: 5000, code: 200}
-#     - {host: 127.0.0.1, type: http, get: '/', code: 200, useproxy: False }
-#     - {name: nova, sleep: 20} # defaults to 10
-#     - {name: nova, retry: 10} # defaults to 5
+- name: heat
+  image: shaddock/heat:latest
+  priority: 100
+  ports:
+    - 8004
+    - 8000
+  volumes:
+    - mount: /var/log/heat
+      host_dir: /var/log/shaddock/heat
+  depends-on:
+    - {name: nova, port: 8774}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
+    HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: password
+    ADMIN_PASS: panama
+    RABBIT_HOST_IP: <your_ip>
+    RABBIT_PASS: panama
+    HEAT_PASS: panama
+    HEAT_DBPASS: panama
+    HEAT_DOMAIN_PASS: panama
 
-# - name: mistral
-  # image: shaddock/mistral:latest
-  # ports:
-    # - 8989
-  # priority: 90
-  # volumes:
-    # - mount: /var/log/supervisor
-      # host_dir: /var/log/shaddock/mistral
-  # depends-on:
-    # - {name: seed, status: stopped}
-    # - {name: mysql, port: 3306}
-    # - {name: keystone, port: 5000, get: '/v2.0'}
-    # - {name: keystone, port: 35357, get: '/v2.0'}
+
+#- name: ceilometer
+#  image: shaddock/ceilometer:latest
+#  priority: 100
+#  ports:
+#    - 8777
+#  volumes:
+#    - mount: /var/log/ceilometer
+#      host_dir: /var/log/shaddock/ceilometer
+#  depends-on:
+#    - {name: nova, port: 8774}
+#    - {name: keystone, port: 5000, get: '/v2.0'}
+#    - {name: keystone, port: 35357, get: '/v2.0'}
+#  env:
+#    MYSQL_HOST_IP: <your_ip>
+#    KEYSTONE_HOST_IP: <your_ip>
+#    RABBIT_HOST_IP: <your_ip>
+#    MYSQL_USER: admin
+#    MYSQL_PASSWORD: password
+#    ADMIN_PASS: panama
+#    CEILOMETER_DBPASS: panama
+#    RABBIT_PASS: panama
+#    CEILOMETER_PASS: panama
+    
+#- name: sahara
+#  image: shaddock/sahara:latest
+#  priority: 100
+#  ports:
+#    - 8777
+#  volumes:
+#    - mount: /var/log/sahara
+#      host_dir: /var/log/shaddock/sahara
+#  depends-on:
+#    - {name: nova, port: 8774}
+#    - {name: keystone, port: 5000, get: '/v2.0'}
+#    - {name: keystone, port: 35357, get: '/v2.0'}
+#  env:
+#    MYSQL_HOST_IP: <your_ip>
+#    KEYSTONE_HOST_IP: <your_ip>
+#    RABBIT_HOST_IP: <your_ip>
+#    MYSQL_USER: admin
+#    MYSQL_PASSWORD: password
+#    ADMIN_PASS: panama
+#    SAHARA_PASS: panama
+#    SAHARA_DBPASS: panama
+#    RABBIT_PASS: panama
+
 

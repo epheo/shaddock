@@ -68,6 +68,19 @@ Structure example of a template file:
         GLANCE_DBPASS: panama
         GLANCE_PASS: panama
 
+Tests:
+
+.. code:: yaml
+
+     - {name: nova, status: stopped}
+     - {name: nova, port: 8774, type: tcp}
+     - {name: nova, port: 8774, state: down, type: tcp}
+     - {host: google.com, port: 8774, state: down, type: tcp}
+     - {name: nova, type: http, get: '/v2.0', port: 5000, code: 200}
+     - {host: google.com, type: http, get: '/v2.0', port: 5000, code: 200}
+     - {host: 127.0.0.1, type: http, get: '/', code: 200, useproxy: False }
+     - {name: nova, sleep: 20} # defaults to 10
+     - {name: nova, retry: 10} # defaults to 5
 
 Usage
 -----
