@@ -146,6 +146,8 @@
   image: shaddock/block-storage:latest
   priority: 60
   privileged: True
+  ports:
+    - 3260
   volumes:
     - mount: /var/log/cinder-storage
       host_dir: /var/log/shaddock/cinder-storage
