@@ -145,9 +145,6 @@
 - name: block-storage
   image: shaddock/block-storage:latest
   priority: 60
-  ports:
-    - 80
-    - 11211
   volumes:
     - mount: /var/log/cinder-storage
       host_dir: /var/log/shaddock/cinder-storage
