@@ -165,8 +165,8 @@
     CINDER_PASS: panama
 
 
-- name: hypervisor
-  image: shaddock/qemu:latest
+- name: compute
+  image: shaddock/compute:latest
   ports:
     - 8775
   volumes:
@@ -187,7 +187,8 @@
     NOVA_DBPASS: panama
     NOVA_PASS: panama
     NOVA_NETWORK: True
-    QEMU: True
+    QEMU: False
+    LXD: True
 
 
 - name: heat
