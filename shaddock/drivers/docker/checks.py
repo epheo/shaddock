@@ -15,15 +15,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import docker
+from shaddock.drivers.docker import api as dockerapi
+
 
 def check(app_args, param):
 
-    docker_host = app_args.docker_host
-    docker_version = app_args.docker_version
-    docker_api = docker.Client(base_url=docker_host,
-                               version=docker_version,
-                               timeout=10)
+    docker_client = dockerapi.DockerApi(app_args)
+    docker_api = docker_client.api
 
     try:
         status = [c['Status'][:2].lower()
@@ -44,10 +42,8 @@ def check(app_args, param):
     return ret
 
 def list(app_args):
-    docker_host = app_args.docker_host
-    docker_version = app_args.docker_version
-    docker_api = docker.Client(base_url=docker_host,
-                               version=docker_version,
-                               timeout=10)
+
+    docker_client = dockerapi.DockerApi(app_args)
+    docker_api = docker_client.api
 
     return docker_api.images()

@@ -15,10 +15,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import docker
 import json
 from shaddock import model
 import sys
+from shaddock.drivers.docker import api as dockerapi
 
 
 class Image(object):
@@ -28,9 +28,9 @@ class Image(object):
         self.docker_version = app_args.docker_version
         self.cfg = model.ContainerConfig(name, self.app_args)
         self.name = self.cfg.name
-        self.docker_api = docker.Client(base_url=self.docker_host,
-                                        version=str(self.docker_version),
-                                        timeout=10)
+
+        docker_client = dockerapi.DockerApi(app_args)
+        self.docker_api = docker_client.api
 
     def build(self, nocache):
         for line in self.docker_api.build(path=self.cfg.path,
