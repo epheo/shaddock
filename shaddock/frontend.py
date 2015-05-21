@@ -196,7 +196,7 @@ class List(Lister):
         l = ()
         for svc in model.get_services_list(self.app_args):
             b = dockercontainer.Container(svc['name'],
-                                  self.app_args)
+                                          self.app_args)
             if b.id:
                 c_id = b.id[:12]
             else:
