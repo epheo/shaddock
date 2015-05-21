@@ -29,13 +29,13 @@ class Image(object):
         self.cfg = model.ContainerConfig(name, self.app_args)
         self.name = self.cfg.name
         self.docker_api = docker.Client(base_url=self.docker_host,
-                                       version=str(self.docker_version),
-                                       timeout=10)
+                                        version=str(self.docker_version),
+                                        timeout=10)
 
     def build(self, nocache):
         for line in self.docker_api.build(path=self.cfg.path,
-                                         tag=self.cfg.tag,
-                                         nocache=nocache):
+                                          tag=self.cfg.tag,
+                                          nocache=nocache):
             jsonstream = json.loads(line.decode())
             stream = jsonstream.get('stream')
             error = jsonstream.get('error')

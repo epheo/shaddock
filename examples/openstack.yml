@@ -184,7 +184,6 @@
     RABBIT_HOST_IP: <your_ip>
     RABBIT_PASS: panama
     NOVA_HOST_IP: <your_ip>
-    NOVA_DBPASS: panama
     NOVA_PASS: panama
     NOVA_NETWORK: True
     QEMU: False

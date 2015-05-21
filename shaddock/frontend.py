@@ -191,7 +191,6 @@ class List(Lister):
 
     def take_action(self, parsed_args):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
-
         imageslist = dockerchecks.list(self.app_args)
 
         l = ()

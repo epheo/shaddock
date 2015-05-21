@@ -113,12 +113,52 @@ class ShaddockShell(App):
             help='Show tracebacks on errors.',
         )
         parser.add_argument(
-            '--docker-host',
+            '-H', '--host',
             action='store',
             dest='docker_host',
             default=self.env('DOCKER_HOST',
                              default='unix://var/run/docker.sock'),
             help='IP/hostname to the Docker API.  (Env: DOCKER_HOST)'
+        )
+        parser.add_argument(
+            '--tlscert',
+            action='store',
+            dest='docker_cert_path',
+            default=self.env('DOCKER_CERT_PATH',
+                             default=None),
+            help='Path to TLS certificate file.  (Env: DOCKER_CERT_PATH)'
+        )
+        parser.add_argument(
+            '--tlskey',
+            action='store',
+            dest='docker_key_path',
+            default=self.env('DOCKER_KEY_PATH',
+                             default=None),
+            help='Path to TLS key file.  (Env: DOCKER_KEY_PATH)'
+        )
+        parser.add_argument(
+            '--tlscacert',
+            action='store',
+            dest='docker_cacert_path',
+            default=self.env('DOCKER_CACERT_PATH',
+                             default=None),
+            help='Trust only remotes providing a certificate signed by the CA given here.  (Env: DOCKER_CACERT_PATH)'
+        )
+        parser.add_argument(
+            '--tlsverify',
+            action='store_true',
+            dest='docker_tls_verify',
+            default=self.env('DOCKER_TLS_VERIFY',
+                             default=False),
+            help='Use TLS and verify the remote.  (Env: DOCKER_TLS_VERIFY)'
+        )
+        parser.add_argument(
+            '--tls',
+            action='store_true',
+            dest='docker_tls',
+            default=self.env('DOCKER_TLS',
+                             default=False),
+            help='Use TLS; implied by tls-verify flags.  (Env: DOCKER_TLS)'
         )
         parser.add_argument(
             '--docker-version',
