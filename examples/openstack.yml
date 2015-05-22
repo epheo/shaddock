@@ -186,7 +186,8 @@
     NOVA_HOST_IP: <your_ip>
     NOVA_PASS: panama
     NOVA_NETWORK: True
-    QEMU: True
+    QEMU: False
+    KVM: True
     LXD: False
 
 
