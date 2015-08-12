@@ -41,7 +41,7 @@
   depends-on:
     - {name: mysql, port: 3306}
   env:
-    MYSQL_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: 16.49.138.223
     MYSQL_USER: admin
     ADMIN_TOKEN: panama
     MYSQL_PASSWORD: password
@@ -55,8 +55,8 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
     ADMIN_TOKEN: panama
     KEYSTONE_PASS: panama
     ADMIN_PASS: panama
@@ -80,15 +80,15 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
-    RABBIT_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: 16.49.138.223
     RABBIT_PASS: panama
-    NOVA_HOST_IP: <your_ip>
+    NOVA_HOST_IP: 16.49.138.223
     NOVA_DBPASS: panama
     NOVA_PASS: panama
 
@@ -108,8 +108,8 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
@@ -131,11 +131,11 @@
   depends-on:
     - {name: nova, port: 8774}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    NOVA_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
-    GLANCE_HOST_IP: <your_ip>
-    RABBIT_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    NOVA_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
+    GLANCE_HOST_IP: 16.49.138.223
+    RABBIT_HOST_IP: 16.49.138.223
     RABBIT_PASS: panama
     CINDER_PASS: panama
     CINDER_DBPASS: panama
@@ -153,13 +153,13 @@
     - {name: nova, port: 8774}
     - {name: block-storage, port: 3260}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    NOVA_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    NOVA_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
-    RABBIT_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: 16.49.138.223
     RABBIT_PASS: panama
     CINDER_DBPASS: panama
     CINDER_PASS: panama
@@ -172,18 +172,17 @@
   volumes:
     - mount: /var/log/nova
       host_dir: /var/log/shaddock/compute
-  privileged: True
-  network_mode: host
+   network_mode: host
   priority: 90
   depends-on:
     - {name: nova, port: 8774}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
-    HOST_IP: <your_ip>
-    RABBIT_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
+    HOST_IP: 16.49.138.223
+    RABBIT_HOST_IP: 16.49.138.223
     RABBIT_PASS: panama
-    NOVA_HOST_IP: <your_ip>
+    NOVA_HOST_IP: 16.49.138.223
     NOVA_PASS: panama
     NOVA_NETWORK: True
     QEMU: False
@@ -205,14 +204,14 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
-    HOST_IP: <your_ip>
-    NOVA_HOST_IP: <your_ip>
-    MYSQL_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
+    HOST_IP: 16.49.138.223
+    NOVA_HOST_IP: 16.49.138.223
+    MYSQL_HOST_IP: 16.49.138.223
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
     ADMIN_PASS: panama
-    RABBIT_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: 16.49.138.223
     RABBIT_PASS: panama
     HEAT_PASS: panama
     HEAT_DBPASS: panama
@@ -233,7 +232,7 @@
     - {name: keystone, port: 5000, get: '/v2.0'}
     - {name: keystone, port: 35357, get: '/v2.0'}
   env:
-    KEYSTONE_HOST_IP: <your_ip>
+    KEYSTONE_HOST_IP: 16.49.138.223
 
 
 #- name: ceilometer
@@ -249,9 +248,9 @@
 #    - {name: keystone, port: 5000, get: '/v2.0'}
 #    - {name: keystone, port: 35357, get: '/v2.0'}
 #  env:
-#    MYSQL_HOST_IP: <your_ip>
-#    KEYSTONE_HOST_IP: <your_ip>
-#    RABBIT_HOST_IP: <your_ip>
+#    MYSQL_HOST_IP: 16.49.138.223
+#    KEYSTONE_HOST_IP: 16.49.138.223
+#    RABBIT_HOST_IP: 16.49.138.223
 #    MYSQL_USER: admin
 #    MYSQL_PASSWORD: password
 #    ADMIN_PASS: panama
@@ -272,9 +271,9 @@
 #    - {name: keystone, port: 5000, get: '/v2.0'}
 #    - {name: keystone, port: 35357, get: '/v2.0'}
 #  env:
-#    MYSQL_HOST_IP: <your_ip>
-#    KEYSTONE_HOST_IP: <your_ip>
-#    RABBIT_HOST_IP: <your_ip>
+#    MYSQL_HOST_IP: 16.49.138.223
+#    KEYSTONE_HOST_IP: 16.49.138.223
+#    RABBIT_HOST_IP: 16.49.138.223
 #    MYSQL_USER: admin
 #    MYSQL_PASSWORD: password
 #    ADMIN_PASS: panama
