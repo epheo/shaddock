@@ -172,7 +172,7 @@
   volumes:
     - mount: /var/log/nova
       host_dir: /var/log/shaddock/compute
-   network_mode: host
+  network_mode: host
   priority: 90
   depends-on:
     - {name: nova, port: 8774}
