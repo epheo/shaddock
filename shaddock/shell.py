@@ -142,11 +142,12 @@ class ShaddockShell(App):
             dest='docker_cacert_path',
             default=self.env('DOCKER_CACERT_PATH',
                              default=None),
-            help='Trust only remotes providing a certificate signed by the CA given here.  (Env: DOCKER_CACERT_PATH)'
+            help='Trust only remotes providing a certificate signed by the'
+                 'CA given here.  (Env: DOCKER_CACERT_PATH)'
         )
         parser.add_argument(
             '--tlsverify',
-            action='store_true',
+            action='store',
             dest='docker_tls_verify',
             default=self.env('DOCKER_TLS_VERIFY',
                              default=False),
@@ -159,6 +160,16 @@ class ShaddockShell(App):
             default=self.env('DOCKER_TLS',
                              default=False),
             help='Use TLS; implied by tls-verify flags.  (Env: DOCKER_TLS)'
+        )
+        parser.add_argument(
+            '--boot2docker',
+            action='store_true',
+            dest='docker_boot2docker',
+            default=self.env('DOCKER_BOOT2DOCKER',
+                             default=False),
+            help='Use Boot2Docker TLS conf.  (Env: DOCKER_BOOT2DOCKER) \n'
+                 'You should first:\n'
+                 '\"eval $(sudo docker-machine env machine_name)\"'
         )
         parser.add_argument(
             '--docker-version',

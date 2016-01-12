@@ -15,7 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import docker
+from docker.client import Client
+from docker.utils import kwargs_from_env
 
 # Possibilities:
 #
@@ -64,6 +65,9 @@ class DockerApi(object):
 
         if self.docker_tls is True:
             if (self.docker_cert_path is not None) and (self.docker_key_path is not None):
+                print('--tls'
+                      '--tlscert /path/to/client-cert.pem'
+                      '--tlskey /path/to/client-key.pem')
                 tls_config = docker.tls.TLSConfig(
                     client_cert=(self.docker_cert_path, self.docker_key_path)
                 )
@@ -73,17 +77,30 @@ class DockerApi(object):
         if self.docker_tls_verify is True:
             if self.docker_cacert_path is not None:
                 if (self.docker_cert_path is not None) and (self.docker_key_path is not None):
+                    print('--tlsverify'
+                          '--tlscert /path/to/client-cert.pem'
+                          '--tlskey /path/to/client-key.pem'
+                          '--tlscacert /path/to/ca.pem')
                     tls_config = docker.tls.TLSConfig(
                         client_cert=(self.docker_cert_path, self.docker_key_path),
                         verify=self.docker_cacert_path)
 
                 else:
+                    print('--tlsverify '
+                          '--tlscacert /path/to/ca.pem')
                     tls_config = docker.tls.TLSConfig(ca_cert=self.docker_cacert_path)
 
             else:
-                raise IndexError('Please specify at least a CA cert with --tlscacert')
+                raise IndexError('Please specify at least a CA cert with --tlscacert', tls_config)
 
-        self.api = docker.Client(base_url=self.docker_host,
-                                 version=str(self.docker_version),
-                                 tls=tls_config,
-                                 timeout=50)
+        if self.app_args.docker_boot2docker is True:
+            kwargs = kwargs_from_env()
+            kwargs['tls'].assert_hostname = False
+
+            self.api = Client(**kwargs)
+
+        else:
+            self.api = Client(base_url=self.docker_host,
+                              version=str(self.docker_version),
+                              tls=tls_config,
+                              timeout=50)
