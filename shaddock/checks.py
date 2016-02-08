@@ -28,7 +28,6 @@ class Checks(object):
     def __init__(self, app_args):
         self.app_args = app_args
 
-
     def run(self, definition):
         self.param = {}
         self.param['name'] = None
@@ -61,7 +60,8 @@ class Checks(object):
         # starting).
         if self.param['name'] is not None:
             try:
-                c = dockercontainer.Container(self.param['name'], self.app_args)
+                c = dockercontainer.Container(self.param['name'],
+                                              self.app_args)
                 self.param['host'] = c.ip
                 self.param['useproxy'] = False
                 if c.ip is None:

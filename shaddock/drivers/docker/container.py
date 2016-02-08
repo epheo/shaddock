@@ -15,7 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import docker
+from shaddock.drivers.docker import api as dockerapi
 from shaddock import model
 import sys
 
@@ -23,16 +23,15 @@ import sys
 class Container(object):
     def __init__(self, service_name, app_args):
         self.app_args = app_args
-        self.docker_host = app_args.docker_host
-        self.docker_version = app_args.docker_version
         # input_name can ba a tag or a name
         self.input_name = service_name
         self.cfg = model.ContainerConfig(service_name, self.app_args)
         self.tag = self.cfg.tag
         self.name = self.cfg.name
-        self.dockerapi = docker.Client(base_url=self.docker_host,
-                                       version=str(self.docker_version),
-                                       timeout=10)
+
+        docker_client = dockerapi.DockerApi(app_args)
+        self.docker_api = docker_client.api
+
         info = self.get_info()
         for attr in info.keys():
             setattr(self, attr, info[attr])
@@ -44,7 +43,7 @@ class Container(object):
 
     def create(self):
         print('Creating container: {}'.format(self.name))
-        c_id = self.dockerapi.create_container(
+        c_id = self.docker_api.create_container(
             image=self.cfg.tag,
             name=self.name,
             detach=False,
@@ -59,34 +58,33 @@ class Container(object):
             container = Container(self.input_name, self.app_args)
             self.id = container.create()
         print('Starting container: {}'.format(self.name))
-        self.dockerapi.start(container=self.id,
-                             binds=self.cfg.binds,
-                             port_bindings=self.cfg.ports_bindings,
-                             privileged=self.cfg.privileged,
-                             network_mode=self.cfg.network_mode)
+        self.docker_api.start(container=self.id,
+                              binds=self.cfg.binds,
+                              port_bindings=self.cfg.ports_bindings,
+                              privileged=self.cfg.privileged,
+                              network_mode=self.cfg.network_mode)
 
     def stop(self):
         if self.started is True:
             print('Stopping container: {}'.format(self.name))
-            self.dockerapi.stop(self.id)
+            self.docker_api.stop(self.id)
 
     def remove(self):
         self.stop()
         if self.created is True:
             print('Removing container: {}'.format(self.name))
-            self.dockerapi.remove_container(self.id)
-
+            self.docker_api.remove_container(self.id)
 
     def restart(self):
-        self.dockerapi.restart(self.id)
+        self.docker_api.restart(self.id)
 
     def return_logs(self):
         if self.tag is not None:
 
             # "Fix" in order to not use the stream generator in Python2
-            if (sys.version_info > (3, 0)):
+            if sys.version_info > (3, 0):
                 try:
-                    for line in self.dockerapi.logs(
+                    for line in self.docker_api.logs(
                                            container=self.id,
                                            stderr=True,
                                            stdout=True,
@@ -97,11 +95,11 @@ class Container(object):
                     return True
             else:
 
-                line = self.dockerapi.logs(container=self.id,
-                                           stderr=True,
-                                           stdout=True,
-                                           timestamps=False,
-                                           stream=False)
+                line = self.docker_api.logs(container=self.id,
+                                            stderr=True,
+                                            stdout=True,
+                                            timestamps=False,
+                                            stream=False)
                 print(line)
 
     def get_info(self):
@@ -112,7 +110,7 @@ class Container(object):
         info['started'] = False
         info['created'] = False
         info['status'] = 'Not Created'
-        containers_list = self.dockerapi.containers(all=True)
+        containers_list = self.docker_api.containers(all=True)
         if containers_list:
             try:
                 # One item contains "Names": ["/realname"]
@@ -125,7 +123,7 @@ class Container(object):
                 c_status = 'Not Created'
 
             if c_id:
-                container_info = self.dockerapi.inspect_container(c_id)
+                container_info = self.docker_api.inspect_container(c_id)
                 config = container_info['Config']
                 network = container_info['NetworkSettings']
                 info['started'] = container_info['State']['Running']

@@ -117,21 +117,44 @@
     GLANCE_PASS: panama
 
 
+- name: block-storage
+  image: shaddock/block-storage:latest
+  priority: 55
+  privileged: True
+  ports:
+    - 3260
+  volumes:
+    - mount: /var/log/cinder-storage
+      host_dir: /var/log/shaddock/cinder-storage
+    - mount: /var/lib/cindervols
+      host_dir: /var/lib/cindervols
+  depends-on:
+    - {name: nova, port: 8774}
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
+    MYSQL_HOST_IP: <your_ip>
+    GLANCE_HOST_IP: <your_ip>
+    RABBIT_HOST_IP: <your_ip>
+    RABBIT_PASS: panama
+    CINDER_PASS: panama
+    CINDER_DBPASS: panama
+
+
 - name: cinder
   image: shaddock/cinder:latest
-  priority: 51
+  priority: 60
   ports:
     - 8776
   volumes:
     - mount: /var/log/cinder
       host_dir: /var/log/shaddock/cinder
   depends-on:
-    - {name: seed, status: stopped}
-    - {name: mysql, port: 3306}
-    - {name: keystone, port: 5000, get: '/v2.0'}
-    - {name: keystone, port: 35357, get: '/v2.0'}
+    - {name: nova, port: 8774}
+    - {name: block-storage, port: 3260}
   env:
     KEYSTONE_HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
     MYSQL_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
@@ -142,49 +165,13 @@
     CINDER_PASS: panama
 
 
-- name: cinder-storage
-  image: shaddock/cinder-storage:latest
-  priority: 60
-  ports:
-    - 80
-    - 11211
-  volumes:
-    - mount: /var/log/cinder-storage
-      host_dir: /var/log/shaddock/cinder-storage
-  depends-on:
-    - {name: nova, port: 8774}
-    - {name: cinder, port: 8776}
-    - {name: keystone, port: 5000, get: '/v2.0'}
-    - {name: keystone, port: 35357, get: '/v2.0'}
-  env:
-    KEYSTONE_HOST_IP: <your_ip>
-
-
-- name: horizon
-  image: shaddock/horizon:latest
-  priority: 60
-  ports:
-    - 80
-    - 11211
-  volumes:
-    - mount: /var/log/horizon
-      host_dir: /var/log/shaddock/horizon
-  depends-on:
-    - {name: nova, port: 8774}
-    - {name: keystone, port: 5000, get: '/v2.0'}
-    - {name: keystone, port: 35357, get: '/v2.0'}
-  env:
-    KEYSTONE_HOST_IP: <your_ip>
-
-
-- name: hypervisor
-  image: shaddock/qemu:latest
+- name: compute
+  image: shaddock/compute:latest
   ports:
     - 8775
   volumes:
     - mount: /var/log/nova
       host_dir: /var/log/shaddock/compute
-  privileged: True
   network_mode: host
   priority: 90
   depends-on:
@@ -196,10 +183,11 @@
     RABBIT_HOST_IP: <your_ip>
     RABBIT_PASS: panama
     NOVA_HOST_IP: <your_ip>
-    NOVA_DBPASS: panama
     NOVA_PASS: panama
     NOVA_NETWORK: True
-    QEMU: True
+    QEMU: False
+    KVM: True
+    LXD: False
 
 
 - name: heat
@@ -218,6 +206,7 @@
   env:
     KEYSTONE_HOST_IP: <your_ip>
     HOST_IP: <your_ip>
+    NOVA_HOST_IP: <your_ip>
     MYSQL_HOST_IP: <your_ip>
     MYSQL_USER: admin
     MYSQL_PASSWORD: password
@@ -227,6 +216,23 @@
     HEAT_PASS: panama
     HEAT_DBPASS: panama
     HEAT_DOMAIN_PASS: panama
+
+
+- name: horizon
+  image: shaddock/horizon:latest
+  priority: 110
+  ports:
+    - 80
+    - 11211
+  volumes:
+    - mount: /var/log/horizon
+      host_dir: /var/log/shaddock/horizon
+  depends-on:
+    - {name: nova, port: 8774}
+    - {name: keystone, port: 5000, get: '/v2.0'}
+    - {name: keystone, port: 35357, get: '/v2.0'}
+  env:
+    KEYSTONE_HOST_IP: <your_ip>
 
 
 #- name: ceilometer

@@ -45,7 +45,6 @@ class Build(Command):
     def take_action(self, parsed_args):
         name = parsed_args.name
         nocache = parsed_args.no_cache
-
         if name:
             if name == 'all':
                 print('Building all services...')
@@ -53,7 +52,7 @@ class Build(Command):
                 schedul.build_all(nocache)
             else:
                 image = dockerimage.Image(name,
-                                      self.app_args)
+                                          self.app_args)
                 image.build(nocache)
         else:
             raise IndexError
@@ -77,7 +76,7 @@ class Create(ShowOne):
                 schedul.create_all()
             else:
                 container = dockercontainer.Container(name,
-                                              self.app_args)
+                                                      self.app_args)
                 container.create()
         else:
             raise IndexError
@@ -101,7 +100,7 @@ class Start(ShowOne):
                 schedul.start_all()
             else:
                 container = dockercontainer.Container(name,
-                                              self.app_args)
+                                                      self.app_args)
                 container.start()
         else:
             raise IndexError
@@ -125,7 +124,7 @@ class Stop(ShowOne):
                 schedul.stop_all()
             else:
                 container = dockercontainer.Container(name,
-                                              self.app_args)
+                                                      self.app_args)
                 container.stop()
         else:
             raise IndexError
@@ -149,7 +148,7 @@ class Restart(ShowOne):
                 schedul.restart_all()
             else:
                 container = dockercontainer.Container(name,
-                                              self.app_args)
+                                                      self.app_args)
                 container.restart()
         else:
             raise IndexError
@@ -173,7 +172,7 @@ class Remove(ShowOne):
                 schedul.remove_all()
             else:
                 container = dockercontainer.Container(name,
-                                              self.app_args)
+                                                      self.app_args)
                 container.remove()
         else:
             raise IndexError
@@ -191,13 +190,12 @@ class List(Lister):
 
     def take_action(self, parsed_args):
         columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
-
         imageslist = dockerchecks.list(self.app_args)
 
         l = ()
         for svc in model.get_services_list(self.app_args):
             b = dockercontainer.Container(svc['name'],
-                                  self.app_args)
+                                          self.app_args)
             if b.id:
                 c_id = b.id[:12]
             else:
