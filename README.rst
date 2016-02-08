@@ -117,12 +117,15 @@ Usage
                             Path to TLS key file. (Env: DOCKER_KEY_PATH)
       --tlscacert DOCKER_CACERT_PATH
                             Trust only remotes providing a certificate signed by
-                            the CA given here. (Env: DOCKER_CACERT_PATH)
+                            theCA given here. (Env: DOCKER_CACERT_PATH)
       --tlsverify DOCKER_TLS_VERIFY
                             Use TLS and verify the remote. (Env:
                             DOCKER_TLS_VERIFY)
-      --tls DOCKER_TLS      Use TLS; implied by tls-verify flags. (Env:
+      --tls                 Use TLS; implied by tls-verify flags. (Env:
                             DOCKER_TLS)
+      --boot2docker         Use Boot2Docker TLS conf. (Env: DOCKER_BOOT2DOCKER)
+                            You should first: "eval $(sudo docker-machine env
+                            machine_name)"
       --docker-version DOCKER_VERSION
                             Docker API version number (Env: DOCKER_VERSION)
       -f TEMPLATE_FILE, --template-file TEMPLATE_FILE
@@ -148,6 +151,12 @@ Usage
       show           Show details about a container
       start          Start a new container
       stop           Stop a container
+
+Docker Machine and Mac OS X support
+-----------------------------------
+Please use `--boot2docker`
+
+You may want to eval `$(sudo docker-machine env machine_name)"` first.
 
 
 Informations
