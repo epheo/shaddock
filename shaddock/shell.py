@@ -180,6 +180,14 @@ class ShaddockShell(App):
             help='Docker API version number (Env: DOCKER_VERSION)'
         )
         parser.add_argument(
+            '-d', '--docker-api-file',
+            action='store',
+            dest='docker_api_file',
+            default=self.env('DOCKER_API_FILE',
+                             default=None),
+            help='Docker API file to use. (Env: DOCKER_API_FILE)'
+        )
+        parser.add_argument(
             '-f', '--template-file',
             action='store',
             dest='template_file',
@@ -188,7 +196,7 @@ class ShaddockShell(App):
             help='Template file to use. (Env: TEMPLATE_FILE)'
         )
         parser.add_argument(
-            '-d', '--images-dir',
+            '-i', '--images-dir',
             action='store',
             dest='images_dir',
             default=self.env('IMAGES_DIR',
