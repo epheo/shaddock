@@ -109,9 +109,14 @@ class ContainerConfig(object):
         if tpl_volumes is not None:
             try:
                 for volume in tpl_volumes:
+                    if len(volume['mount'].split(':')) > 1:
+                        volume['mount'] = volume['mount'].split(':')[0]
+                        ro = True
+                    else:
+                        ro = False
                     self.volumes.append(volume['mount'])
                     self.binds[volume['host_dir']] = {'bind': volume['mount'],
-                                                      'ro': False}
+                                                      'ro': ro}
             except KeyError:
                 raise TemplateFileError(
                     "A container's volume definition in your"
