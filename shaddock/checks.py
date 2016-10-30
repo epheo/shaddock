@@ -16,10 +16,12 @@
 #    under the License.
 
 import socket
+
 import requests
-from shaddock.drivers.docker import checks as dockerchecks
-from shaddock.drivers.docker import container as dockercontainer
+
 from shaddock import model
+from shaddock.drivers.docker import container as dockercontainer
+from shaddock.drivers.docker import checks as dockerchecks
 
 
 class Checks(object):
@@ -64,7 +66,7 @@ class Checks(object):
                 self.param['useproxy'] = False
                 if c.ip is None:
                     return False
-            except Exception:
+            except:
                 return False
 
         if self.param['type'] == 'tcp':
@@ -107,6 +109,6 @@ class Checks(object):
                 ret = True
             else:
                 ret = False
-        except Exception:
+        except:
             ret = False
         return ret

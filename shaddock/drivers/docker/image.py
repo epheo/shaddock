@@ -28,9 +28,18 @@ class Image(object):
         self.docker_version = app_args.docker_version
         self.cfg = model.ContainerConfig(name, self.app_args)
         self.name = self.cfg.name
+	self.host = self.cfg.host
 
-        docker_client = dockerapi.DockerApi(app_args)
-        self.docker_api = docker_client.api
+        if self.cfg.host is None:
+            docker_client = dockerapi.DockerApi(app_args)
+            self.docker_api = docker_client.api
+        else:
+            self.api = model.DockerConfig(self.host, self.app_args)
+            args_url = self.app_args.docker_host
+            self.app_args.docker_host = self.api.url
+            docker_client = dockerapi.DockerApi(self.app_args)
+            self.docker_api = docker_client.api
+            self.app_args.docker_host = args_url
 
     def build(self, nocache):
         for line in self.docker_api.build(path=self.cfg.path,

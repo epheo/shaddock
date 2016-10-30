@@ -15,8 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import re
 import yaml
+import re
 
 
 class TemplateFileError(Exception):
@@ -31,6 +31,11 @@ def get_services_list(app_args):
         services_list = yaml.load(f)
     return services_list
 
+def get_docker_api_list(app_args):
+    docker_api_file = app_args.docker_api_file
+    with open(docker_api_file) as d:
+        docker_api_list = yaml.load(d)
+    return docker_api_list
 
 class ContainerConfig(object):
     def __init__(self, name, app_args):
@@ -41,6 +46,7 @@ class ContainerConfig(object):
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.tag = name
             self.name = name.split('/')[1]
+            self.host = None
             self.path = '{}/{}'.format(self.images_dir, self.tag)
             self.ports = None
             self.ports_bindings = None
@@ -72,6 +78,7 @@ class ContainerConfig(object):
                 " {} is missing the name property".format(template_file))
 
         self.name = name
+        self.host = service.get('host')
         try:
             self.tag = service['image']
         except KeyError:
@@ -102,9 +109,14 @@ class ContainerConfig(object):
         if tpl_volumes is not None:
             try:
                 for volume in tpl_volumes:
+                    if len(volume['mount'].split(':')) > 1:
+                        volume['mount'] = volume['mount'].split(':')[0]
+                        ro = True
+                    else:
+                        ro = False
                     self.volumes.append(volume['mount'])
                     self.binds[volume['host_dir']] = {'bind': volume['mount'],
-                                                      'ro': False}
+                                                      'ro': ro}
             except KeyError:
                 raise TemplateFileError(
                     "A container's volume definition in your"
@@ -124,3 +136,35 @@ class ContainerConfig(object):
         #      'privileged': True,
         #      'network_mode': None
         #      },
+
+class DockerConfig(object):
+    def __init__(self, name, app_args):
+        self.app_args = app_args
+        if re.match("^[^\s/]+/[^\s/]+$", name):
+            self.name = name
+            self.url = None
+        else:
+            self.__construct(name)
+
+    def __construct(self, name):
+        docker_api_file = self.app_args.docker_api_file
+        docker_api_list = get_docker_api_list(self.app_args)
+        try:
+            dockerapi = [api for api in docker_api_list if
+                       api['name'] == name]
+            if len(dockerapi) > 1:
+                raise TemplateFileError(
+                    "There is more than one definition matching"
+                    " 'name: {}' in your {}".format(name, docker_api_file))
+            dockerapi = dockerapi[0]
+        except IndexError:
+            raise TemplateFileError(
+                "There is no container definition containing"
+                " 'name: {}' in your {}".format(name, docker_api_file))
+        except KeyError:
+            raise TemplateFileError(
+                "At least one container definition in your"
+                " {} is missing the name property".format(docker_api_file))
+
+        self.name = name
+        self.url = dockerapi['url']
