@@ -47,8 +47,14 @@ def get_clusters(app_args):
     if template_file is None:
         raise NameError("You should specify a template file with -f")
     with open(template_file) as f:
-        cluster_list = yaml.load(f, Loader)
-    return cluster_list['clusters']
+        model = yaml.load(f, Loader)
+        cluster_list=[]
+        for cluster in model['clusters']:
+            j2 = Template(str(cluster))
+            cluster_yaml = j2.render(cluster['vars'])
+            cluster = yaml.load(cluster_yaml)
+            cluster_list.append(cluster)
+    return cluster_list
 
 def get_services_list(app_args):
     cluster_list = get_clusters(app_args)

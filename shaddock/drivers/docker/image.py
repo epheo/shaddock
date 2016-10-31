@@ -47,7 +47,10 @@ class Image(object):
         for line in self.docker_api.build(path=self.cfg.path,
                                           tag=self.cfg.tag,
                                           nocache=nocache):
-            jsonstream = json.loads(line.decode())
+            try:
+                jsonstream = json.loads(line.decode())
+            except UnicodeDecodeError:
+                pass
             stream = jsonstream.get('stream')
             error = jsonstream.get('error')
             if error is not None:
