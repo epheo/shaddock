@@ -15,20 +15,41 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from jinja2 import Template
 import yaml
 import re
+import os.path
 
 
 class TemplateFileError(Exception):
     pass
 
+class Loader(yaml.Loader):
+    def __init__(self, stream):
+        self._root = os.path.split(stream.name)[0]
+        super(Loader, self).__init__(stream)
 
-def get_services_list(app_args):
+    def include(self, node):
+        filename = os.path.join(self._root, self.construct_scalar(node))
+        with open(filename, 'r') as f:
+            return yaml.load(f, Loader)
+
+Loader.add_constructor('!include', Loader.include)
+
+
+def get_clusters(app_args):
     template_file = app_args.template_file
     if template_file is None:
         raise NameError("You should specify a template file with -f")
     with open(template_file) as f:
-        services_list = yaml.load(f)
+        clusterlist = yaml.load(f, Loader)
+    return cluster_list['clusters']
+
+def get_services_list(app_args):
+    cluster_list = get_clusters(app_args)
+    services_list = []
+    for cluster in cluster_list:
+      services_list.append(cluster['services'])
     return services_list
 
 def get_docker_api_list(app_args):
