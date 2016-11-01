@@ -209,8 +209,12 @@ class List(Lister):
             except IndexError:
                 img_build = None
             
+            if 'host' in svc:
+                host = svc['host']
+            else:
+                host = 'localhost'
 
-            line = (svc['name'], b.status, svc['host'], b.ip, b.tag, img_build)
+            line = (svc['name'], b.status, host, b.ip, b.tag, img_build)
             l = l + (line, )
         return columns, l
 
