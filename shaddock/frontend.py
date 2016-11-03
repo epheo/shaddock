@@ -189,7 +189,7 @@ class List(Lister):
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Status', 'Docker-Id', 'IP', 'Image', 'Image Build')
+        columns = ('Name', 'Status', 'Host', 'IP', 'Image', 'Image Build')
         imageslist = dockerchecks.list(self.app_args)
 
         l = ()
@@ -197,9 +197,9 @@ class List(Lister):
             b = dockercontainer.Container(svc['name'],
                                           self.app_args)
             if b.id:
-                c_id = b.id[:12]
+                container_id = b.id[:12]
             else:
-                c_id = b.id
+                container_id = b.id
 
             try:
                 img_build = [img['Created'] for img in imageslist
@@ -208,8 +208,13 @@ class List(Lister):
                                           time.localtime(img_build))
             except IndexError:
                 img_build = None
+            
+            if 'host' in svc:
+                host = svc['host']
+            else:
+                host = 'localhost'
 
-            line = (svc['name'], b.status, c_id, b.ip, b.tag, img_build)
+            line = (svc['name'], b.status, host, b.ip, b.tag, img_build)
             l = l + (line, )
         return columns, l
 

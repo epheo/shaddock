@@ -1,56 +1,97 @@
 **Shaddock**
 ============
-Shaddock provides a platform deployed in http://docker.com containers following
-a predefined template (like an http://openstack.org infrastructure)
+Shaddock is a container based orchestration and deployment tool that rely on
+a yaml definition model to describe and manage a distributed multi-service
+infrastructure.
+
+http://github.com/epheo/shaddock-openstack is a yml definition model exemple you
+can use with Shaddock to build, deploy and manage the lifecycle of an OpenStack
+platform from the upstream git sources.
+
 
 QuickStart
 ----------
 
 .. code:: bash
 
-    # Installation:
+    # Shaddock installation:
     git clone https://github.com/epheo/shaddock
-    cd shaddock
-    sudo python setup.py install
+    cd shaddock && sudo pip install .
 
-    # Configuration:
-    cd examples && ./set_ip.sh openstack.yml
+    # Using an existing yaml definition model:
+    git clone https://github.com/epheo/shaddock-openstack
 
-    # Usage:
-    shaddock -f examples/openstack.yml
+    # Play with it! :
+    shaddock -f openstack-legacy.yml
     (shaddock) ps
-    (shaddock) pull all
+    (shaddock) build all
     (shaddock) start all
 
-**Run the shaddock shell in a container:**
 
-Without installation but require the docker API to listen on a tcp port.
+The Shaddock YAML definiton model
+---------------------------------
 
-.. code:: bash
+.. code-block:: yaml
 
-    docker run --rm -i -v examples:/examples --env DOCKER_HOST="https://<docker_api>:2376" --env TEMPLATE_FILE=/examples/openstack.yml -t shaddock/shaddock
+   clusters: 
+   
+     - name: venv-builder
+       hosts: !include hosts/all.yml
+       vars:
+         git_branch: 'stable/newton'
+       images: images/venv-builder/
+   
+       services:       
+           - name: nova
+             image: shaddock/generic-pyvenv-builder:latest
+             priority: 10
+             volumes:
+               - mount: /opt/openstack
+                 host_dir: /opt/openstack
+             env:
+               GIT_URL: https://github.com/openstack/nova.git
+               GIT_BRANCH: '{{ git_branch }}'
+   
+
+Using the jinja2 templating functionalities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The entire model is parsed using jinja2 before being interpreted by Shaddock,
+You can define any variables in the ***vars:*** section of a cluster definiton.
+
+refs: http://jinja.pocoo.org/
 
 
-
-OpenStack template configuration
+Using the !include functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can find a reference template for an OpenStack platform in the examples/ directory.
-This template point to OpenStack services Docker images hosted in the public Docker repository.
+Shaddock allow you to split your definition model into multiple yaml files using the !include fonction.
 
-You can/should of course create your own template file following the same architecture using the needed Docker images.
-
-In case you would *build* and use your own images you can specify a directory of Dockerfiles to Shaddock with the '-d' option.
-
-The directory should follow this hierarchy: directory/user/image/Dockerfile
-You will find the one used in order to build the demonstration OpenStack images at https://github.com/epheo/shaddock-openstack
+This, conbined with the Jinja2 templating allow you to design very complex architectures without repetitions or loosing in readabality of your model.
 
 
-Structure example of a template file:
+.. code-block:: yaml
 
+   vars:
+     git_branch: 'stable/newton'
+
+
+.. code-block:: yaml
+
+   vars: !include myfolder/vars_supertype.yml 
+
+.. code-block:: bash
+
+   $cat ./myfoler/vars_supertype.yml
+
+   git_branch: 'stable/newton'
+
+
+How to define a **service**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. code:: yaml
 
     - name: glance
       image: shaddock/glance:latest
+      host: node0001
       priority: 50
       ports:
         - 9292
@@ -63,12 +104,23 @@ Structure example of a template file:
         - {name: keystone, port: 5000, get: '/v2.0'}
         - {name: keystone, port: 35357, get: '/v2.0'}
       env:
-        MYSQL_HOST_IP: <your_ip>
-        KEYSTONE_HOST_IP: <your_ip>
-        GLANCE_DBPASS: panama
-        GLANCE_PASS: panama
+        MYSQL_HOST_IP: '{{ your_ip }}'
+        KEYSTONE_HOST_IP: '{{ your_ip }}'
+        GLANCE_DBPASS: '{{ your_ip }}'
+        GLANCE_PASS: '{{ your_ip }}'
 
-Tests:
+How does the **scheduler** works
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Shaddock scheduler will ensure that all the requirements you provide are matched before starting a new service.
+
+You can check:
+- A container status
+- If a container listen or don't listen on a port (tcp or udp)
+- The value returned by a http get
+
+You can also specify the number of retry and the time to wait before 2 checks.
+
 
 .. code:: yaml
 
@@ -82,8 +134,33 @@ Tests:
      - {name: nova, sleep: 20} # defaults to 10
      - {name: nova, retry: 10} # defaults to 5
 
-Usage
------
+
+Multi-host capability
+~~~~~~~~~~~~~~~~~~~~~
+Shaddock is able to schedule your services on different hosts accros your 
+datacenter.
+The only prerequirements for a host to be part of a Shaddock cluster is to have
+ the Docker API installed and listening on a port.
+You can then configure your hosts in your cluster defintion.
+
+.. code-block:: yaml
+
+   hosts:
+     - name: localhost
+       url: unix://var/run/docker.sock
+     
+     - name: node001
+       url: tcp://10.0.42.1:4243
+
+     - name: node002
+       url: tcp://10.0.42.2:4243
+
+The TLS options are currently only available via the CLI or the environment 
+variables but will be added to the model in the next milestone.
+
+
+CLI usage:
+----------
 
 .. code:: bash
 
@@ -152,11 +229,25 @@ Usage
       start          Start a new container
       stop           Stop a container
 
+
+Alternative configuration and other systems
+-------------------------------------------
+
 Docker Machine and Mac OS X support
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Please use `--boot2docker`
 
 You may want to eval `$(sudo docker-machine env machine_name)"` first.
+
+
+Run the shaddock shell from a container
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Without installation but require the docker API to listen on a tcp port.
+
+.. code:: bash
+
+    docker run --rm -i -v examples:/examples --env DOCKER_HOST="https://<docker_api>:2376" --env TEMPLATE_FILE=/examples/openstack.yml -t shaddock/shaddock
+
 
 
 Informations
@@ -172,7 +263,6 @@ References
 ~~~~~~~~~~
 
 Docker-py API Documentation: http://docker-py.readthedocs.org/
-
 OpenStack Official Documentation: http://docs.openstack.org/
 
 Help

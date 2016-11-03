@@ -28,9 +28,20 @@ class Container(object):
         self.cfg = model.ContainerConfig(service_name, self.app_args)
         self.tag = self.cfg.tag
         self.name = self.cfg.name
+        self.host = self.cfg.host
+        self.cluster_hosts = self.cfg.cluster_hosts
 
-        docker_client = dockerapi.DockerApi(app_args)
-        self.docker_api = docker_client.api
+        if self.cfg.host is None:
+            docker_client = dockerapi.DockerApi(self.app_args)
+            self.docker_api = docker_client.api
+        else:
+            self.api = model.DockerConfig(self.host, self.app_args,
+                    self.cluster_hosts)
+            args_url = self.app_args.docker_host
+            self.app_args.docker_host = self.api.url
+            docker_client = dockerapi.DockerApi(self.app_args)
+            self.docker_api = docker_client.api
+            self.app_args.docker_host = args_url
 
         info = self.get_info()
         for attr in info.keys():

@@ -18,34 +18,35 @@
 from docker.client import Client
 from docker.utils import kwargs_from_env
 
-# Possibilities:
-#
-#   Authenticate server based on public/default CA pool
-#       Verify --> tls=True
-#       No verify --> tls = tls_config = docker.tls.TLSConfig(verify=False)
-#      opt: --tls
-#
-#   Authenticate with client certificate, do not authenticate server based on given CA
-#       tls = tls_config = docker.tls.TLSConfig(
-#         client_cert=('/path/to/client-cert.pem', '/path/to/client-key.pem'))
-#      opt: --tls
-#           --tlscert /path/to/client-cert.pem
-#           --tlskey /path/to/client-key.pem
-#
-#   Authenticate server based on given CA
-#       tls = tls_config = docker.tls.TLSConfig(ca_cert='/path/to/ca.pem')
-#      opt: --tlsverify
-#           --tlscacert /path/to/ca.pem
-#
-#   Authenticate with client certificate, authenticate server based on given CA
-#       tls = tls_config = docker.tls.TLSConfig(
-#         client_cert=('/path/to/client-cert.pem', '/path/to/client-key.pem'),
-#         verify='/path/to/ca.pem')
-#       opt: --tlsverify \
-#            --tlscert /path/to/client-cert.pem \
-#            --tlskey /path/to/client-key.pem \
-#            --tlscacert /path/to/ca.pem
+""" 
+ Possibilities:
 
+   Authenticate server based on public/default CA pool
+       Verify --> tls=True
+       No verify --> tls = tls_config = docker.tls.TLSConfig(verify=False)
+      opt: --tls
+
+   Authenticate with client certificate, do not authenticate server based on given CA
+       tls = tls_config = docker.tls.TLSConfig(
+         client_cert=('/path/to/client-cert.pem', '/path/to/client-key.pem'))
+      opt: --tls
+           --tlscert /path/to/client-cert.pem
+           --tlskey /path/to/client-key.pem
+
+   Authenticate server based on given CA
+       tls = tls_config = docker.tls.TLSConfig(ca_cert='/path/to/ca.pem')
+      opt: --tlsverify
+           --tlscacert /path/to/ca.pem
+
+   Authenticate with client certificate, authenticate server based on given CA
+       tls = tls_config = docker.tls.TLSConfig(
+         client_cert=('/path/to/client-cert.pem', '/path/to/client-key.pem'),
+         verify='/path/to/ca.pem')
+       opt: --tlsverify \
+            --tlscert /path/to/client-cert.pem \
+            --tlskey /path/to/client-key.pem \
+            --tlscacert /path/to/ca.pem
+"""
 
 class DockerApi(object):
 
