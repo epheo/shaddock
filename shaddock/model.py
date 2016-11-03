@@ -176,33 +176,21 @@ class ContainerConfig(object):
         #      },
 
 class DockerConfig(object):
-<<<<<<< HEAD
-    def __init__(self, name, app_args):
-=======
     def __init__(self, name, app_args, cluster_hosts):
->>>>>>> origin/pyvenv
         self.app_args = app_args
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.name = name
             self.url = None
-<<<<<<< HEAD
-=======
             self.cluster_hosts = cluster_hosts
->>>>>>> origin/pyvenv
         else:
             self.__construct(name)
 
     def __construct(self, name):
-<<<<<<< HEAD
-        docker_api_file = self.app_args.docker_api_file
-        docker_api_list = get_docker_api_list(self.app_args)
-=======
         if self.app_args.docker_api_file:
             docker_api_file = self.app_args.docker_api_file
             docker_api_list = get_docker_api_list(self.app_args)
         else:
             docker_api_list = self.cluster_hosts 
->>>>>>> origin/pyvenv
         try:
             dockerapi = [api for api in docker_api_list if
                        api['name'] == name]

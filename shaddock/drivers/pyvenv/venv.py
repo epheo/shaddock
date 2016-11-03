@@ -123,8 +123,8 @@ class Container(object):
     """
 
 
-        self.extra_text   = ""
-        self.git_location = "" 
+    self.extra_text   = ""
+    self.git_location = ""
 
 
     def __init__(self, service_name, *args, **kwargs):
