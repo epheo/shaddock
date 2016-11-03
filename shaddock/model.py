@@ -122,11 +122,11 @@ class ContainerConfig(object):
         self.cluster_hosts = service.get('cluster_hosts')
         self.cluster_name = service.get('cluster_name')
         try:
-            self.images_dir = os.path.join(
-                    os.path.dirname(template_file), service.get('img_dir')) 
+            self.images_dir
         except AttributeError:
             try:
-                self.images_dir
+                self.images_dir = os.path.join(
+                        os.path.dirname(template_file), service.get('img_dir')) 
             except AttributeError:
                 raise TemplateFileError(
                 "Cluster definition in {} is missing the images key. "
