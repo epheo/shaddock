@@ -105,7 +105,6 @@ class Container(object):
                 except (KeyboardInterrupt, SystemExit):
                     return True
             else:
-
                 line = self.docker_api.logs(container=self.id,
                                             stderr=True,
                                             stdout=True,

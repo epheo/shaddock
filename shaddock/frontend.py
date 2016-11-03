@@ -206,7 +206,7 @@ class List(Lister):
                              if b.tag in img['RepoTags']][0]
                 img_build = time.strftime('%m/%d %H:%M',
                                           time.localtime(img_build))
-            except IndexError:
+            except IndexError, TypeError:
                 img_build = None
             
             if 'host' in svc:
