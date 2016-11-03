@@ -15,20 +15,56 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from jinja2 import Template
 import yaml
 import re
+import os.path
 
 
 class TemplateFileError(Exception):
     pass
 
+class Loader(yaml.Loader):
+    def __init__(self, stream):
+        self._root = os.path.split(stream.name)[0]
+        super(Loader, self).__init__(stream)
 
-def get_services_list(app_args):
+    def include(self, node):
+        filename = os.path.join(self._root, self.construct_scalar(node))
+        try:
+            with open(filename, 'r') as f:
+                return yaml.load(f, Loader)
+        except Exception:
+            raise TemplateFileError(
+                "The file {} you're trying to include doesn't"
+                "exist.".format(filename))
+
+Loader.add_constructor('!include', Loader.include)
+
+
+def get_clusters(app_args):
     template_file = app_args.template_file
     if template_file is None:
         raise NameError("You should specify a template file with -f")
     with open(template_file) as f:
-        services_list = yaml.load(f)
+        model = yaml.load(f, Loader)
+        cluster_list=[]
+        for cluster in model['clusters']:
+            j2 = Template(str(cluster))
+            cluster_yaml = j2.render(cluster['vars'])
+            cluster = yaml.load(cluster_yaml)
+            cluster_list.append(cluster)
+    return cluster_list
+
+def get_services_list(app_args):
+    cluster_list = get_clusters(app_args)
+    services_list = []
+    for cluster in cluster_list:
+        for service in cluster['services']:
+            service['cluster_name'] = cluster['name']
+            if service['host']:
+                service['cluster_hosts'] = cluster['hosts']
+            services_list.append(service)
     return services_list
 
 def get_docker_api_list(app_args):
@@ -79,6 +115,8 @@ class ContainerConfig(object):
 
         self.name = name
         self.host = service.get('host')
+        self.cluster_hosts = service.get('cluster_hosts')
+        self.cluster_name = service.get('cluster_name')
         try:
             self.tag = service['image']
         except KeyError:
@@ -138,17 +176,33 @@ class ContainerConfig(object):
         #      },
 
 class DockerConfig(object):
+<<<<<<< HEAD
     def __init__(self, name, app_args):
+=======
+    def __init__(self, name, app_args, cluster_hosts):
+>>>>>>> origin/pyvenv
         self.app_args = app_args
         if re.match("^[^\s/]+/[^\s/]+$", name):
             self.name = name
             self.url = None
+<<<<<<< HEAD
+=======
+            self.cluster_hosts = cluster_hosts
+>>>>>>> origin/pyvenv
         else:
             self.__construct(name)
 
     def __construct(self, name):
+<<<<<<< HEAD
         docker_api_file = self.app_args.docker_api_file
         docker_api_list = get_docker_api_list(self.app_args)
+=======
+        if self.app_args.docker_api_file:
+            docker_api_file = self.app_args.docker_api_file
+            docker_api_list = get_docker_api_list(self.app_args)
+        else:
+            docker_api_list = self.cluster_hosts 
+>>>>>>> origin/pyvenv
         try:
             dockerapi = [api for api in docker_api_list if
                        api['name'] == name]
