@@ -18,15 +18,15 @@
 from docker.client import Client
 from docker.utils import kwargs_from_env
 
-""" 
- Possibilities:
+"""Possibilities:
 
    Authenticate server based on public/default CA pool
        Verify --> tls=True
        No verify --> tls = tls_config = docker.tls.TLSConfig(verify=False)
       opt: --tls
 
-   Authenticate with client certificate, do not authenticate server based on given CA
+   Authenticate with client certificate, do not authenticate server based
+   on given CA
        tls = tls_config = docker.tls.TLSConfig(
          client_cert=('/path/to/client-cert.pem', '/path/to/client-key.pem'))
       opt: --tls
@@ -48,6 +48,7 @@ from docker.utils import kwargs_from_env
             --tlscacert /path/to/ca.pem
 """
 
+
 class DockerApi(object):
 
     def __init__(self, app_args):
@@ -65,7 +66,8 @@ class DockerApi(object):
         tls_config = False
 
         if self.docker_tls is True:
-            if (self.docker_cert_path is not None) and (self.docker_key_path is not None):
+            if (self.docker_cert_path is not None) and (self.docker_key_path
+                                                        is not None):
                 print('--tls'
                       '--tlscert /path/to/client-cert.pem'
                       '--tlskey /path/to/client-key.pem')
@@ -77,22 +79,26 @@ class DockerApi(object):
 
         if self.docker_tls_verify is True:
             if self.docker_cacert_path is not None:
-                if (self.docker_cert_path is not None) and (self.docker_key_path is not None):
+                if (self.docker_cert_path is not None) and (
+                    self.docker_key_path is not None):
                     print('--tlsverify'
                           '--tlscert /path/to/client-cert.pem'
                           '--tlskey /path/to/client-key.pem'
                           '--tlscacert /path/to/ca.pem')
                     tls_config = docker.tls.TLSConfig(
-                        client_cert=(self.docker_cert_path, self.docker_key_path),
+                        client_cert=(self.docker_cert_path,
+                                     self.docker_key_path),
                         verify=self.docker_cacert_path)
 
                 else:
                     print('--tlsverify '
                           '--tlscacert /path/to/ca.pem')
-                    tls_config = docker.tls.TLSConfig(ca_cert=self.docker_cacert_path)
+                    tls_config = docker.tls.TLSConfig(
+                        ca_cert=self.docker_cacert_path)
 
             else:
-                raise IndexError('Please specify at least a CA cert with --tlscacert', tls_config)
+                raise IndexError("Please specify at least a CA cert with "
+                                 "--tlscacert", tls_config)
 
         if self.app_args.docker_boot2docker is True:
             kwargs = kwargs_from_env()

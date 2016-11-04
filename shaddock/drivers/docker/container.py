@@ -36,7 +36,7 @@ class Container(object):
             self.docker_api = docker_client.api
         else:
             self.api = model.DockerConfig(self.host, self.app_args,
-                    self.cluster_hosts)
+                                          self.cluster_hosts)
             args_url = self.app_args.docker_host
             self.app_args.docker_host = self.api.url
             docker_client = dockerapi.DockerApi(self.app_args)
@@ -96,11 +96,12 @@ class Container(object):
             if sys.version_info > (3, 0):
                 try:
                     for line in self.docker_api.logs(
-                                           container=self.id,
-                                           stderr=True,
-                                           stdout=True,
-                                           timestamps=False,
-                                           stream=True):
+                        container=self.id,
+                        stderr=True,
+                        stdout=True,
+                        timestamps=False,
+                        stream=True
+                        ):
                         print(line.decode('utf-8').rstrip())
                 except (KeyboardInterrupt, SystemExit):
                     return True

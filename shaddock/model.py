@@ -16,13 +16,14 @@
 #    under the License.
 
 from jinja2 import Template
-import yaml
-import re
 import os.path
+import re
+import yaml
 
 
 class TemplateFileError(Exception):
     pass
+
 
 class Loader(yaml.Loader):
     def __init__(self, stream):
@@ -48,7 +49,7 @@ def get_clusters(app_args):
         raise NameError("You should specify a template file with -f")
     with open(template_file) as f:
         model = yaml.load(f, Loader)
-        cluster_list=[]
+        cluster_list = []
         for cluster in model['clusters']:
             j2 = Template(str(cluster))
             if 'vars' in cluster:
@@ -56,6 +57,7 @@ def get_clusters(app_args):
                 cluster = yaml.load(cluster_yaml)
             cluster_list.append(cluster)
     return cluster_list
+
 
 def get_services_list(app_args):
     cluster_list = get_clusters(app_args)
@@ -70,11 +72,13 @@ def get_services_list(app_args):
             services_list.append(service)
     return services_list
 
+
 def get_docker_api_list(app_args):
     docker_api_file = app_args.docker_api_file
     with open(docker_api_file) as d:
         docker_api_list = yaml.load(d)
     return docker_api_list
+
 
 class ContainerConfig(object):
     def __init__(self, name, app_args):
@@ -126,13 +130,13 @@ class ContainerConfig(object):
         except AttributeError:
             try:
                 self.images_dir = os.path.join(
-                        os.path.dirname(template_file), service.get('img_dir')) 
+                    os.path.dirname(template_file), service.get('img_dir'))
             except AttributeError:
                 raise TemplateFileError(
-                "Cluster definition in {} is missing the images key. "
-                "If you don't want to define a static images path in "
-                "your model you can also specify a directory to build "
-                "in with the -i cli arg.".format(template_file))
+                    "Cluster definition in {} is missing the images key. "
+                    "If you don't want to define a static images path in "
+                    "your model you can also specify a directory to build "
+                    "in with the -i cli arg.".format(template_file))
         try:
             self.tag = service['image']
         except KeyError:
@@ -192,10 +196,10 @@ class DockerConfig(object):
             docker_api_file = self.app_args.docker_api_file
             docker_api_list = get_docker_api_list(self.app_args)
         else:
-            docker_api_list = self.cluster_hosts 
+            docker_api_list = self.cluster_hosts
         try:
             dockerapi = [api for api in docker_api_list if
-                       api['name'] == name]
+                         api['name'] == name]
             if len(dockerapi) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"

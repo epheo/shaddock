@@ -15,16 +15,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import time
 
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-
-from shaddock import model, scheduler
+from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
-from shaddock.drivers.docker import checks as dockerchecks
+from shaddock import model
+from shaddock import scheduler
+import time
 
 
 class Build(Command):
@@ -181,9 +181,11 @@ class Remove(ShowOne):
 
 class List(Lister):
     """Show a list of Containers.
+
        The 'Name', 'Created', 'Started', 'IP', 'Tag',
        'Docker-id' are printed by default.
     """
+
     def get_parser(self, prog_name):
         parser = super(List, self).get_parser(prog_name)
         return parser
@@ -196,19 +198,21 @@ class List(Lister):
         for svc in model.get_services_list(self.app_args):
             b = dockercontainer.Container(svc['name'],
                                           self.app_args)
+            """Return the container id, but not used for now.
+
             if b.id:
                 container_id = b.id[:12]
             else:
                 container_id = b.id
-
+            """
             try:
                 img_build = [img['Created'] for img in imageslist
                              if b.tag in img['RepoTags']][0]
                 img_build = time.strftime('%m/%d %H:%M',
                                           time.localtime(img_build))
-            except IndexError, TypeError:
+            except Exception:
                 img_build = None
-            
+
             if 'host' in svc:
                 host = svc['host']
             else:

@@ -140,7 +140,7 @@ Multi-host capability
 Shaddock is able to schedule your services on different hosts accros your 
 datacenter.
 The only prerequirements for a host to be part of a Shaddock cluster is to have
- the Docker API installed and listening on a port.
+the Docker API installed and listening on a port.
 You can then configure your hosts in your cluster defintion.
 
 .. code-block:: yaml
