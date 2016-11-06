@@ -16,9 +16,9 @@
 #    under the License.
 
 import json
+from shaddock.drivers.docker import api as dockerapi
 from shaddock import model
 import sys
-from shaddock.drivers.docker import api as dockerapi
 
 
 class Image(object):
@@ -28,7 +28,7 @@ class Image(object):
         self.docker_version = app_args.docker_version
         self.cfg = model.ContainerConfig(name, self.app_args)
         self.name = self.cfg.name
-	self.host = self.cfg.host
+        self.host = self.cfg.host
         self.cluster_hosts = self.cfg.cluster_hosts
 
         if self.cfg.host is None:
@@ -36,7 +36,7 @@ class Image(object):
             self.docker_api = docker_client.api
         else:
             self.api = model.DockerConfig(self.host, self.app_args,
-                    self.cluster_hosts)
+                                          self.cluster_hosts)
             args_url = self.app_args.docker_host
             self.app_args.docker_host = self.api.url
             docker_client = dockerapi.DockerApi(self.app_args)

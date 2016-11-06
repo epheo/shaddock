@@ -323,7 +323,11 @@ CHANGES
 * Frontend ok Need to find a solution for the base build in first
 * fix init
 * Fix octopenstack imports
+<<<<<<< HEAD
 * Frontend refactoring: Add lib argparse Front/Back isolation Arguments
+=======
+* Frontend refactoring: 	Add lib argparse 	Front/Back isolation 	Arguments
+>>>>>>> origin/pep8-refacto-from-pyvenv
 * fix var name
 * Moved container information get in get_info()
 * add self arguments in Container class
@@ -349,7 +353,7 @@ CHANGES
 0.3
 ---
 
-* Remove backlog (add to hithub issues
+* Remove backlog (add to hithub issues)
 * fix print volumes confs
 * volumes confs
 * fix config files

@@ -15,13 +15,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import socket
-
 import requests
-
-from shaddock import model
-from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import checks as dockerchecks
+from shaddock.drivers.docker import container as dockercontainer
+from shaddock import model
+import socket
 
 
 class Checks(object):
@@ -66,7 +64,7 @@ class Checks(object):
                 self.param['useproxy'] = False
                 if c.ip is None:
                     return False
-            except:
+            except Exception:
                 return False
 
         if self.param['type'] == 'tcp':
@@ -109,6 +107,6 @@ class Checks(object):
                 ret = True
             else:
                 ret = False
-        except:
+        except Exception:
             ret = False
         return ret

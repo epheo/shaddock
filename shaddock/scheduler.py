@@ -16,11 +16,11 @@
 #    under the License.
 
 from operator import itemgetter
-import time
-
-from shaddock import model, checks
+from shaddock import checks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
+from shaddock import model
+import time
 
 
 class Scheduler(object):
