@@ -50,7 +50,10 @@ class Checks(object):
         self.param['useproxy'] = bool(self.param['useproxy'])
 
         # Docker check
-        if set(definition.keys()) in [{'name'}, {'name', 'status'}]:
+        if set(definition.keys()) in [{'name'}, {'name', 'status'},
+                {'name', 'status', 'retry', 'sleep'},
+                {'name', 'status', 'sleep'},
+                {'name', 'status', 'retry'}]:
             return self.docker_check()
 
         # If tcp or http type: we need to get the ip of the corresponding
