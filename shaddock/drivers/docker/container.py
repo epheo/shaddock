@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    Copyright (C) 2014 Thibaut Lapierre <root@epheo.eu>. All Rights Reserved.
+#    Copyright (C) 2014 Thibaut Lapierre <git@epheo.eu>. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -21,6 +21,18 @@ import sys
 
 
 class Container(object):
+    """Instance a defined container
+
+    This class instance a Docker container depending on its
+    name and model definition.
+    The basics Docker methods are implemented as well as a
+    Shaddock's specific one that return the information of 
+    the concerned container.
+
+    Shaddock keep no tracks of any Container ID and rely on no
+    databases. THe containers are retrieve from their names.
+    """
+
     def __init__(self, service_name, app_args):
         self.app_args = app_args
         # input_name can ba a tag or a name
@@ -31,17 +43,9 @@ class Container(object):
         self.host = self.cfg.host
         self.cluster_hosts = self.cfg.cluster_hosts
 
-        if self.cfg.host is None:
-            docker_client = dockerapi.DockerApi(self.app_args)
-            self.docker_api = docker_client.api
-        else:
-            self.api = model.DockerConfig(self.host, self.app_args,
-                                          self.cluster_hosts)
-            args_url = self.app_args.docker_host
-            self.app_args.docker_host = self.api.url
-            docker_client = dockerapi.DockerApi(self.app_args)
-            self.docker_api = docker_client.api
-            self.app_args.docker_host = args_url
+        api_cfg = self.cfg.api_cfg
+        docker_client = dockerapi.DockerApi(self.app_args, api_cfg)
+        self.docker_api = docker_client.api
 
         info = self.get_info()
         for attr in info.keys():
@@ -61,7 +65,8 @@ class Container(object):
             ports=self.cfg.ports,
             environment=self.cfg.env,
             volumes=self.cfg.volumes,
-            hostname=self.cfg.name)
+            hostname=self.cfg.name,
+            command=self.cfg.command)
         return c_id
 
     def start(self):

@@ -29,7 +29,15 @@ class Scheduler(object):
         self.docker_host = app_args.docker_host
         self.docker_version = app_args.docker_version
         self.services_list = model.get_services_list(self.app_args)
-        self.services_list.sort(key=itemgetter('priority'))
+        try:
+            self.services_list.sort(key=itemgetter('priority'))
+        except KeyError:
+            raise model.TemplateFileError(
+                "In order to use the scheduler functionality, all the "
+                "services from your model need to have the priority "
+                "argument defined. At least one of your services does "
+                "not have this argument set.")
+            
         self.checker = checks.Checks(self.app_args)
 
     def build_all(self, nocache):

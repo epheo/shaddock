@@ -184,6 +184,12 @@ class List(Lister):
 
        The 'Name', 'Created', 'Started', 'IP', 'Tag',
        'Docker-id' are printed by default.
+
+       (epheo): imageslist is currently not returning anything as it 
+       refer to the list fct of dockerchecks and we would need to give
+       to the DockerApi class a list of all Docker Hosts, interate on 
+       them and return a list of all images on all hosts.
+       This is currently not implemented on multihosts
     """
 
     def get_parser(self, prog_name):
@@ -191,8 +197,8 @@ class List(Lister):
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Status', 'Host', 'IP', 'Image', 'Image Build')
-        imageslist = dockerchecks.list(self.app_args)
+        columns = ('Name', 'Status', 'Host', 'IP', 'Image')
+        #imageslist = dockerchecks.list(self.app_args)
 
         l = ()
         for svc in model.get_services_list(self.app_args):
@@ -204,7 +210,9 @@ class List(Lister):
                 container_id = b.id[:12]
             else:
                 container_id = b.id
-            """
+            
+            # Return the image build state, but not used for now.
+            
             try:
                 img_build = [img['Created'] for img in imageslist
                              if b.tag in img['RepoTags']][0]
@@ -212,13 +220,14 @@ class List(Lister):
                                           time.localtime(img_build))
             except Exception:
                 img_build = None
+            """
 
             if 'host' in svc:
                 host = svc['host']
             else:
                 host = 'localhost'
 
-            line = (svc['name'], b.status, host, b.ip, b.tag, img_build)
+            line = (svc['name'], b.status, host, b.ip, b.tag)
             l = l + (line, )
         return columns, l
 

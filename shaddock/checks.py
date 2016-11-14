@@ -57,7 +57,7 @@ class Checks(object):
             return self.docker_check()
 
         # If tcp or http type: we need to get the ip of the corresponding
-        # container. If it not available we return false (maybe it is just
+        # container. If it not available we return false (it may be just
         # starting).
         if self.param['name'] is not None:
             try:
@@ -79,7 +79,9 @@ class Checks(object):
                                           "{}".format(str(definition)))
 
     def docker_check(self):
-        return dockerchecks.check(self.app_args, self.param)
+        cfg = model.ContainerConfig(self.param['name'], self.app_args)
+        api_cfg = cfg.api_cfg
+        return dockerchecks.check(self.app_args, self.param, api_cfg)
 
     def port_check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
