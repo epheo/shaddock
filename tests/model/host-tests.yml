@@ -4,7 +4,6 @@
 
 ---
 
-
 clusters: 
 
   - name: host-cluster0

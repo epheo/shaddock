@@ -280,7 +280,7 @@ class ModelDefinition(object):
         except IndexError:
             raise TemplateFileError(
                 "There is no Docker Host definition containing"
-                " 'name: {}' in model.".format(name))
+                " 'name: {}' in model.".format(svc_args['host']))
         except KeyError:
             api_cfg = 'undefined'
         except TypeError:
