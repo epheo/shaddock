@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    Copyright (C) 2014 Thibaut Lapierre <root@epheo.eu>. All Rights Reserved.
+#    Copyright (C) 2016 Thibaut Lapierre <git@epheo.eu>. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -14,3 +14,27 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
+from shaddock.drivers.docker import api as dockerapi
+from shaddock import model
+
+# https://docker-py.readthedocs.io/en/latest/networks/
+
+class Network(object):
+    """Instance a defined Docker Network
+
+    This class instance a defined Docker network 
+
+    """
+
+    def __init__(self, net_name):
+        pass
+
+    def create(self):
+        pass
+
+    def remove(self):
+        pass
+
+class Endpoint(object):
+    pass

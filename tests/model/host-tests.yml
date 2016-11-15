@@ -1,0 +1,37 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+
+---
+
+clusters: 
+
+  - name: host-cluster0
+    images: images/testdir
+    services:     
+      - name: service001
+        image: testuser/arch_base:latest
+        priority: 200
+
+  - name: host-cluster1
+    images: images/testdir/
+    hosts: !include hosts/all.yml
+    services:
+      - name: service002
+        image: testuser/arch_base:latest
+        priority: 210
+
+      - name: service003
+        image: testuser/arch_base:latest
+        host: node001-socket
+        priority: 211
+
+      - name: service004
+        image: testuser/arch_base:latest
+        host: node002-tcp
+        priority: 212
+
+      - name: service005
+        image: testuser/arch_base:latest
+        host: node003-tls
+        priority: 213

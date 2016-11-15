@@ -18,9 +18,9 @@
 from shaddock.drivers.docker import api as dockerapi
 
 
-def check(app_args, param):
+def check(app_args, param, api_cfg):
 
-    docker_client = dockerapi.DockerApi(app_args)
+    docker_client = dockerapi.DockerApi(app_args, api_cfg)
     docker_api = docker_client.api
 
     try:
@@ -41,9 +41,13 @@ def check(app_args, param):
             ret = True
     return ret
 
-def list(app_args):
 
-    docker_client = dockerapi.DockerApi(app_args)
-    docker_api = docker_client.api
-
-    return docker_api.images()
+#def list(app_args, api_cfg):
+#
+#    docker_client = dockerapi.DockerApi(app_args, api_cfg)
+#    docker_api = docker_client.api
+#
+#    return docker_api.images()
+#
+#    This fct is used by the frontend List cmd which is currenlty not
+#    implemented for multi_host.

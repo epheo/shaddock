@@ -15,16 +15,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import time
 
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-
-from shaddock import model, scheduler
+from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
-from shaddock.drivers.docker import checks as dockerchecks
+from shaddock.model import ModelDefinition
+from shaddock import scheduler
+import time
 
 
 class Build(Command):
@@ -181,36 +181,55 @@ class Remove(ShowOne):
 
 class List(Lister):
     """Show a list of Containers.
+
        The 'Name', 'Created', 'Started', 'IP', 'Tag',
        'Docker-id' are printed by default.
+
+       (epheo): imageslist is currently not returning anything as it 
+       refer to the list fct of dockerchecks and we would need to give
+       to the DockerApi class a list of all Docker Hosts, interate on 
+       them and return a list of all images on all hosts.
+       This is currently not implemented on multihosts
     """
+
     def get_parser(self, prog_name):
         parser = super(List, self).get_parser(prog_name)
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Status', 'Host', 'IP', 'Image', 'Image Build')
-        imageslist = dockerchecks.list(self.app_args)
+        columns = ('Name', 'Status', 'Host', 'IP', 'Image')
+        #imageslist = dockerchecks.list(self.app_args)
 
         l = ()
-        for svc in model.get_services_list(self.app_args):
+        model = ModelDefinition(self.app_args)
+
+        for svc in model.get_services_list():
             b = dockercontainer.Container(svc['name'],
                                           self.app_args)
+            """Return the container id, but not used for now.
+
             if b.id:
                 container_id = b.id[:12]
             else:
                 container_id = b.id
-
+            
+            # Return the image build state, but not used for now.
+            
             try:
                 img_build = [img['Created'] for img in imageslist
                              if b.tag in img['RepoTags']][0]
                 img_build = time.strftime('%m/%d %H:%M',
                                           time.localtime(img_build))
-            except IndexError:
+            except Exception:
                 img_build = None
-            
+            """
 
-            line = (svc['name'], b.status, svc['host'], b.ip, b.tag, img_build)
+            if 'host' in svc:
+                host = svc['host']
+            else:
+                host = 'localhost'
+
+            line = (svc['name'], b.status, host, b.ip, b.tag)
             l = l + (line, )
         return columns, l
 

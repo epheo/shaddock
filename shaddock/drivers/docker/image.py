@@ -16,36 +16,27 @@
 #    under the License.
 
 import json
-from shaddock import model
-import sys
 from shaddock.drivers.docker import api as dockerapi
+from shaddock.model import ModelDefinition
+import sys
 
 
 class Image(object):
-    def __init__(self, name, app_args):
+    
+    def __init__(self, service_name, app_args):
         self.app_args = app_args
         self.docker_host = app_args.docker_host
         self.docker_version = app_args.docker_version
-        self.cfg = model.ContainerConfig(name, self.app_args)
-        self.name = self.cfg.name
-	self.host = self.cfg.host
-        self.cluster_hosts = self.cfg.cluster_hosts
-
-        if self.cfg.host is None:
-            docker_client = dockerapi.DockerApi(app_args)
-            self.docker_api = docker_client.api
-        else:
-            self.api = model.DockerConfig(self.host, self.app_args,
-                    self.cluster_hosts)
-            args_url = self.app_args.docker_host
-            self.app_args.docker_host = self.api.url
-            docker_client = dockerapi.DockerApi(self.app_args)
-            self.docker_api = docker_client.api
-            self.app_args.docker_host = args_url
+        model = ModelDefinition(self.app_args)
+        self.cfg = model.get_service_args(service_name)
+        api_cfg = self.cfg['api_cfg']
+        docker_client = dockerapi.DockerApi(app_args, 
+                self.cfg['api_cfg'])
+        self.docker_api = docker_client.api
 
     def build(self, nocache):
-        for line in self.docker_api.build(path=self.cfg.path,
-                                          tag=self.cfg.tag,
+        for line in self.docker_api.build(path=self.cfg['path'],
+                                          tag=self.cfg['tag'],
                                           nocache=nocache):
             try:
                 jsonstream = json.loads(line.decode())
@@ -59,9 +50,9 @@ class Image(object):
                 print(stream.rstrip())
 
     def pull(self):
-        sys.stdout.write("Pulling image %s:" % self.cfg.tag),
+        sys.stdout.write("Pulling image %s:" % self.cfg['tag']),
         sys.stdout.flush()
-        for line in self.docker_api.pull(self.cfg.tag, stream=True):
+        for line in self.docker_api.pull(self.cfg['tag'], stream=True):
             tick = '*'
             sys.stdout.write(tick)
             sys.stdout.flush()

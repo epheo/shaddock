@@ -18,9 +18,9 @@ import argparse
 from cliff.app import App
 from cliff.commandmanager import CommandManager
 from cliff.help import HelpAction
-import shaddock.frontend
 import logging
 import os
+import shaddock.frontend
 import sys
 
 
@@ -180,14 +180,6 @@ class ShaddockShell(App):
             help='Docker API version number (Env: DOCKER_VERSION)'
         )
         parser.add_argument(
-            '-d', '--docker-api-file',
-            action='store',
-            dest='docker_api_file',
-            default=self.env('DOCKER_API_FILE',
-                             default=None),
-            help='Docker API file to use. (Env: DOCKER_API_FILE)'
-        )
-        parser.add_argument(
             '-f', '--template-file',
             action='store',
             dest='template_file',
@@ -196,7 +188,7 @@ class ShaddockShell(App):
             help='Template file to use. (Env: TEMPLATE_FILE)'
         )
         parser.add_argument(
-            '-i', '--images-dir',
+            '-d', '--images-dir',
             action='store',
             dest='images_dir',
             default=self.env('IMAGES_DIR',

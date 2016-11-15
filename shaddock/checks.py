@@ -15,13 +15,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import socket
-
 import requests
-
-from shaddock import model
-from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import checks as dockerchecks
+from shaddock.drivers.docker import container as dockercontainer
+from shaddock.model import ModelDefinition
+import socket
 
 
 class Checks(object):
@@ -52,11 +50,14 @@ class Checks(object):
         self.param['useproxy'] = bool(self.param['useproxy'])
 
         # Docker check
-        if set(definition.keys()) in [{'name'}, {'name', 'status'}]:
+        if set(definition.keys()) in [{'name'}, {'name', 'status'},
+                {'name', 'status', 'retry', 'sleep'},
+                {'name', 'status', 'sleep'},
+                {'name', 'status', 'retry'}]:
             return self.docker_check()
 
         # If tcp or http type: we need to get the ip of the corresponding
-        # container. If it not available we return false (maybe it is just
+        # container. If it not available we return false (it may be just
         # starting).
         if self.param['name'] is not None:
             try:
@@ -66,7 +67,7 @@ class Checks(object):
                 self.param['useproxy'] = False
                 if c.ip is None:
                     return False
-            except:
+            except Exception:
                 return False
 
         if self.param['type'] == 'tcp':
@@ -78,7 +79,10 @@ class Checks(object):
                                           "{}".format(str(definition)))
 
     def docker_check(self):
-        return dockerchecks.check(self.app_args, self.param)
+        model = ModelDefinition(self.app_args)
+        cfg = model.get_service_args(self.param['name'])
+        api_cfg = cfg['api_cfg']
+        return dockerchecks.check(self.app_args, self.param, api_cfg)
 
     def port_check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -109,6 +113,6 @@ class Checks(object):
                 ret = True
             else:
                 ret = False
-        except:
+        except Exception:
             ret = False
         return ret

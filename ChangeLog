@@ -1,0 +1,477 @@
+CHANGES
+=======
+
+* Fix sed command to replace the right string
+* merge add_services
+* merge
+* Document Boot2Docker tls support
+* Document Boot2Docker tls support
+* Add TLS support for Dcoker API
+* Add Boot2Docker support
+* change exple
+* change exple
+* KVM
+* Qemu
+* tls
+* Refacto for OpenStack project
+* Add TLS support
+* LXD
+* fix cinder
+* Add port 3260 for iSCSI
+* tgtd
+* tgtd
+* block-device
+* nova_host_ip
+* Change nova conf and add new services to .yml
+* Fixed minor readme
+* This commit replace the string infrastructure.yml by the template name supplied as an argument
+* Env
+* Qemu env vars
+* Qemu env vars
+* fixc
+* Fix add service
+* refacto configparse
+* Fix Env mysql
+* Fix Keystone Env
+* Fix checkError
+* +x
+* fix list
+* fix list
+* fix list
+* fix list
+* fix docker checks
+* split docker driver
+* split docker driver
+* fix scheduler
+* fix scheduler
+* fix scheduler
+* fix scheduler
+* fix scheduler
+* split backend
+* fix pull command
+* fix pull command
+* fix seed tag
+* fix raise error
+* Raise error for config file and image dir
+* Raise error for config file and image dir
+* Change default behavior
+* Catch error bool
+* Catch error bool
+* Catch error bool
+* Catch error bool
+* Catch error bool
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme + frontend
+* Fix checks
+* Add env vars + set_ip.sh
+* fix
+* DONE: - Change ENV variables places - Merge infrastructure and configuration.yml - Remove name dependencie on infratsructure.yaml - Add options images_dir and template_file - app_args propagation (is it a good thing?)
+* Update README.rst
+* Update README.rst
+* pull all done
+* rstrip
+* Add pull.rstrip
+* Add pull.rstrip
+* Add pull all / typo
+* Add pull all
+* Add pull all
+* refactoring of list command output
+* Fix volume mount
+* Readme
+* Change id if empty
+* Change id if empty
+* Determining running state not from IP
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* ps
+* ps
+* Dockerfile
+* Dokerfile
+* Dokerfile
+* Fix list
+* Change Readme and add Dockerfile
+* Add status + dockerid
+* Add Status and shortened docker id to list cmd
+* merge issue #54
+* Resolve issue #54
+* container returns None if no ip
+* Print before starting checks
+* typo
+* restart all
+* scheduler OK
+* checks implemented
+* version
+* Don't retrieve container info if container name is allx
+* Typo
+* Delete double creating message
+* Retrieve container info by name and not img
+* improv
+* merge
+* resolve issue #18
+* remove openstack common
+* Change create and pull from class and add visual progress bar to pull
+* wip
+* Now we can build and start images even if they are not in the infrastructure.yaml
+* bug fixes + improvements
+* model.py finished
+* Update readme
+* wip
+* Bug fix, image ID may be also an INT
+* Fix compatibility Python2 and 3 for logs fct
+* Remova new line between logs and builds
+* Catch error on logs generator
+* Readline utf8
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Change README
+* Add pull cli option, take only a name for now (exple: seed)
+* Change output of logs generator to str
+* Catch KeybordInterrupt error when quitting stream logs
+* Catch KeybordInterrupt error when quitting stream logs
+* Catch KeybordInterrupt error when quitting stream logs
+* fix stream logs
+* fix stream logs
+* return to ==
+* add tag support to cli
+* merge m6s0 (pull cmd and delete user)
+* Remove --user cli option in order to change the model name arg by the tag
+* comprehensive list rules
+* pep8
+* Fix logs option
+* Retrieve args from root
+* replace oslo_config by oslo.config
+* correction privileged
+* typo
+* typo
+* typo
+* switch from dic and dico to dict
+* model refact
+* Adding docker options to other commands
+* Adding docker options to other commands
+* Adding docker options to other commands
+* Adding docker options to other commands
+* Adding docker options to other commands
+* Adding docker options to build
+* Adding docker options to build
+* Workaround args
+* Workaround args
+* Change behavior of --no-cache fct
+* Change behavior of --no-cache fct
+* Adding remove all option. Fix old import
+* Adding remove all option
+* Trying to pass general cli options to cmds
+* Add no cache cli option
+* Replace openstack.common + clean setup.cfg of old entry points
+* Cliff App add options. Fix
+* Cliff App add options
+* Replace main.py by shell.py
+* oslo config file is working
+* oslo-config
+* Fix making logs a generator
+* Fix making logs a generator
+* Make logs a generator
+* re re re add comfig file
+* Fix version number issue
+* Fix version number
+* Add version number
+* Fix service info
+* Fix service info
+* Add logs command
+* Add logs command
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Fix retrieve scheduler build_all
+* Fix retrieve scheduler build_all
+* Fix retrieve scheduler build_all
+* Fix retrieve name_list()
+* Refacto build take_action
+* Refacto build take_action
+* Fix ContainerConfig rename
+* Scheduler work
+* Rename to shaddock
+* Change name to shaddock
+* Add tox
+* Change setup.cfg
+* Commit in the middle of intégration of oslo_config
+* add oslo-config-generator
+* Add conf.nocache
+* Refacto + opti
+* backend.start now check if Image is created before launching container. If the image is not created start method will create it first then start
+* Fix create before start
+* Begin start before create
+* Use oslo_config
+* Add help to cliff
+* Fix Docker version type
+* Fix : Try oslo.config with CONF global var
+* Try oslo.config with CONF global var
+* Add config file
+* oslo.config integration
+* oslo.config first implementation (Not working yet)
+* Fix config file by pbr
+* Fix condition for name arguments
+* pep8
+* Fix add files
+* Fix requirements
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme
+* Readme in rst
+* Readme in rst
+* fix pbr
+* add pbr + seed
+* begin scheduler
+* Refactor vue + repair restart
+* Refactor View()
+* Refactor View()
+* FIx building
+* Fix cliff show to all commands
+* Add cliff show to all commands
+* add show to start cmd
+* add show to start cmd
+* fix
+* No_cache rather ok
+* Cliff command line integrated
+* Add cliff cli + Huge refactoring get_info ApiCalls / 90
+* Core OpenStack services deploying fine
+* ajout network_mode
+* readme
+* Change output .start +docker logs cli
+* Delete frontend.old
+* Delete initconfig.py
+* Remove useless variables in Build and Start fct
+* Bug Fix
+* Fix conf
+* Add INI config
+* Update README.md
+* Update README.md
+* Fix config files location
+* fix version
+* fix oos
+* fix etc
+* rm conf
+* Fix split
+* Split in two project + rename
+* Update README.md
+* Fix Timeout
+* Fix RM
+* Fix RM
+* Fix RM
+* Fix RM
+* Fix dockerapi
+* Add restart and info
+* Actions
+* Add openstack services config files
+* bugfix
+* bugfix
+* bugfix
+* work on config
+* mv docs et change pubk
+* Fix view + refacto
+* Fix Json error for Python3 compatibility
+* Change epel install in Dockerfile
+* Update README.md
+* Update README.md
+* Fix Dockerfile
+* Fix Dockerfile
+* Fix Dockerfile
+* Fix default conf
+* fix backend.Container.start
+* Fix Container.stop et Container.remove func - Split previous crapy useless hack
+* hotfox
+* Hotfix proposed for backend.Container.get_info()
+* Try hotfix for start
+* fix backend.Container.start
+* fix frontend
+* Update README.md
+* Update readme
+* Update Readme
+* Remove useless code in build backend Update Readme
+* Fix build order in order to run the base build first The hack is: - Changed the model to authorize empty model construction - Make the 'if base' and verification if empty in the backend - Initiate a first base container build in frontend
+* Frontend ok Need to find a solution for the base build in first
+* fix init
+* Fix octopenstack imports
+<<<<<<< HEAD
+* Frontend refactoring: Add lib argparse Front/Back isolation Arguments
+=======
+* Frontend refactoring: 	Add lib argparse 	Front/Back isolation 	Arguments
+>>>>>>> origin/pep8-refacto-from-pyvenv
+* fix var name
+* Moved container information get in get_info()
+* add self arguments in Container class
+* fix get_info
+* backend refacto
+* Backend changes make 2 classes: Images and Containers problem is Images and Containers lives longer than the octopenstack execution
+* New model by dictionary object: Code refactoring Dico as class instancied by containers
+* working well
+* Add ip var for conf
+* ip get for dic
+* ip get for dic
+* ip get for dic
+* conf
+* conf
+* conf
+* begin autoconf
+* del vol config
+* del vol config
+* del vol config
+* Change Nova Dockerfile
+* setup
+
+0.3
+---
+
+* Remove backlog (add to hithub issues)
+* fix print volumes confs
+* volumes confs
+* fix config files
+* reorg config files
+* add conf files
+* add conf files
+* add conf files
+* add conf files
+* ?
+* Packaging ok, start unit test but not yet
+* init tox
+* packaging completed
+* setup.py not working
+* Add Setup.py, more more to do
+* add tox + travis
+* Fix Readme
+* sh clean
+* Start dev Init
+* fix ssh
+* doc
+* first clean sh scripts
+* Delete admin-openrc.sh
+* Delete setup_defaults.sh
+* Change defaults in config files
+* doc
+* Add doc
+* Add nocache option to config file
+* ssh fix
+* Doc
+* fix ssh
+* remove old model
+* bug fix lowercase on name var
+* model yaml now fully working
+* yaml model seems working
+* fix build view
+* dico contructor ok :D :D
+* modif view
+* bug fix timout
+* bug fix timout
+* bug fix on view
+* add select container possibility
+* add ssh for param + getip funct
+* All containers running
+* dockerfiles
+* ok rabbitmq
+* Documentation
+* Documentation
+* Doc
+* Doc
+* Doc
+* Yaml integration for model
+* STOP et RM WORKING :)
+* Documentation+
+* Documentation
+* Documentation
+* Documentation
+* fix getinfo
+* fix getinfo
+* fic control param 1
+* fic control param 1
+* bug fix
+* bug fix
+* bug fix
+* doc
+* doc
+* doc
+* bug fix
+* working, reorganised
+* not working: import error to resolve. Go 2 bed
+* rename main
+* Change README
+* Change README and name
+* add getinfo stop rm fct and parse dico for containers options
+* reorg
+* merge changes
+* lot of messy stuff
+* first commit
+* privileged
+* privileged ok
+* + privileged mode for nova
+* + privileged mode for nova
+* no cache
+* no cache
+* no cache
+* no cache
+* change exposition + no cache
+* correct ports
+* pass base in first
+* ports redirect fixed
+* bugfix
+* bugfix
+* fix ports redirect
+* remove ssh
+* fix run
+* add run cmd
+* add pile pop out for start
+* start fct fixed
+* start fct fixed
+* fix volume
+* fix volume
+* novacompute fix
+* ?
+* bugfix base
+* bug fix
+* fix volumes
+* bugfix
+* fix README
+* Add conf to README
+* Add command line arg
+* README
+* bugfix
+* bugfix
+* add create & start
+* mvc refacto
+* +mvc
+* ok w fabric
+* bugfix
+* yEd Graph
+* README
+* first commit
+* Initial commit

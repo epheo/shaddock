@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    Copyright (C) 2014 Thibaut Lapierre <root@epheo.eu>. All Rights Reserved.
+#    Copyright (C) 2014 Thibaut Lapierre <git@epheo.eu>. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -16,32 +16,37 @@
 #    under the License.
 
 from shaddock.drivers.docker import api as dockerapi
-from shaddock import model
+from shaddock.model import ModelDefinition
 import sys
 
 
 class Container(object):
+    """Instance a defined container
+
+    This class instance a Docker container depending on its
+    name and model definition.
+    The basics Docker methods are implemented as well as a
+    Shaddock's specific one that return the information of 
+    the concerned container.
+
+    Shaddock keep no tracks of any Container ID and rely on no
+    databases. THe containers are retrieve from their names.
+    """
+
     def __init__(self, service_name, app_args):
         self.app_args = app_args
         # input_name can ba a tag or a name
         self.input_name = service_name
-        self.cfg = model.ContainerConfig(service_name, self.app_args)
-        self.tag = self.cfg.tag
-        self.name = self.cfg.name
-        self.host = self.cfg.host
-        self.cluster_hosts = self.cfg.cluster_hosts
+        model = ModelDefinition(self.app_args)
+        self.cfg = model.get_service_args(service_name)
+        self.tag = self.cfg['tag']
+        self.name = self.cfg['name']
+        self.host = self.cfg['host']
+        self.cluster_hosts = self.cfg['cluster_hosts']
 
-        if self.cfg.host is None:
-            docker_client = dockerapi.DockerApi(self.app_args)
-            self.docker_api = docker_client.api
-        else:
-            self.api = model.DockerConfig(self.host, self.app_args,
-                    self.cluster_hosts)
-            args_url = self.app_args.docker_host
-            self.app_args.docker_host = self.api.url
-            docker_client = dockerapi.DockerApi(self.app_args)
-            self.docker_api = docker_client.api
-            self.app_args.docker_host = args_url
+        api_cfg = self.cfg['api_cfg']
+        docker_client = dockerapi.DockerApi(self.app_args, api_cfg)
+        self.docker_api = docker_client.api
 
         info = self.get_info()
         for attr in info.keys():
@@ -55,13 +60,14 @@ class Container(object):
     def create(self):
         print('Creating container: {}'.format(self.name))
         c_id = self.docker_api.create_container(
-            image=self.cfg.tag,
-            name=self.name,
+            image=self.cfg['tag'],
+            name=self.cfg['name'],
             detach=False,
-            ports=self.cfg.ports,
-            environment=self.cfg.env,
-            volumes=self.cfg.volumes,
-            hostname=self.cfg.name)
+            ports=self.cfg['ports'],
+            environment=self.cfg['env'],
+            volumes=self.cfg['volumes'],
+            hostname=self.cfg['name'],
+            command=self.cfg['command'])
         return c_id
 
     def start(self):
@@ -70,10 +76,10 @@ class Container(object):
             self.id = container.create()
         print('Starting container: {}'.format(self.name))
         self.docker_api.start(container=self.id,
-                              binds=self.cfg.binds,
-                              port_bindings=self.cfg.ports_bindings,
-                              privileged=self.cfg.privileged,
-                              network_mode=self.cfg.network_mode)
+                              binds=self.cfg['binds'],
+                              port_bindings=self.cfg['ports_bindings'],
+                              privileged=self.cfg['privileged'],
+                              network_mode=self.cfg['network_mode'])
 
     def stop(self):
         if self.started is True:
@@ -90,22 +96,22 @@ class Container(object):
         self.docker_api.restart(self.id)
 
     def return_logs(self):
-        if self.tag is not None:
+        if self.cfg['tag'] is not None:
 
             # "Fix" in order to not use the stream generator in Python2
-            if sys.version_info > (3, 0):
-                try:
-                    for line in self.docker_api.logs(
-                                           container=self.id,
-                                           stderr=True,
-                                           stdout=True,
-                                           timestamps=False,
-                                           stream=True):
-                        print(line.decode('utf-8').rstrip())
-                except (KeyboardInterrupt, SystemExit):
-                    return True
-            else:
-
+            # if sys.version_info > (3, 0):
+            #     try:
+            #         for line in self.docker_api.logs(
+            #             container=self.id,
+            #             stderr=True,
+            #             stdout=True,
+            #             timestamps=False,
+            #             stream=True
+            #             ):
+            #             print(line.decode('utf-8').rstrip())
+            #     except (KeyboardInterrupt, SystemExit):
+            #         return True
+            # else:
                 line = self.docker_api.logs(container=self.id,
                                             stderr=True,
                                             stdout=True,
