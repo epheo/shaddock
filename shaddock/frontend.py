@@ -22,7 +22,7 @@ from cliff.show import ShowOne
 from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
-from shaddock import model
+from shaddock.model import ModelDefinition
 from shaddock import scheduler
 import time
 
@@ -201,7 +201,9 @@ class List(Lister):
         #imageslist = dockerchecks.list(self.app_args)
 
         l = ()
-        for svc in model.get_services_list(self.app_args):
+        model = ModelDefinition(self.app_args)
+
+        for svc in model.get_services_list():
             b = dockercontainer.Container(svc['name'],
                                           self.app_args)
             """Return the container id, but not used for now.

@@ -19,7 +19,8 @@ from operator import itemgetter
 from shaddock import checks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.drivers.docker import image as dockerimage
-from shaddock import model
+from shaddock.model import ModelDefinition
+from shaddock.model import TemplateFileError
 import time
 
 
@@ -28,11 +29,12 @@ class Scheduler(object):
         self.app_args = app_args
         self.docker_host = app_args.docker_host
         self.docker_version = app_args.docker_version
-        self.services_list = model.get_services_list(self.app_args)
+        model = ModelDefinition(self.app_args)
+        self.services_list = model.get_services_list()
         try:
             self.services_list.sort(key=itemgetter('priority'))
         except KeyError:
-            raise model.TemplateFileError(
+            raise TemplateFileError(
                 "In order to use the scheduler functionality, all the "
                 "services from your model need to have the priority "
                 "argument defined. At least one of your services does "

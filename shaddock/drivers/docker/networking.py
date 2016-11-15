@@ -21,9 +21,10 @@ from shaddock import model
 # https://docker-py.readthedocs.io/en/latest/networks/
 
 class Network(object):
-    """Instance a defined container
+    """Instance a defined Docker Network
 
-    This class instance a Docker network 
+    This class instance a defined Docker network 
+
     """
 
     def __init__(self, net_name):
