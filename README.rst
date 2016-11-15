@@ -108,6 +108,8 @@ How to define a **service**
         KEYSTONE_HOST_IP: '{{ your_ip }}'
         GLANCE_DBPASS: '{{ your_ip }}'
         GLANCE_PASS: '{{ your_ip }}'
+      command: "glance-api --log-file=/var/log/glance/glance-api.log"
+
 
 How does the **scheduler** works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,11 +118,10 @@ The Shaddock scheduler will ensure that all the requirements you provide are mat
 
 You can check:
 - A container status
-- If a container listen or don't listen on a port (tcp or udp)
-- The value returned by a http get
+- If a container listen on a port (tcp or udp)
+- The return of a http GET
 
 You can also specify the number of retry and the time to wait before 2 checks.
-
 
 .. code:: yaml
 
@@ -146,17 +147,20 @@ You can then configure your hosts in your cluster defintion.
 .. code-block:: yaml
 
    hosts:
-     - name: localhost
-       url: unix://var/run/docker.sock
-     
-     - name: node001
-       url: tcp://10.0.42.1:4243
+      - name: node001-socket
+        url: unix://var/run/docker.sock
+      
+      - name: node002-tcp
+        url: tcp://127.0.0.1:2376
+        verion: 1.12
 
-     - name: node002
-       url: tcp://10.0.42.2:4243
-
-The TLS options are currently only available via the CLI or the environment 
-variables but will be added to the model in the next milestone.
+      - name: node003-tls
+        url: tcp://127.0.0.1:2376
+        tls: False
+        cert_path: None
+        key_path: None
+        cacert_path: None
+        tls_verify: False
 
 
 CLI usage:
@@ -246,7 +250,7 @@ Without installation but require the docker API to listen on a tcp port.
 
 .. code:: bash
 
-    docker run --rm -i -v examples:/examples --env DOCKER_HOST="https://<docker_api>:2376" --env TEMPLATE_FILE=/examples/openstack.yml -t shaddock/shaddock
+    docker run --rm -i -v shaddock/tests/model/:/model --env DOCKER_HOST="https://<your_host>:2376" --env TEMPLATE_FILE=/model/service-tests.yml -t shaddock/shaddock
 
 
 
@@ -268,15 +272,16 @@ OpenStack Official Documentation: http://docs.openstack.org/
 Help
 ~~~~
 
-**Set up the Docker remote API:**
+**Set up the Docker API to listen on tcp:**
 
 refs: https://docs.docker.com/reference/api/docker_remote_api/
 
 
 .. code:: bash
 
-    cat /etc/default/docker.io
-    DOCKER_OPTS="-H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock"
+    cat /usr/lib/systemd/system/docker.service |grep ExecStart
+
+    ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376
 
 
 **Docker installation:**

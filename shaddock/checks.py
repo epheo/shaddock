@@ -18,7 +18,7 @@
 import requests
 from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker import container as dockercontainer
-from shaddock import model
+from shaddock.model import ModelDefinition
 import socket
 
 
@@ -79,8 +79,9 @@ class Checks(object):
                                           "{}".format(str(definition)))
 
     def docker_check(self):
-        cfg = model.ContainerConfig(self.param['name'], self.app_args)
-        api_cfg = cfg.api_cfg
+        model = ModelDefinition(self.app_args)
+        cfg = model.get_service_args(self.param['name'])
+        api_cfg = cfg['api_cfg']
         return dockerchecks.check(self.app_args, self.param, api_cfg)
 
     def port_check(self):

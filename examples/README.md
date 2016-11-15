@@ -1,1 +1,4 @@
-git clone https://github.com/epheo/shaddock-openstack.git
+
+---
+
+https://github.com/epheo/shaddock-openstack.git

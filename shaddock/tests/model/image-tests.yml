@@ -1,0 +1,46 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+#
+# This model use the following symlink hierarchy to test different
+# paths and image names.
+# .
+# ├── testdir
+# │   └── testuser
+# │       └── arch_base
+# │           └── Dockerfile
+# └── _testdir
+#     ├── another_testuser
+#     │   ├── another_arch_base -> ../../testdir/testuser/arch_base
+#     │   └── arch_base -> ../../testdir/testuser/arch_base
+#     └── testuser
+#         └── arch_base -> ../../testdir/testuser/arch_base
+# 
+# shaddock -f shaddock/tests/model/image-tests.yml --debug -vvv build all
+# shaddock -f shaddock/tests/model/image-tests.yml --debug -vvv start all
+
+---
+
+clusters: 
+
+  - name: img-cluster0
+    images: images/testdir
+    services:     
+      - name: service001
+        image: testuser/arch_base:latest
+        priority: 0
+
+  - name: img-cluster1
+    images: images/_testdir/
+    services:
+      - name: service002
+        image: testuser/arch_base:latest
+        priority: 10
+
+      - name: service003
+        image: another_testuser/arch_base:latest
+        priority: 20
+
+      - name: service004
+        image: another_testuser/another_arch_base:latest
+        priority: 30
