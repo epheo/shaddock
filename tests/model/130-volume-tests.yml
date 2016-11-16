@@ -11,7 +11,7 @@ clusters:
     services:
       - name: attach-volume-test
         image: testuser/arch_base:latest
-        priority: 100
+        priority: 130
         volumes:
           - mount: /tmp
             host_dir: /tmp

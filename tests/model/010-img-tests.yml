@@ -30,17 +30,21 @@ clusters:
         image: testuser/arch_base:latest
         priority: 0
 
-  - name: img-cluster1
+      - name: service002
+        image: testuser/netcat:latest
+        priority: 0
+
+  - name: img-cluster10
     images: images/_testdir/
     services:
-      - name: service002
+      - name: service011
         image: testuser/arch_base:latest
         priority: 10
 
-      - name: service003
+      - name: service012
         image: another_testuser/arch_base:latest
         priority: 20
 
-      - name: service004
+      - name: service013
         image: another_testuser/another_arch_base:latest
         priority: 30

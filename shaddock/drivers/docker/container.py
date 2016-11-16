@@ -17,7 +17,6 @@
 
 from shaddock.drivers.docker import api as dockerapi
 from shaddock.model import ModelDefinition
-import sys
 
 
 class Container(object):
@@ -26,7 +25,7 @@ class Container(object):
     This class instance a Docker container depending on its
     name and model definition.
     The basics Docker methods are implemented as well as a
-    Shaddock's specific one that return the information of 
+    Shaddock's specific one that return the information of
     the concerned container.
 
     Shaddock keep no tracks of any Container ID and rely on no
@@ -41,8 +40,6 @@ class Container(object):
         self.cfg = model.get_service_args(service_name)
         self.tag = self.cfg['tag']
         self.name = self.cfg['name']
-        self.host = self.cfg['host']
-        self.cluster_hosts = self.cfg['cluster_hosts']
 
         api_cfg = self.cfg['api_cfg']
         docker_client = dockerapi.DockerApi(self.app_args, api_cfg)

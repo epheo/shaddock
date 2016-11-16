@@ -113,12 +113,13 @@ class ShaddockShell(App):
             help='Show tracebacks on errors.',
         )
         parser.add_argument(
-            '-H', '--host',
+            '-i', '--url',
             action='store',
-            dest='docker_host',
-            default=self.env('DOCKER_HOST',
-                             default='unix://var/run/docker.sock'),
-            help='IP/hostname to the Docker API.  (Env: DOCKER_HOST)'
+            dest='docker_url',
+            default=self.env('DOCKER_URL',
+                             default=None),
+            help="Force a specific host url API."
+                 "(Env: DOCKER_URL='tcp://127.0.0.1:2376')"
         )
         parser.add_argument(
             '--tlscert',
@@ -126,7 +127,8 @@ class ShaddockShell(App):
             dest='docker_cert_path',
             default=self.env('DOCKER_CERT_PATH',
                              default=None),
-            help='Path to TLS certificate file.  (Env: DOCKER_CERT_PATH)'
+            help="Path to TLS certificate file."
+                 "(Env: DOCKER_CERT_PATH=/path/to)"
         )
         parser.add_argument(
             '--tlskey',
@@ -134,7 +136,7 @@ class ShaddockShell(App):
             dest='docker_key_path',
             default=self.env('DOCKER_KEY_PATH',
                              default=None),
-            help='Path to TLS key file.  (Env: DOCKER_KEY_PATH)'
+            help='Path to TLS key file.  (Env: DOCKER_KEY_PATH=/path/to)'
         )
         parser.add_argument(
             '--tlscacert',
@@ -143,7 +145,7 @@ class ShaddockShell(App):
             default=self.env('DOCKER_CACERT_PATH',
                              default=None),
             help='Trust only remotes providing a certificate signed by the'
-                 'CA given here.  (Env: DOCKER_CACERT_PATH)'
+                 'CA given here.  (Env: DOCKER_CACERT_PATH=/path/to)'
         )
         parser.add_argument(
             '--tlsverify',
@@ -151,7 +153,8 @@ class ShaddockShell(App):
             dest='docker_tls_verify',
             default=self.env('DOCKER_TLS_VERIFY',
                              default=False),
-            help='Use TLS and verify the remote.  (Env: DOCKER_TLS_VERIFY)'
+            help='Use TLS and verify the remote.'
+                 '(Env: DOCKER_TLS_VERIFY=True)'
         )
         parser.add_argument(
             '--tls',
@@ -159,7 +162,8 @@ class ShaddockShell(App):
             dest='docker_tls',
             default=self.env('DOCKER_TLS',
                              default=False),
-            help='Use TLS; implied by tls-verify flags.  (Env: DOCKER_TLS)'
+            help='Use TLS; implied by tls-verify flags.'
+                 '(Env: DOCKER_TLS=True)'
         )
         parser.add_argument(
             '--boot2docker',
@@ -167,7 +171,7 @@ class ShaddockShell(App):
             dest='docker_boot2docker',
             default=self.env('DOCKER_BOOT2DOCKER',
                              default=False),
-            help='Use Boot2Docker TLS conf.  (Env: DOCKER_BOOT2DOCKER) \n'
+            help='Use Boot2Docker TLS conf.  (Env: DOCKER_BOOT2DOCKER=True) \n'
                  'You should first:\n'
                  '\"eval $(sudo docker-machine env machine_name)\"'
         )
@@ -183,18 +187,18 @@ class ShaddockShell(App):
             '-f', '--template-file',
             action='store',
             dest='template_file',
-            default=self.env('TEMPLATE_FILE',
+            default=self.env('SHADDOCK_MODEL',
                              default=None),
-            help='Template file to use. (Env: TEMPLATE_FILE)'
+            help='Template file to use. (Env: SHADDOCK_MODEL=/path/to)'
         )
         parser.add_argument(
             '-d', '--images-dir',
             action='store',
             dest='images_dir',
-            default=self.env('IMAGES_DIR',
+            default=self.env('SHADDOCK_IMG_DIR',
                              default=None),
             help=('Directory to build Docker images from.'
-                  '(Env: IMAGES_DIR)')
+                  '(Env: SHADDOCK_IMG_DIR)')
         )
         return parser
 
@@ -215,7 +219,7 @@ class ShaddockShell(App):
             'logs': shaddock.frontend.Logs,
             'stop': shaddock.frontend.Stop,
             'restart': shaddock.frontend.Restart,
-            'remove': shaddock.frontend.Remove,
+            'rm': shaddock.frontend.Remove,
             'ps': shaddock.frontend.List,
             'info': shaddock.frontend.Show,
             'pull': shaddock.frontend.Pull
@@ -240,6 +244,7 @@ class ShaddockShell(App):
 
 def main(argv=sys.argv[1:]):
     return ShaddockShell().run(argv)
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))

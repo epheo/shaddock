@@ -42,12 +42,14 @@ def check(app_args, param, api_cfg):
     return ret
 
 
-#def list(app_args, api_cfg):
-#
-#    docker_client = dockerapi.DockerApi(app_args, api_cfg)
-#    docker_api = docker_client.api
-#
-#    return docker_api.images()
-#
-#    This fct is used by the frontend List cmd which is currenlty not
-#    implemented for multi_host.
+def images_list(app_args, api_cfg):
+    """Return all the images as a list
+
+    This fct is used by the frontend List cmd which is currenlty not
+    implemented for multi_host.
+    """
+
+    docker_client = dockerapi.DockerApi(app_args, api_cfg)
+    docker_api = docker_client.api
+
+    return docker_api.images()

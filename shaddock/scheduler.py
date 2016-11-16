@@ -27,8 +27,6 @@ import time
 class Scheduler(object):
     def __init__(self, app_args):
         self.app_args = app_args
-        self.docker_host = app_args.docker_host
-        self.docker_version = app_args.docker_version
         model = ModelDefinition(self.app_args)
         self.services_list = model.get_services_list()
         try:

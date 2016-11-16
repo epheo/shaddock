@@ -22,16 +22,13 @@ import sys
 
 
 class Image(object):
-    
+
     def __init__(self, service_name, app_args):
         self.app_args = app_args
-        self.docker_host = app_args.docker_host
-        self.docker_version = app_args.docker_version
         model = ModelDefinition(self.app_args)
         self.cfg = model.get_service_args(service_name)
-        api_cfg = self.cfg['api_cfg']
-        docker_client = dockerapi.DockerApi(app_args, 
-                self.cfg['api_cfg'])
+        docker_client = dockerapi.DockerApi(app_args,
+                                            self.cfg['api_cfg'])
         self.docker_api = docker_client.api
 
     def build(self, nocache):

@@ -49,6 +49,7 @@ The Shaddock YAML definiton model
              env:
                GIT_URL: https://github.com/openstack/nova.git
                GIT_BRANCH: '{{ git_branch }}'
+             command: builder.sh
    
 
 Using the !include functionality
@@ -169,56 +170,6 @@ refs: http://jinja.pocoo.org/
 CLI usage:
 ----------
 
-.. code:: bash
-
-    shaddock --help
-
-
-.. code:: raw
-
-    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]
-                    [-H DOCKER_HOST] [--tlscert DOCKER_CERT_PATH]
-                    [--tlskey DOCKER_KEY_PATH] [--tlscacert DOCKER_CACERT_PATH]
-                    [--tlsverify DOCKER_TLS_VERIFY] [--tls DOCKER_TLS]
-                    [--docker-version DOCKER_VERSION] [-f TEMPLATE_FILE]
-                    [-d IMAGES_DIR]
-
-
-.. code:: raw
-
-    optional arguments:
-      --version             Show program's version number and exit.
-      -v, --verbose         Increase verbosity of output. Can be repeated.
-      --log-file LOG_FILE   Specify a file to log output. Disabled by default.
-      -q, --quiet           Suppress output except warnings and errors.
-      -h, --help            Show this help message and exit.
-      --debug               Show tracebacks on errors.
-      -H DOCKER_HOST, --host DOCKER_HOST
-                            IP/hostname to the Docker API. (Env: DOCKER_HOST)
-      --tlscert DOCKER_CERT_PATH
-                            Path to TLS certificate file. (Env: DOCKER_CERT_PATH)
-      --tlskey DOCKER_KEY_PATH
-                            Path to TLS key file. (Env: DOCKER_KEY_PATH)
-      --tlscacert DOCKER_CACERT_PATH
-                            Trust only remotes providing a certificate signed by
-                            theCA given here. (Env: DOCKER_CACERT_PATH)
-      --tlsverify DOCKER_TLS_VERIFY
-                            Use TLS and verify the remote. (Env:
-                            DOCKER_TLS_VERIFY)
-      --tls                 Use TLS; implied by tls-verify flags. (Env:
-                            DOCKER_TLS)
-      --boot2docker         Use Boot2Docker TLS conf. (Env: DOCKER_BOOT2DOCKER)
-                            You should first: "eval $(sudo docker-machine env
-                            machine_name)"
-      --docker-version DOCKER_VERSION
-                            Docker API version number (Env: DOCKER_VERSION)
-      -f TEMPLATE_FILE, --template-file TEMPLATE_FILE
-                            Template file to use. (Env: TEMPLATE_FILE)
-      -d IMAGES_DIR, --images-dir IMAGES_DIR
-                            Directory to build Docker images from.(Env:
-                            IMAGES_DIR)
-
-
 .. code:: raw
 
     Commands:
@@ -237,11 +188,39 @@ CLI usage:
       stop           Stop a container
 
 
+You can force a certain host API via the CLI or environment variables as well, 
+both will take precedence over any host defintion from the model.
+
+
+.. code:: raw
+
+    usage: shaddock [--version] [-v] [--log-file LOG_FILE] [-q] [--debug]
+
+                    [-f TEMPLATE_FILE] [-d IMAGES_DIR]
+
+                    [-i --host] [--docker-version ]
+                    [--tls ] [--tlscert ] [--tlskey ]
+                    [--tlsverify ] [--tlscacert ]  
+
+
+.. code:: bash
+
+      export DOCKER_HOST='tcp://127.0.0.1:2376'
+      export DOCKER_VERSION=1.12
+
+      export DOCKER_TLS=True
+      export DOCKER_CERT_PATH=/path/to
+      export DOCKER_KEY_PATH=/path/to
+
+      export DOCKER_TLS_VERIFY=True
+      export DOCKER_CACERT_PATH=/path/to
+
+
 Alternative configuration and other systems
 -------------------------------------------
 
-Docker Machine and Mac OS X support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Docker Machine and OS X support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Please use `--boot2docker`
 
 You may want to eval `$(sudo docker-machine env machine_name)"` first.
@@ -260,17 +239,6 @@ Help
 ~~~~
 **Set up the Docker API to listen on tcp:**
 refs: https://docs.docker.com/reference/api/docker_remote_api/
-
-
-.. code:: bash
-
-    cat /usr/lib/systemd/system/docker.service |grep ExecStart
-
-    ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376
-
-
-**Docker installation:**
-refs: https://docs.docker.com/installation/
 
 
 Informations

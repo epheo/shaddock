@@ -240,6 +240,9 @@ class ModelDefinition(object):
         # Host API Definition:
         #
         api_cfg = {}
+        none_args = ['cert_path', 'key_path', 'cacert_path', 'boot2docker']
+        false_args = ['tls_verify', 'tls']
+
         try:
             api_cfg = [api for api in svc_args['cluster_hosts'] if
                        api['name'] == svc_args['host']]
@@ -253,15 +256,13 @@ class ModelDefinition(object):
                 api_cfg['url']
             except KeyError:
                 raise TemplateFileError("Your Host definition have no"
-                                        " matching URL")
-
-            for key in ['cert_path', 'key_path', 'cacert_path']:
+                                        " 'url': field")
+            for key in none_args:
                 try:
                     api_cfg[key]
                 except KeyError:
                     api_cfg[key] = None
-
-            for key in ['tls_verify', 'tls']:
+            for key in false_args:
                 try:
                     api_cfg[key]
                 except KeyError:
@@ -275,11 +276,14 @@ class ModelDefinition(object):
         except IndexError:
             raise TemplateFileError(
                 "There is no Docker Host definition containing"
-                " 'name: {}' in model.".format(svc_args['host']))
-        except KeyError:
-            api_cfg = 'undefined'
-        except TypeError:
-            api_cfg = 'undefined'
+                " 'name: {}' in your model.".format(svc_args['host']))
+        except(KeyError, TypeError):
+            api_cfg['url'] = 'unix://var/run/docker.sock'
+            api_cfg['version'] = '1.12'
+            for key in none_args:
+                api_cfg[key] = None
+            for key in false_args:
+                api_cfg[key] = False
 
         svc_args['api_cfg'] = api_cfg
 

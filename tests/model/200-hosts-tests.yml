@@ -15,7 +15,7 @@ clusters:
 
   - name: host-cluster1
     images: images/testdir/
-    hosts: !include hosts/all.yml
+    hosts: !include site01/hosts_dc01.yml
     services:
       - name: service002
         image: testuser/arch_base:latest

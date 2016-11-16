@@ -19,6 +19,7 @@ import requests
 from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker import container as dockercontainer
 from shaddock.model import ModelDefinition
+from shaddock.model import TemplateFileError
 import socket
 
 
@@ -42,8 +43,8 @@ class Checks(object):
         # We Can't define name and host at the same time
         if ({'host', 'name'}.isdisjoint(set(definition.keys())) or
                 {'host', 'name'}.issubset(set(definition.keys()))):
-            raise model.TemplateFileError("Wrong check definition: "
-                                          "{}".format(str(definition)))
+            raise TemplateFileError("Wrong check definition: "
+                                    "{}".format(str(definition)))
 
         for opt in definition.keys():
             self.param[opt] = definition[opt]
@@ -51,9 +52,9 @@ class Checks(object):
 
         # Docker check
         if set(definition.keys()) in [{'name'}, {'name', 'status'},
-                {'name', 'status', 'retry', 'sleep'},
-                {'name', 'status', 'sleep'},
-                {'name', 'status', 'retry'}]:
+                                      {'name', 'status', 'retry', 'sleep'},
+                                      {'name', 'status', 'sleep'},
+                                      {'name', 'status', 'retry'}]:
             return self.docker_check()
 
         # If tcp or http type: we need to get the ip of the corresponding
@@ -75,8 +76,8 @@ class Checks(object):
         elif self.param['type'] in ['http', 'https']:
             return self.http_check()
         else:
-            raise model.TemplateFileError("Wrong check definition: "
-                                          "{}".format(str(definition)))
+            raise TemplateFileError("Wrong check definition: "
+                                    "{}".format(str(definition)))
 
     def docker_check(self):
         model = ModelDefinition(self.app_args)

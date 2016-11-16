@@ -19,6 +19,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+local/
 bin/
 lib64/
 parts/

@@ -1,19 +1,22 @@
 
 # Functional Testing definition model for Shaddock.
 # =================================================
+# Jinja2 rendering testing
 
 ---
 
 clusters: 
 
-  - name: svc-cluster1
-    vars: !include vars/default.yml
+  - name: vars-cluster1
+    vars: 
+      !include site01/test-variables01.yml
+    vars:
+      !include site01/test-variables02.yml
     images: images/testdir
-
     services:
       - name: env-test
         image: testuser/arch_base:latest
-        priority: 120
+        priority: 400
         env:
           VAR001: '{{ var_001 }}'
         command: "env"

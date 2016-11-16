@@ -1,6 +1,32 @@
 CHANGES
 =======
 
+* PEP8 and tests
+* PEP8 + Fix API TLS
+* Move tests
+* Write tests
+* Model refactoring
+* Refactoring multi-hosts
+* Quick and dirty fix for checks in case of retry or sleep
+* Update jinja2 requirement (again)
+* Add jinja2 requirement
+* Add jinja2 requirement
+* Flake and pepe8 refacto
+* Try catch list frontend
+* Documentation in README Commenting Fix image_dir from model and CLI
+* Remove pyvenv dir
+* Correction IndentationError
+* Update Authors and requirements
+* Add Image definition from model Add multiple try catch errors Fix allow both definition of images and hosts by cli arg and model Fix Host display in list when no host specified (localhost)
+* Add Jinja2 templating possibility
+* Add hosts autoresolutions and include fonction, Services automaticaly takes hosts url from file in the model
+* Add clusters definition
+* gitignore
+* pep8
+* Add example infrastructure.yml
+* Add mode ro for volumes
+* adds the ability to split the infrastructure on multiple nodes
+* adds the ability to split the infrastructure on multiple nodes
 * Fix sed command to replace the right string
 * merge add_services
 * merge
@@ -70,7 +96,7 @@ CHANGES
 * Fix checks
 * Add env vars + set_ip.sh
 * fix
-* DONE: - Change ENV variables places - Merge infrastructure and configuration.yml - Remove name dependencie on infratsructure.yaml - Add options images_dir and template_file - app_args propagation (is it a good thing?)
+* DONE: 	- Change ENV variables places 	- Merge infrastructure and configuration.yml 	- Remove name dependencie on infratsructure.yaml 	- Add options images_dir and template_file 	- app_args propagation (is it a good thing?)
 * Update README.rst
 * Update README.rst
 * pull all done
@@ -323,11 +349,7 @@ CHANGES
 * Frontend ok Need to find a solution for the base build in first
 * fix init
 * Fix octopenstack imports
-<<<<<<< HEAD
-* Frontend refactoring: Add lib argparse Front/Back isolation Arguments
-=======
 * Frontend refactoring: 	Add lib argparse 	Front/Back isolation 	Arguments
->>>>>>> origin/pep8-refacto-from-pyvenv
 * fix var name
 * Moved container information get in get_info()
 * add self arguments in Container class

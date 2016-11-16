@@ -11,7 +11,7 @@ clusters:
     services:
       - name: bind-ports-test
         image: testuser/arch_base:latest
-        priority: 110
+        priority: 300
         ports:
           - 1234
           - 4321
