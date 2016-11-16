@@ -17,7 +17,6 @@
 
 from jinja2 import Template
 import os.path
-import re
 import yaml
 
 
@@ -26,7 +25,7 @@ class TemplateFileError(Exception):
 
 
 class Loader(yaml.Loader):
-    """Include 
+    """Include
 
     This class change the Yaml Load fct to allow file inclusion
     using the !include keywork.
@@ -82,17 +81,16 @@ class ModelDefinition(object):
             cluster_list.append(cluster)
         return cluster_list
 
-
     def get_services_list(self):
         """Return a list of services
-    
+
         This method is returning a list of all the services from all
         the clusters.
         It also include in the service definition a few elements from
-        the parent cluster for future use (The hosts list and 
+        the parent cluster for future use (The hosts list and
         image dir).
-        
-        In the future we should change this one by "get_all_svc" and 
+
+        In the future we should change this one by "get_all_svc" and
         create a new fct to return all the services from one specific
         cluster.
         """
@@ -136,10 +134,9 @@ class ModelDefinition(object):
 
         return clu_args
 
-
     def get_service_args(self, name):
         """This method returns a dict with the service arguments.
-        
+
         """
 
         svc_args = {}
@@ -166,14 +163,13 @@ class ModelDefinition(object):
         # Global definition:
         #
         svc_args['name'] = name
-        
+
         for key in ['host', 'cluster_hosts', 'cluster_name',
-                'cluster_vars', 'privileged', 'env', 'command']:
+                    'cluster_vars', 'privileged', 'env', 'command']:
             try:
                 svc_args[key] = service[key]
             except KeyError:
                 svc_args[key] = None
-
 
         # Image dir definition:
         #
@@ -196,8 +192,8 @@ class ModelDefinition(object):
                 "Container definition of: '{}' in your {} is"
                 " missing the image property".format(name, template_file))
 
-        svc_args['path'] = '{}/{}'.format(svc_args['images_dir'], 
-                svc_args['tag'].split(":")[0])
+        svc_args['path'] = '{}/{}'.format(svc_args['images_dir'],
+                                          svc_args['tag'].split(":")[0])
 
         # Networking definition:
         #
@@ -218,7 +214,7 @@ class ModelDefinition(object):
         svc_args['ports_bindings'] = ports_bindings
 
         # Volume definition:
-        # 
+        #
         volumes = []
         binds = {}
         tpl_volumes = service.get('volumes')
@@ -232,7 +228,7 @@ class ModelDefinition(object):
                         ro = False
                     volumes.append(volume['mount'])
                     binds[volume['host_dir']] = {'bind': volume['mount'],
-                                                      'ro': ro}
+                                                 'ro': ro}
             except KeyError:
                 raise TemplateFileError(
                     "A container's volume definition in your"
@@ -243,22 +239,21 @@ class ModelDefinition(object):
 
         # Host API Definition:
         #
-        #
         api_cfg = {}
         try:
             api_cfg = [api for api in svc_args['cluster_hosts'] if
-                         api['name'] == svc_args['host']]
+                       api['name'] == svc_args['host']]
             if len(api_cfg) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"
                     " 'name: {}' in your model".format(name))
             api_cfg = api_cfg[0]
-            
+
             try:
                 api_cfg['url']
             except KeyError:
-                raise TemplateFileError(
-                        "Your Host definition have no matching URL")
+                raise TemplateFileError("Your Host definition have no"
+                                        " matching URL")
 
             for key in ['cert_path', 'key_path', 'cacert_path']:
                 try:
@@ -267,10 +262,10 @@ class ModelDefinition(object):
                     api_cfg[key] = None
 
             for key in ['tls_verify', 'tls']:
-               try:
-                   api_cfg[key]
-               except KeyError:
-                   api_cfg[key] = False        
+                try:
+                    api_cfg[key]
+                except KeyError:
+                    api_cfg[key] = False
 
             try:
                 api_cfg['version']
@@ -285,7 +280,7 @@ class ModelDefinition(object):
             api_cfg = 'undefined'
         except TypeError:
             api_cfg = 'undefined'
-        
-        svc_args['api_cfg'] = api_cfg 
+
+        svc_args['api_cfg'] = api_cfg
 
         return svc_args

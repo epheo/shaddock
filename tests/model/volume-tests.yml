@@ -1,0 +1,17 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+
+---
+
+clusters: 
+
+  - name: svc-cluster0
+    images: images/testdir
+    services:
+      - name: attach-volume-test
+        image: testuser/arch_base:latest
+        priority: 100
+        volumes:
+          - mount: /tmp
+            host_dir: /tmp

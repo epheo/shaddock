@@ -11,7 +11,6 @@ platform from the upstream git sources.
 
 QuickStart
 ----------
-
 .. code:: bash
 
     # Shaddock installation:
@@ -22,7 +21,7 @@ QuickStart
     git clone https://github.com/epheo/shaddock-openstack
 
     # Play with it! :
-    shaddock -f openstack-legacy.yml
+    shaddock -f openstack-deployer.yml
     (shaddock) ps
     (shaddock) build all
     (shaddock) start all
@@ -30,7 +29,6 @@ QuickStart
 
 The Shaddock YAML definiton model
 ---------------------------------
-
 .. code-block:: yaml
 
    clusters: 
@@ -42,7 +40,7 @@ The Shaddock YAML definiton model
        images: images/venv-builder/
    
        services:       
-           - name: nova
+           - name: nova-builder
              image: shaddock/generic-pyvenv-builder:latest
              priority: 10
              volumes:
@@ -53,19 +51,13 @@ The Shaddock YAML definiton model
                GIT_BRANCH: '{{ git_branch }}'
    
 
-Using the jinja2 templating functionalities
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The entire model is parsed using jinja2 before being interpreted by Shaddock,
-You can define any variables in the ***vars:*** section of a cluster definiton.
-
-refs: http://jinja.pocoo.org/
-
-
 Using the !include functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Shaddock allow you to split your definition model into multiple yaml files using the !include fonction.
+Shaddock allow you to split your definition model into multiple yaml files
+using the !include notation.
 
-This, conbined with the Jinja2 templating allow you to design very complex architectures without repetitions or loosing in readabality of your model.
+This, conbined with the templating allow you to design very complex
+architectures without repetitions or loosing in readabality of your model.
 
 
 .. code-block:: yaml
@@ -113,15 +105,16 @@ How to define a **service**
 
 How does the **scheduler** works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The Shaddock scheduler will ensure that all the requirements you provide are matched before starting a new service.
+The Shaddock scheduler will ensure that all the requirements you provide are 
+matched before starting a new service.
 
 You can check:
 - A container status
-- If a container listen on a port (tcp or udp)
-- The return of a http GET
+- If a port is open (tcp or udp)
+- The return code of a http GET
 
-You can also specify the number of retry and the time to wait before 2 checks.
+You can also specify the number of retry, the time to wait before 2 checks, and
+if the check should use the system proxy vars or not.
 
 .. code:: yaml
 
@@ -140,8 +133,8 @@ Multi-host capability
 ~~~~~~~~~~~~~~~~~~~~~
 Shaddock is able to schedule your services on different hosts accros your 
 datacenter.
-The only prerequirements for a host to be part of a Shaddock cluster is to have
-the Docker API installed and listening on a port.
+The only prerequirements for a host to be part of a Shaddock cluster is toi
+have the Docker API installed and listening on a port.
 You can then configure your hosts in your cluster defintion.
 
 .. code-block:: yaml
@@ -161,6 +154,16 @@ You can then configure your hosts in your cluster defintion.
         key_path: None
         cacert_path: None
         tls_verify: False
+
+
+Using the templating functionalities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The model definition variables {{ your_var }} are templated using Jinja2
+before being interpreted by Shaddock.
+You can define any variables value in the **vars:** section of a cluster
+definiton.
+
+refs: http://jinja.pocoo.org/
 
 
 CLI usage:
@@ -246,34 +249,16 @@ You may want to eval `$(sudo docker-machine env machine_name)"` first.
 
 Run the shaddock shell from a container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Without installation but require the docker API to listen on a tcp port.
-
 .. code:: bash
 
-    docker run --rm -i -v shaddock/tests/model/:/model --env DOCKER_HOST="https://<your_host>:2376" --env TEMPLATE_FILE=/model/service-tests.yml -t shaddock/shaddock
-
-
-
-Informations
-------------
-
-License
-~~~~~~~
-Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you
-may not use this file except in compliance with the License. You may obtain a
-copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-References
-~~~~~~~~~~
-
-Docker-py API Documentation: http://docker-py.readthedocs.org/
-OpenStack Official Documentation: http://docs.openstack.org/
+    docker run --rm -i -v shaddock/tests/model/:/model \
+        --env DOCKER_HOST="https://<your_host>:2376" \
+        --env TEMPLATE_FILE=/model/service-tests.yml \
+        -t shaddock/shaddock
 
 Help
 ~~~~
-
 **Set up the Docker API to listen on tcp:**
-
 refs: https://docs.docker.com/reference/api/docker_remote_api/
 
 
@@ -285,5 +270,20 @@ refs: https://docs.docker.com/reference/api/docker_remote_api/
 
 
 **Docker installation:**
-
 refs: https://docs.docker.com/installation/
+
+
+Informations
+------------
+License
+~~~~~~~
+Shaddock is licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You may obtain a
+copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+References
+~~~~~~~~~~
+Docker-py API Documentation: http://docker-py.readthedocs.org/
+OpenStack Official Documentation: http://docs.openstack.org/
+
+

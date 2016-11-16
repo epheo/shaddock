@@ -1,0 +1,19 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+
+---
+
+clusters: 
+
+  - name: svc-cluster1
+    vars: !include vars/default.yml
+    images: images/testdir
+
+    services:
+      - name: env-test
+        image: testuser/arch_base:latest
+        priority: 120
+        env:
+          VAR001: '{{ var_001 }}'
+        command: "env"

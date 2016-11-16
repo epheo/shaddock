@@ -1,0 +1,17 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+
+---
+
+clusters: 
+
+  - name: svc-cluster0
+    images: images/testdir
+    services:
+      - name: bind-ports-test
+        image: testuser/arch_base:latest
+        priority: 110
+        ports:
+          - 1234
+          - 4321
