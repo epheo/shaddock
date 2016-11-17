@@ -38,7 +38,7 @@ class Scheduler(object):
                 "argument defined. At least one of your services does "
                 "not have this argument set.")
 
-            self.checker = checks.Checks(self.app_args)
+        self.checker = checks.Checks(self.app_args)
 
     def build_all(self, nocache):
         for svc in self.services_list:

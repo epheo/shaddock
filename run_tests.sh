@@ -8,7 +8,7 @@ for test_scenario in 010-img-tests.yml \
                      200-hosts-tests.yml \
                      300-network-tests.yml \
                      400-jinja-tests.yml \
-                     # 500-scheduler-tests.yml
+                     500-scheduler-tests.yml
 do
   echo ""
   echo "# Running test scenario $test_scenario"
