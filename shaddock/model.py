@@ -207,9 +207,15 @@ class ModelDefinition(object):
 
         ports = service.get('ports')
         if ports is not None:
-            for port in ports:
-                portslist.append((port, 'tcp'))
-                ports_bindings[port] = ('0.0.0.0', port)
+            for portb in ports:
+                try:
+                    port, binding = portb.split(':', 1)
+                    portslist.append((port, 'tcp'))
+                    ports_bindings[port] = ('0.0.0.0', binding)
+                except AttributeError:
+                    portslist.append((portb, 'tcp'))
+                    ports_bindings[portb] = ('0.0.0.0', portb)
+
         svc_args['ports'] = portslist
         svc_args['ports_bindings'] = ports_bindings
 

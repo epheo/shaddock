@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix scheduler
 * PEP8 and tests
 * PEP8 + Fix API TLS
 * Move tests

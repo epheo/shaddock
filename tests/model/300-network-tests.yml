@@ -13,5 +13,16 @@ clusters:
         image: testuser/arch_base:latest
         priority: 300
         ports:
-          - 1234
+          - 4224
           - 4321
+      - name: bind-ports-test02
+        image: testuser/arch_base:latest
+        priority: 300
+        ports:
+          - 4234:4321
+      - name: bind-ports-test03
+        image: testuser/arch_base:latest
+        priority: 300
+        ports:
+          - "4134:4321"
+          - 4333:4323
