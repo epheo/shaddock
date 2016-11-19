@@ -26,11 +26,11 @@ from shaddock import scheduler
 
 
 class Build(Command):
-    """Build a new container"""
+    """Build a service"""
 
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         parser.add_argument(
             '--no-cache',
             action='store_true',
@@ -62,7 +62,7 @@ class Create(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         return parser
 
     def take_action(self, parsed_args):
@@ -86,7 +86,7 @@ class Start(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Start, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         return parser
 
     def take_action(self, parsed_args):
@@ -110,7 +110,7 @@ class Stop(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Stop, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         return parser
 
     def take_action(self, parsed_args):
@@ -134,7 +134,7 @@ class Restart(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Restart, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         return parser
 
     def take_action(self, parsed_args):
@@ -158,7 +158,7 @@ class Remove(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Remove, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default='all')
         return parser
 
     def take_action(self, parsed_args):

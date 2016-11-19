@@ -57,9 +57,9 @@ class ModelDefinition(object):
 
         Loader.add_constructor('!include', Loader.include)
 
-        if app_args.template_file is None:
+        if app_args.shdk_model is None:
             raise NameError("You should specify a template file with -f")
-        with open(app_args.template_file) as f:
+        with open(app_args.shdk_model) as f:
             self.model = yaml.load(f, Loader)
 
     def _jinja_render(template):
@@ -112,7 +112,7 @@ class ModelDefinition(object):
 
     def get_cluster_args(self, name):
         clu_args = {}
-        template_file = self.app_args.template_file
+        template_file = self.app_args.shdk_model
         cluster_list = self.get_cluster_list()
 
         try:
@@ -140,7 +140,7 @@ class ModelDefinition(object):
         """
 
         svc_args = {}
-        template_file = self.app_args.template_file
+        template_file = self.app_args.shdk_model
         services_list = self.get_services_list()
 
         try:
@@ -173,8 +173,8 @@ class ModelDefinition(object):
 
         # Image dir definition:
         #
-        if self.app_args.images_dir is not None:
-            svc_args['images_dir'] = self.app_args.images_dir
+        if self.app_args.shdk_imgdir is not None:
+            svc_args['images_dir'] = self.app_args.shdk_imgdir
         else:
             try:
                 svc_args['images_dir'] = os.path.join(
