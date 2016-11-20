@@ -1,6 +1,6 @@
 #!/bin/bash
 
-shaddock -f tests/model/010-img-tests.yml build all
+shaddock -f tests/model/010-img-tests.yml build
 
 for test_scenario in 010-img-tests.yml \
                      130-volume-tests.yml \
@@ -15,8 +15,8 @@ do
   echo "# ------------------------------------"
   # $1=--debug
   # $2=-vvv"
-  shaddock -f tests/model/$test_scenario $1 $2 rm all > /dev/null
-  shaddock -f tests/model/$test_scenario $1 $2 start all
-  shaddock -f tests/model/$test_scenario $1 $2 rm all > /dev/null
-  # shaddock -f tests/model/$test_scenario $opts logs all |tail -n600
+  shaddock -f tests/model/$test_scenario $1 $2 rm > /dev/null
+  shaddock -f tests/model/$test_scenario $1 $2 start
+  shaddock -f tests/model/$test_scenario $1 $2 rm > /dev/null
+  # shaddock -f tests/model/$test_scenario $opts logs |tail -n600
 done

@@ -118,7 +118,7 @@ class ShaddockShell(App):
             dest='shdk_model',
             default=self.env('SHDK_MODEL',
                              default=None),
-            help='Template file to use.)'
+            help='Template file to use.'
         )
         parser.add_argument(
             '-d', '--images-dir',
@@ -127,6 +127,14 @@ class ShaddockShell(App):
             default=self.env('SHDK_IMGDIR',
                              default=None),
             help='Directory to build Docker images from.'
+        )
+        parser.add_argument(
+            '-c', '--cluster',
+            action='store',
+            dest='shdk_cluster',
+            default=self.env('SHDK_CLUSTER',
+                             default=None),
+            help='The cluster to use (No value is all by default).'
         )
         parser.add_argument(
             '--docker-version',
@@ -214,7 +222,7 @@ class ShaddockShell(App):
             'restart': shaddock.frontend.Restart,
             'rm': shaddock.frontend.Remove,
             'ps': shaddock.frontend.List,
-            'info': shaddock.frontend.Show,
+            'show': shaddock.frontend.Show,
             'pull': shaddock.frontend.Pull
         }
 

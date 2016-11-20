@@ -12,6 +12,6 @@ clusters:
       - name: attach-volume-test
         image: testuser/arch_base:latest
         priority: 130
-        volumes:
-          - mount: /tmp
-            host_dir: /tmp
+        volumes: 
+          '/home/user1/': {'bind': '/mnt/vol2','mode': 'rw'}
+          '/var/www': {'bind': '/mnt/vol1','mode': 'ro'}

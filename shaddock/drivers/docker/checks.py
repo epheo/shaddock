@@ -15,17 +15,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from shaddock.drivers.docker import api as dockerapi
+from shaddock.drivers.docker.api import DockerApi
 
 
-def check(app_args, param, api_cfg):
-
-    docker_client = dockerapi.DockerApi(app_args, api_cfg)
-    docker_api = docker_client.api
-
+def check(param, api_cfg):
+    docker_api = DockerApi(api_cfg)
+    docker_client = docker_api.connect()
     try:
         status = [c['Status'][:2].lower()
-                  for c in docker_api.containers()
+                  for c in docker_client.containers()
                   if (c['Names'][0][1:] == param['name'])][0]
     except IndexError:
         status = 'down'
@@ -48,8 +46,6 @@ def images_list(app_args, api_cfg):
     This fct is used by the frontend List cmd which is currenlty not
     implemented for multi_host.
     """
-
-    docker_client = dockerapi.DockerApi(app_args, api_cfg)
-    docker_api = docker_client.api
-
-    return docker_api.images()
+    docker_api = DockerApi(api_cfg)
+    docker_client = docker_api.connect()
+    return docker_client.images()

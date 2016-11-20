@@ -15,8 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from shaddock.drivers.docker import api as dockerapi
-from shaddock.model import ModelDefinition
+from shaddock.drivers.docker.api import DockerApi
 
 
 class Container(object):
@@ -32,68 +31,107 @@ class Container(object):
     databases. THe containers are retrieve from their names.
     """
 
-    def __init__(self, service_name, app_args):
-        self.app_args = app_args
-        # input_name can ba a tag or a name
-        self.input_name = service_name
-        model = ModelDefinition(self.app_args)
-        self.cfg = model.get_service_args(service_name)
-        self.tag = self.cfg['tag']
-        self.name = self.cfg['name']
-
-        api_cfg = self.cfg['api_cfg']
-        docker_client = dockerapi.DockerApi(self.app_args, api_cfg)
-        self.docker_api = docker_client.api
-
-        info = self.get_info()
-        for attr in info.keys():
-            setattr(self, attr, info[attr])
-        # self.id = info['id']
-        # self.ip = info['ip']
-        # self.hostname = info['hostname']
-        # self.started = info['started']
-        # self.created = info['created']
+    def __init__(self, name, model, infos=None):
+        self.name = name
+        self.cfg = model.get_service(self.name)
+        docker_api = DockerApi(self.cfg['api_cfg'])
+        self.docker_client = docker_api.connect()
+        self.info = self._get_info(infos)
 
     def create(self):
+        """Returns (dict):
+
+        A dictionary with an image 'Id' key and a 'Warnings' key.
+        """
         print('Creating container: {}'.format(self.name))
-        c_id = self.docker_api.create_container(
-            image=self.cfg['tag'],
-            name=self.cfg['name'],
-            detach=False,
-            ports=self.cfg['ports'],
-            environment=self.cfg['env'],
-            volumes=self.cfg['volumes'],
-            hostname=self.cfg['name'],
-            command=self.cfg['command'])
-        return c_id
+        create = self.docker_client.create_container(
+            image=self.cfg['image'],
+            name=self.name,
+            ports=self.cfg.get('ports'),
+            environment=self.cfg.get('env'),
+            volumes=self.cfg.get('volumes'),
+            hostname=self.name,
+            command=self.cfg.get('command'),
+            detach=self.cfg.get('detach', False),
+            stdin_open=self.cfg.get('stdin_open', False),
+            tty=self.cfg.get('tty', False),
+            mem_limit=self.cfg.get('mem_limit'),
+            dns=self.cfg.get('dns'),
+            volumes_from=self.cfg.get('volumes_from'),
+            network_disabled=self.cfg.get('network_disabled', False),
+            entrypoint=self.cfg.get('entrypoint'),
+            user=self.cfg.get('user'),
+            cpu_shares=self.cfg.get('cpu_shares'),
+            working_dir=self.cfg.get('working_dir'),
+            domainname=self.cfg.get('domainname'),
+            memswap_limit=self.cfg.get('memswap_limit'),
+            cpuset=self.cfg.get('cpuset'),
+            host_config=self.cfg.get('host_config'),
+            mac_address=self.cfg.get('mac_address'),
+            labels=self.cfg.get('labels'),
+            volume_driver=self.cfg.get('volume_driver'),
+            stop_signal=self.cfg.get('stop_signal'),
+            networking_config=self.cfg.get('networking_config')
+            # For future release of Docker-py:
+            #
+            # mac_address=self.cfg.get('mac_address'),
+            # labels=self.cfg.get('labels'),
+            # volume_driver=self.cfg.get('volume_driver'),
+            # stop_signal=self.cfg.get('stop_signal'),
+            # networking_config=self.cfg.get('networking_config'),
+            # healthcheck=self.cfg.get('healthcheck')
+            )
+        create = create['Id']
+        return create
 
     def start(self):
-        if self.created is False:
-            container = Container(self.input_name, self.app_args)
-            self.id = container.create()
+        """Returns (dict):
+
+        A dictionary with an image 'Id' key and a 'Warnings' key.
+        """
+        if self.info.get('Id') is None:
+            self.info['Id'] = self.create()
         print('Starting container: {}'.format(self.name))
-        self.docker_api.start(container=self.id,
-                              binds=self.cfg['binds'],
-                              port_bindings=self.cfg['ports_bindings'],
-                              privileged=self.cfg['privileged'],
-                              network_mode=self.cfg['network_mode'])
+        start = self.docker_client.start(
+            container=self.info['Id'],
+            binds=self.cfg.get('binds'),
+            port_bindings=self.cfg.get('ports_bindings'),
+            privileged=self.cfg.get('privileged'),
+            network_mode=self.cfg.get('network_mode', 'bridge'),
+            lxc_conf=self.cfg.get('lxc_conf'),
+            publish_all_ports=self.cfg.get('publish_all_ports'),
+            links=self.cfg.get('links'),
+            dns=self.cfg.get('dns'),
+            dns_search=self.cfg.get('dns_search'),
+            volumes_from=self.cfg.get('volumes_from'),
+            restart_policy=self.cfg.get('restart_policy'),
+            cap_add=self.cfg.get('cap_add'),
+            cap_drop=self.cfg.get('cap_drop'),
+            devices=self.cfg.get('devices'),
+            extra_hosts=self.cfg.get('extra_hosts'),
+            read_only=self.cfg.get('read_only'),
+            pid_mode=self.cfg.get('pid_mode'),
+            ipc_mode=self.cfg.get('ipc_mode'),
+            security_opt=self.cfg.get('security_opt'),
+            ulimits=self.cfg.get('ulimits'))
+        return start
 
     def stop(self):
-        if self.started is True:
+        if self.info.get('Id') is not None:
             print('Stopping container: {}'.format(self.name))
-            self.docker_api.stop(self.id)
+            self.docker_client.stop(self.info['Id'])
 
     def remove(self):
         self.stop()
-        if self.created is True:
+        if self.info.get('Id') is not None:
             print('Removing container: {}'.format(self.name))
-            self.docker_api.remove_container(self.id)
+            self.docker_client.remove_container(self.info['Id'])
 
     def restart(self):
-        self.docker_api.restart(self.id)
+        self.docker_client.restart(self.info['Id'])
 
     def return_logs(self):
-        if self.cfg['tag'] is not None:
+        if self.cfg['image'] is not None:
 
             # "Fix" in order to not use the stream generator in Python2
             # if sys.version_info > (3, 0):
@@ -116,37 +154,17 @@ class Container(object):
                                             stream=False)
                 print(line)
 
-    def get_info(self):
-        info = {}
-        info['id'] = None
-        info['ip'] = None
-        info['hostname'] = None
-        info['started'] = False
-        info['created'] = False
-        info['status'] = 'Not Created'
-        containers_list = self.docker_api.containers(all=True)
-        if containers_list:
-            try:
-                # One item contains "Names": ["/realname"]
-                c_id, c_status = [(item['Id'], item['Status'])
-                                  for item in containers_list
-                                  if ("/" + self.name ==
-                                      str(item['Names'][0]))][0]
-            except IndexError:
-                c_id = None
-                c_status = 'Not Created'
+    def _get_info(self, containers_info=None):
+        if containers_info is None:
+            containers_info = self.docker_client.containers(all=True)
+        try:
+            # One item contains "Names": ["/realname"]
+            info = [item for item in containers_info
+                    if ("/" + self.name == str(
+                        item['Names'][0]))][0]
 
-            if c_id:
-                container_info = self.docker_api.inspect_container(c_id)
-                config = container_info['Config']
-                network = container_info['NetworkSettings']
-                info['started'] = container_info['State']['Running']
-                info['id'] = c_id
-                info['ip'] = network['IPAddress']
-                info['hostname'] = config['Hostname']
-                if c_status == "":
-                    info['status'] = 'Created'
-                else:
-                    info['status'] = c_status
-                info['created'] = True
+            info['Ip'] = None
+        except IndexError:
+            # Container is not running
+            info = {}
         return info

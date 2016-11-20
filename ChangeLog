@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Global refactoring
+* Refacto frontend
 * Add ports bindings defintion possibility
 * Fix scheduler
 * PEP8 and tests

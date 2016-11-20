@@ -19,10 +19,79 @@
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from shaddock.drivers.docker import container as dockercontainer
-from shaddock.drivers.docker import image as dockerimage
+from shaddock.drivers.docker.container import Container
 from shaddock.model import ModelDefinition
-from shaddock import scheduler
+from shaddock.scheduler import Scheduler
+
+
+class Create(ShowOne):
+    """Create a new container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Create, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.create()
+        return get_service_info(self, parsed_args)
+
+
+class Start(ShowOne):
+    """Start a new container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Start, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.start()
+        return get_service_info(self, parsed_args)
+
+
+class Stop(ShowOne):
+    """Stop a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Stop, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.stop()
+        return get_service_info(self, parsed_args)
+
+
+class Restart(ShowOne):
+    """Restart a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Restart, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.restart()
+        return get_service_info(self, parsed_args)
+
+
+class Remove(ShowOne):
+    """Remove a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Remove, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.remove()
+        return get_service_info(self, parsed_args)
 
 
 class Build(Command):
@@ -30,7 +99,7 @@ class Build(Command):
 
     def get_parser(self, prog_name):
         parser = super(Build, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
+        parser.add_argument('name', nargs='?', default=None)
         parser.add_argument(
             '--no-cache',
             action='store_true',
@@ -41,153 +110,50 @@ class Build(Command):
         return parser
 
     def take_action(self, parsed_args):
-        name = parsed_args.name
-        nocache = parsed_args.no_cache
-        if name:
-            if name == 'all':
-                print('Building all services...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.build_all(nocache)
-            else:
-                image = dockerimage.Image(name,
-                                          self.app_args)
-                image.build(nocache)
-        else:
-            raise IndexError
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.build()
         return True
 
 
-class Create(ShowOne):
-    """Create a new container"""
+class Pull(Command):
+    """Pull a container from the Docker Repository"""
 
     def get_parser(self, prog_name):
-        parser = super(Create, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
+        parser = super(Pull, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.pull()
+
+
+class Logs(Command):
+    """Display the logs of a container"""
+
+    def get_parser(self, prog_name):
+        parser = super(Logs, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
         return parser
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Creating all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.create_all()
-            else:
-                container = dockercontainer.Container(name,
-                                                      self.app_args)
-                container.create()
-        else:
-            raise IndexError
-        return get_container_info(self, name, parsed_args)
-
-
-class Start(ShowOne):
-    """Start a new container"""
-
-    def get_parser(self, prog_name):
-        parser = super(Start, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Starting all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.start_all()
-            else:
-                container = dockercontainer.Container(name,
-                                                      self.app_args)
-                container.start()
-        else:
-            raise IndexError
-        return get_container_info(self, name, parsed_args)
-
-
-class Stop(ShowOne):
-    """Stop a container"""
-
-    def get_parser(self, prog_name):
-        parser = super(Stop, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Stopping all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.stop_all()
-            else:
-                container = dockercontainer.Container(name,
-                                                      self.app_args)
-                container.stop()
-        else:
-            raise IndexError
-        return get_container_info(self, name, parsed_args)
-
-
-class Restart(ShowOne):
-    """Restart a container"""
-
-    def get_parser(self, prog_name):
-        parser = super(Restart, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Restarting all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.restart_all()
-            else:
-                container = dockercontainer.Container(name,
-                                                      self.app_args)
-                container.restart()
-        else:
-            raise IndexError
-        return get_container_info(self, name, parsed_args)
-
-
-class Remove(ShowOne):
-    """Remove a container"""
-
-    def get_parser(self, prog_name):
-        parser = super(Remove, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='all')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Removing all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.remove_all()
-            else:
-                container = dockercontainer.Container(name,
-                                                      self.app_args)
-                container.remove()
-        else:
-            raise IndexError
-        return get_container_info(self, name, parsed_args)
+        container = Container(name, self.app_args)
+        container.return_logs()
 
 
 class List(Lister):
     """Show a list of Containers.
 
-       The 'Name', 'Created', 'Started', 'IP', 'Tag',
-       'Docker-id' are printed by default.
-
        (epheo): imageslist is currently not returning anything as it
        refer to the list fct of dockerchecks and we would need to give
        to the DockerApi class a list of all Docker Hosts, interate on
        them and return a list of all images on all hosts.
-       This is currently not implemented on multihosts
+       We should implement that on multihosts
+
+       Same for Container infos:
+       We need to retrieve the container info list only once per host
+       so split it from the container object initiation.
     """
 
     def get_parser(self, prog_name):
@@ -195,39 +161,19 @@ class List(Lister):
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Status', 'Host', 'IP', 'Image')
-        # imageslist = dockerchecks.list(self.app_args)
+        columns = ('Name', 'Cluster', 'State', 'Host', 'IP', 'Image')
 
         l = ()
         model = ModelDefinition(self.app_args)
 
         for svc in model.get_services_list():
-            b = dockercontainer.Container(svc['name'],
-                                          self.app_args)
-            """Return the container id, but not used for now.
-
-            if b.id:
-                container_id = b.id[:12]
-            else:
-                container_id = b.id
-
-            # Return the image build state, but not used for now.
-
-            try:
-                img_build = [img['Created'] for img in imageslist
-                             if b.tag in img['RepoTags']][0]
-                img_build = time.strftime('%m/%d %H:%M',
-                                          time.localtime(img_build))
-            except Exception:
-                img_build = None
-            """
-
-            if 'host' in svc:
-                host = svc['host']
-            else:
-                host = 'localhost'
-
-            line = (svc['name'], b.status, host, b.ip, b.tag)
+            c = Container(svc['name'], model)
+            host = c.cfg.get('host', 'localhost')
+            ip = c.info.get('Ip')
+            tag = c.cfg.get('image')
+            cluster = c.cfg['cluster']['name']
+            state = c.info.get('State')
+            line = (svc['name'], cluster, state, host, ip, tag)
             l = l + (line, )
         return columns, l
 
@@ -237,71 +183,37 @@ class Show(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(Show, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
+        parser.add_argument('name', nargs='?', default=None)
         return parser
 
     def take_action(self, parsed_args):
-        name = parsed_args.name
-        return get_container_info(self, name, parsed_args)
+        return get_service_info(self, parsed_args)
 
 
-class Logs(Command):
-    """Display the logs of a container"""
-
-    def get_parser(self, prog_name):
-        parser = super(Logs, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        container = dockercontainer.Container(name, self.app_args)
-        container.return_logs()
-
-
-class Pull(Command):
-    """Pull a container from the Docker Repository"""
-
-    def get_parser(self, prog_name):
-        parser = super(Pull, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default='.')
-        return parser
-
-    def take_action(self, parsed_args):
-        name = parsed_args.name
-        if name:
-            if name == 'all':
-                print('Pulling all containers...')
-                schedul = scheduler.Scheduler(self.app_args)
-                schedul.pull_all()
-
-            else:
-                image = dockerimage.Image(name, self.app_args)
-                image.pull()
-        else:
-            raise IndexError
-
-
-def get_container_info(self, name, parsed_args):
-    if name == 'all':
-        columns = ('Name',)
-        data = (name,)
+def get_service_info(self, parsed_args):
+    name = parsed_args.name
+    model = ModelDefinition(self.app_args)
+    data = ()
+    columns = ()
+    if name is None:
+        for svc in model.get_services_list():
+            c = Container(svc['name'], model)
+            columns = columns + (svc['name'], )
+            status = c.info.get('Status')
+            data = data + (status, )
     else:
-        container = dockercontainer.Container(name, self.app_args)
+        container = Container(name, model)
         columns = ('Name',
                    'Created',
                    'Started',
                    'IP',
                    'Image',
                    'Docker-id')
-        if container.id:
-            c_id = container.id[:12]
-        else:
-            c_id = None
-        data = (name,
-                container.created,
-                container.started,
-                container.ip,
-                container.tag,
-                c_id)
+        if container.info.get('Id') is not None:
+            data = (name,
+                    container.info.get('Status'),
+                    container.info.get('State'),
+                    container.info.get('Ip'),
+                    container.cfg.get('image'),
+                    container.info.get('Id'))
     return columns, data

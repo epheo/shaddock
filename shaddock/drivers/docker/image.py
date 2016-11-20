@@ -16,25 +16,40 @@
 #    under the License.
 
 import json
-from shaddock.drivers.docker import api as dockerapi
-from shaddock.model import ModelDefinition
-import sys
+from shaddock.drivers.docker.api import DockerApi
 
 
 class Image(object):
 
-    def __init__(self, service_name, app_args):
-        self.app_args = app_args
-        model = ModelDefinition(self.app_args)
-        self.cfg = model.get_service_args(service_name)
-        docker_client = dockerapi.DockerApi(app_args,
-                                            self.cfg['api_cfg'])
-        self.docker_api = docker_client.api
+    def __init__(self, name, model, infos=None):
+        self.name = name
+        self.cfg = model.get_service(self.name)
+        docker_api = DockerApi(self.cfg['api_cfg'])
+        self.docker_client = docker_api.connect()
 
-    def build(self, nocache):
-        for line in self.docker_api.build(path=self.cfg['path'],
-                                          tag=self.cfg['tag'],
-                                          nocache=nocache):
+    def build(self, nocache=None):
+        for line in self.docker_client.build(
+            path=self.cfg['path'],
+            tag=self.cfg['image'],
+            quiet=False,
+            fileobj=None,
+            nocache=nocache,
+            rm=False,
+            stream=False,
+            timeout=None,
+            custom_context=False,
+            encoding=None,
+            pull=False,
+            forcerm=False,
+            dockerfile=None,
+            container_limits=None,
+            decode=False,
+            buildargs=None,
+            gzip=False,
+            # shmsize=None,
+            # labels=None
+            ):
+
             try:
                 jsonstream = json.loads(line.decode())
             except UnicodeDecodeError:
@@ -49,7 +64,7 @@ class Image(object):
     def pull(self):
         sys.stdout.write("Pulling image %s:" % self.cfg['tag']),
         sys.stdout.flush()
-        for line in self.docker_api.pull(self.cfg['tag'], stream=True):
+        for line in self.docker_client.pull(self.cfg['image'], stream=True):
             tick = '*'
             sys.stdout.write(tick)
             sys.stdout.flush()

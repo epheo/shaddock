@@ -13,16 +13,19 @@ clusters:
         image: testuser/arch_base:latest
         priority: 300
         ports:
-          - 4224
-          - 4321
+            1111: [('172.17.0.2', 1234),('172.17.0.1', 1234)]
+            2222: [('172.17.0.1', 4321),('172.17.0.1', 1234)]
+
       - name: bind-ports-test02
         image: testuser/arch_base:latest
         priority: 300
         ports:
-          - 4234:4321
+            '1111/udp': 4567
+            2222: None
+      
       - name: bind-ports-test03
         image: testuser/arch_base:latest
         priority: 300
         ports:
-          - "4134:4321"
-          - 4333:4323
+            1111: [1234, 4567]
+            4333: None

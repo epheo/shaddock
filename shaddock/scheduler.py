@@ -17,67 +17,92 @@
 
 from operator import itemgetter
 from shaddock import checks
-from shaddock.drivers.docker import container as dockercontainer
-from shaddock.drivers.docker import image as dockerimage
+from shaddock.drivers.docker.container import Container
+from shaddock.drivers.docker.image import Image
 from shaddock.model import ModelDefinition
 from shaddock.model import TemplateFileError
 import time
 
 
 class Scheduler(object):
-    def __init__(self, app_args):
-        self.app_args = app_args
-        model = ModelDefinition(self.app_args)
-        self.services_list = model.get_services_list()
-        try:
-            self.services_list.sort(key=itemgetter('priority'))
-        except KeyError:
-            raise TemplateFileError(
-                "In order to use the scheduler functionality, all the "
-                "services from your model need to have the priority "
-                "argument defined. At least one of your services does "
-                "not have this argument set.")
+    def __init__(self, app_args, name=None):
+        self.model = ModelDefinition(app_args)
+        self.services_list = self.model.get_services_list()
+        self.name = name
+        if name is None:
+            try:
+                self.services_list.sort(key=itemgetter('priority'))
+            except KeyError:
+                raise TemplateFileError(
+                    "In order to use the scheduler functionality, all the "
+                    "services from your model need to have the priority "
+                    "argument defined. At least one of your services does "
+                    "not have this argument set.")
+            self.checker = checks.Checks(app_args)
 
-        self.checker = checks.Checks(self.app_args)
+    def build(self):
+        if self.name is None:
+            for svc in self.services_list:
+                image = Image(svc['name'], self.model)
+                image.build()
+        else:
+            image = Image(self.name, self.model)
+            image.build()
 
-    def build_all(self, nocache):
-        for svc in self.services_list:
-            image = dockerimage.Image(svc['name'], self.app_args)
-            image.build(nocache)
-
-    def create_all(self):
-        for svc in self.services_list:
-            container = dockercontainer.Container(svc['name'], self.app_args)
+    def create(self):
+        if self.name is None:
+            for svc in self.services_list:
+                container = Container(svc['name'], self.model)
+                container.create()
+        else:
+            container = Container(self.name, self.model)
             container.create()
 
-    def start_all(self):
-        for svc in self.services_list:
-            container = dockercontainer.Container(svc['name'], self.app_args)
-            checks = svc.get('depends-on', [])
-            if len(checks) > 0:
-                print("Running checks before starting: {}".format(svc['name']))
-                for check in checks:
-                    self.do_check(check)
+    def start(self):
+        if self.name is None:
+            for svc in self.services_list:
+                container = Container(svc['name'], self.model)
+                checks = svc.get('depends-on', [])
+                if len(checks) > 0:
+                    print("Running checks before"
+                          "starting: {}".format(svc['name']))
+                    for check in checks:
+                        self.do_check(check)
+                container.start()
+        else:
+            container = Container(self.name, self.model)
             container.start()
 
-    def remove_all(self):
-        for svc in reversed(self.services_list):
-            container = dockercontainer.Container(svc['name'], self.app_args)
+    def remove(self):
+        if self.name is None:
+            for svc in reversed(self.services_list):
+                container = Container(svc['name'], self.model)
+                container.remove()
+        else:
+            container = Container(self.name, self.model)
             container.remove()
 
-    def pull_all(self):
-        for svc in self.services_list:
-            image = dockerimage.Image(svc['name'], self.app_args)
+    def pull(self):
+        if self.name is None:
+            for svc in self.services_list:
+                image = Image(svc['name'], self.model)
+                image.pull()
+        else:
+            image = Image(self.name, self.model)
             image.pull()
 
-    def stop_all(self):
-        for svc in reversed(self.services_list):
-            container = dockercontainer.Container(svc['name'], self.app_args)
+    def stop(self):
+        if self.name is None:
+            for svc in reversed(self.services_list):
+                container = Container(svc['name'], self.model)
+                container.stop()
+        else:
+            container = Container(self.name, self.model)
             container.stop()
 
-    def restart_all(self):
-        self.stop_all()
-        self.start_all()
+    def restart(self):
+        self.stop()
+        self.start()
 
     def do_check(self, check, retry=None):
         if retry is None:

@@ -17,7 +17,7 @@
 
 import requests
 from shaddock.drivers.docker import checks as dockerchecks
-from shaddock.drivers.docker import container as dockercontainer
+from shaddock.drivers.docker.container import Container
 from shaddock.model import ModelDefinition
 from shaddock.model import TemplateFileError
 import socket
@@ -62,8 +62,7 @@ class Checks(object):
         # starting).
         if self.param['name'] is not None:
             try:
-                c = dockercontainer.Container(self.param['name'],
-                                              self.app_args)
+                c = Container(self.param['name'], self.model)
                 self.param['host'] = c.ip
                 self.param['useproxy'] = False
                 if c.ip is None:
@@ -81,9 +80,9 @@ class Checks(object):
 
     def docker_check(self):
         model = ModelDefinition(self.app_args)
-        cfg = model.get_service_args(self.param['name'])
+        cfg = model.get_service(self.param['name'])
         api_cfg = cfg['api_cfg']
-        return dockerchecks.check(self.app_args, self.param, api_cfg)
+        return dockerchecks.check(self.param, api_cfg)
 
     def port_check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

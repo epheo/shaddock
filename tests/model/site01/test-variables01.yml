@@ -3,3 +3,9 @@
 var_001: plopplopvar001
 var_002: plopplopvar002
 
+servicelist: ['plop', 'plp2', 'plop3']
+
+servicei_yml_list: 
+  - plop
+  - plp2
+  - plop3
