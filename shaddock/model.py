@@ -20,31 +20,6 @@ import os.path
 import yaml
 
 
-class TemplateFileError(Exception):
-    pass
-
-
-class Loader(yaml.Loader):
-    """Include
-
-    This class change the Yaml Load fct to allow file inclusion
-    using the !include keywork.
-    """
-    def __init__(self, stream):
-        self._root = os.path.split(stream.name)[0]
-        super(Loader, self).__init__(stream)
-
-    def include(self, node):
-        filename = os.path.join(self._root, self.construct_scalar(node))
-        try:
-            with open(filename, 'r') as f:
-                return yaml.load(f, Loader)
-        except Exception:
-            raise TemplateFileError(
-                "The file {} you're trying to include doesn't"
-                "exist.".format(filename))
-
-
 class ModelDefinition(object):
     """Container definition
 
@@ -220,3 +195,28 @@ class ModelDefinition(object):
                     " 'name: {}' in your model.".format(service['host']))
         service['api_cfg'] = api_cfg
         return service
+
+
+class TemplateFileError(Exception):
+    pass
+
+
+class Loader(yaml.Loader):
+    """Include
+
+    This class change the Yaml Load fct to allow file inclusion
+    using the !include keywork.
+    """
+    def __init__(self, stream):
+        self._root = os.path.split(stream.name)[0]
+        super(Loader, self).__init__(stream)
+
+    def include(self, node):
+        filename = os.path.join(self._root, self.construct_scalar(node))
+        try:
+            with open(filename, 'r') as f:
+                return yaml.load(f, Loader)
+        except Exception:
+            raise TemplateFileError(
+                "The file {} you're trying to include doesn't"
+                "exist.".format(filename))

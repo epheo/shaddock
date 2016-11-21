@@ -35,7 +35,7 @@ class Scheduler(object):
             except KeyError:
                 raise TemplateFileError(
                     "In order to use the scheduler functionality, all the "
-                    "services from your model need to have the priority "
+                    "services from your model needs to have the priority "
                     "argument defined. At least one of your services does "
                     "not have this argument set.")
             self.checker = checks.Checks(app_args)
@@ -64,7 +64,7 @@ class Scheduler(object):
                 container = Container(svc['name'], self.model)
                 checks = svc.get('depends-on', [])
                 if len(checks) > 0:
-                    print("Running checks before"
+                    print("Running checks before "
                           "starting: {}".format(svc['name']))
                     for check in checks:
                         self.do_check(check)
