@@ -117,7 +117,7 @@ class ShaddockShell(App):
             action='store',
             dest='shdk_model',
             default=self.env('SHDK_MODEL',
-                             default=None),
+                             default='shaddock.yml'),
             help='Template file to use.'
         )
         parser.add_argument(
