@@ -31,7 +31,7 @@ class ShaddockShell(App):
     def __init__(self):
         super(ShaddockShell, self).__init__(
             description='Shaddock shell',
-            version='0.5.1',
+            version='0.6.0',
             command_manager=CommandManager('shaddock.cli'))
         self._set_shell_commands(self._get_commands())
 

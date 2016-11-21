@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Reduce api calls
 * refacto
 * Global refactoring
 * Refacto frontend
