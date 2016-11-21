@@ -9,7 +9,7 @@ clusters:
   - name: host-cluster0
     images: images/testdir
     services:     
-      - name: service001
+      - name: service201
         image: testuser/arch_base:latest
         priority: 200
 
@@ -17,21 +17,21 @@ clusters:
     images: images/testdir/
     hosts: !include site01/hosts_dc01.yml
     services:
-      - name: service002
+      - name: service202
         image: testuser/arch_base:latest
         priority: 210
 
-      - name: service003
+      - name: service203
         image: testuser/arch_base:latest
         host: node001-socket
         priority: 211
 
-      - name: service004
+      - name: service204
         image: testuser/arch_base:latest
         host: node002-tcp
         priority: 212
 
-      - name: service005
+      - name: service205
         image: testuser/arch_base:latest
         host: node003-tls
         priority: 213

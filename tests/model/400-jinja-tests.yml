@@ -23,7 +23,8 @@ clusters:
 
   - name: vars-cluster2
     vars: 
-      !include site01/test-variables01.yml
+      - !include 'site01/test-variables01.yml'
+      - !include 'site01/test-variables02.yml'
     images: images/testdir
     services:
       - name: out-of-jinja2

@@ -23,8 +23,8 @@ QuickStart
     # Play with it! :
     shaddock -f openstack-deployer.yml
     (shaddock) ps
-    (shaddock) build all
-    (shaddock) start all
+    (shaddock) build 
+    (shaddock) start 
 
 
 The Shaddock YAML definiton model

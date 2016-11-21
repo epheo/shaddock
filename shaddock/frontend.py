@@ -22,6 +22,7 @@ from cliff.show import ShowOne
 from shaddock.drivers.docker.container import Container
 from shaddock.model import ModelDefinition
 from shaddock.scheduler import Scheduler
+from shaddock.drivers.docker.api import DockerApi
 
 
 class Create(ShowOne):
@@ -161,19 +162,46 @@ class List(Lister):
         return parser
 
     def take_action(self, parsed_args):
-        columns = ('Name', 'Cluster', 'State', 'Host', 'IP', 'Image')
 
-        l = ()
+        hl = []
         model = ModelDefinition(self.app_args)
+        for cluster in model._get_clusters_list():
+            if cluster.get('hosts') is not None:
+                for host in cluster.get('hosts'):
+                    hl.append(host)
 
+        # Dicts dedup (kind of set of dicts):
+        #
+        # The strategy is to convert the list of dictionaries to a list of
+        # tuples where the tuples contain the items of the dictionary. Since
+        # the tuples can be hashed, you can remove duplicates using set and,
+        # after that, re-create the dictionaries from tuples with dict.
+        #
+        # hl is the original list
+        # d is one of the dictionaries in the list
+        # t is one of the tuples created from a dictionary
+
+        hl = [dict(t) for t in set([tuple(d.items()) for d in hl])]
+
+        infos = []
+        print(hl)
+        for host in hl:
+            docker_api = DockerApi(host)
+            docker_client = docker_api.connect()
+            host_info = docker_client.containers(all=True)
+            for info in host_info:
+                infos.append(info)
+
+        columns = ('Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
+        l = ()
         for svc in model.get_services_list():
-            c = Container(svc['name'], model)
+            c = Container(svc['name'], model, infos)
             host = c.cfg.get('host', 'localhost')
             ip = c.info.get('Ip')
             tag = c.cfg.get('image')
             cluster = c.cfg['cluster']['name']
             state = c.info.get('State')
-            line = (svc['name'], cluster, state, host, ip, tag)
+            line = (cluster, svc['name'], state, host, ip, tag)
             l = l + (line, )
         return columns, l
 

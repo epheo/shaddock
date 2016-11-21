@@ -23,28 +23,28 @@
 
 clusters: 
 
-  - name: img-cluster0
+  - name: img-cluster10
     images: images/testdir
     services:     
-      - name: service001
+      - name: service011
         image: testuser/arch_base:latest
         priority: 0
 
-      - name: service002
+      - name: service012
         image: testuser/netcat:latest
         priority: 0
 
-  - name: img-cluster10
+  - name: img-cluster11
     images: images/_testdir/
     services:
-      - name: service011
+      - name: service013
         image: testuser/arch_base:latest
         priority: 10
 
-      - name: service012
+      - name: service014
         image: another_testuser/arch_base:latest
         priority: 20
 
-      - name: service013
+      - name: service015
         image: another_testuser/another_arch_base:latest
         priority: 30

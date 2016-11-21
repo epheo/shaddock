@@ -43,11 +43,19 @@ class ModelDefinition(object):
 
         This method  return the differents clusters as a list of dicts.
         """
-
         cluster_list = []
-        for cluster in self.model['clusters']:
-            cluster['services'] = str(cluster['services'])
-            cluster_list.append(cluster)
+
+        if self.model.get('projects') is not None:
+            for project in self.model['projects']:
+                for cluster in project['clusters']:
+                    cluster['services'] = str(cluster['services'])
+                    cluster_list.append(cluster)
+
+        if self.model.get('clusters') is not None:
+            for cluster in self.model['clusters']:
+                cluster['services'] = str(cluster['services'])
+                cluster_list.append(cluster)
+
         return cluster_list
 
     def _get_cluster(self, name):
@@ -76,9 +84,15 @@ class ModelDefinition(object):
 
         services_list = []
         if 'vars' in cluster:
-            j2 = Template(cluster['services'])
-            services_yaml = j2.render(cluster['vars'])
-            services = yaml.load(services_yaml)
+            try:
+                j2 = Template(cluster['services'])
+                services_yaml = j2.render(cluster['vars'])
+                services = yaml.load(services_yaml)
+            except ValueError:
+                for l in cluster['vars']:
+                    j2 = Template(cluster['services'])
+                    services_yaml = j2.render(l)
+                    services = yaml.load(services_yaml)
         else:
             services = yaml.load(cluster['services'])
         cluster['services'] = services

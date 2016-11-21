@@ -1,0 +1,12 @@
+
+---
+
+projects:
+  - !include 010-img-tests.yml      
+  - !include 120-cmd-tests.yml      
+  - !include 130-volume-tests.yml   
+  - !include 200-hosts-tests.yml    
+  - !include 300-network-tests.yml  
+  - !include 400-jinja-tests.yml    
+  - !include 500-scheduler-tests.yml
+  - !include 900-simple-test.yml    

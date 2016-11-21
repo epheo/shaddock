@@ -9,6 +9,6 @@ clusters:
   - name: simple-clu
     images: images/testdir
     services:
-      - name: env-test
+      - name: env-test900
         image: testuser/arch_base:latest
         priority: 900
