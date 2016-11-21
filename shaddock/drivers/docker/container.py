@@ -31,13 +31,14 @@ class Container(object):
     databases. THe containers are retrieve from their names.
     """
 
-    def __init__(self, name, model, infos=None):
+    def __init__(self, name, svc_cfg, infos=None):
         self.name = name
-        self.cfg = model.get_service(self.name)
+        self.cfg = svc_cfg
         if infos is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
             self.docker_client = docker_api.connect()
         self.info = self._get_info(infos)
+        self.info = {}
 
     def create(self):
         """Returns (dict):

@@ -20,11 +20,13 @@ clusters:
 
   - name: sched-cluster0
     images: images/testdir
+    vars: 
+      toto: plop
     services:
       - name: test001
         image: testuser/arch_base:latest
         priority: 500
-        command: "sleep 10"
+        command: '{{ toto }}'
       
       - name: test002
         image: testuser/arch_base:latest

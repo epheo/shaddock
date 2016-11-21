@@ -22,9 +22,8 @@ import sys
 
 class Image(object):
 
-    def __init__(self, name, model, infos=None):
+    def __init__(self, name):
         self.name = name
-        self.cfg = model.get_service(self.name)
         docker_api = DockerApi(self.cfg['api_cfg'])
         self.docker_client = docker_api.connect()
 

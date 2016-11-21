@@ -31,35 +31,31 @@ class ModelDefinition(object):
         self.app_args = app_args
         self.cluster_name = app_args.shdk_cluster
 
-        Loader.add_constructor('!include', Loader.include)
-
-        if app_args.shdk_model is None:
-            raise NameError("You should specify a template file with -f")
-        with open(app_args.shdk_model) as f:
-            self.model = yaml.load(f, Loader)
-
-    def _get_clusters_list(self):
+    def _read_from_yaml(self):
         """Return a cluster list from the model.
 
         This method  return the differents clusters as a list of dicts.
         """
         cluster_list = []
+        Loader.add_constructor('!include', Loader.include)
+        with open(self.app_args.shdk_model) as f:
+            model = yaml.load(f, Loader)
 
-        if self.model.get('projects') is not None:
-            for project in self.model['projects']:
+        if model.get('projects') is not None:
+            for project in model['projects']:
                 for cluster in project['clusters']:
                     cluster['services'] = str(cluster['services'])
                     cluster_list.append(cluster)
 
-        if self.model.get('clusters') is not None:
-            for cluster in self.model['clusters']:
+        if model.get('clusters') is not None:
+            for cluster in model['clusters']:
                 cluster['services'] = str(cluster['services'])
                 cluster_list.append(cluster)
 
         return cluster_list
 
     def _get_cluster(self, name):
-        cluster_list = self._get_clusters_list()
+        cluster_list = self._read_from_yaml()
         try:
             cluster = [clu for clu in cluster_list if
                        clu['name'] == name]
@@ -101,6 +97,7 @@ class ModelDefinition(object):
         for service in cluster['services']:
             service['cluster_name'] = cluster['name']
             service['cluster'] = cluster
+            service['cluster']['services'] = {}
             services_list.append(service)
         return services_list
 
@@ -109,7 +106,7 @@ class ModelDefinition(object):
 
         """
         if self.cluster_name is None:
-            cluster_list = self._get_clusters_list()
+            cluster_list = self._read_from_yaml()
             svc_list = []
             for clu in cluster_list:
                 clu_svc_list = self._get_services_list_from_clu(clu)

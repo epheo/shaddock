@@ -167,7 +167,8 @@ class List(Lister):
         columns = ('#', 'Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
         l = ()
         for svc in model.get_services_list():
-            c = Container(svc['name'], model)
+            svc_cfg = model.get_service(svc['name'])
+            c = Container(svc['name'], svc_cfg)
             host = c.cfg.get('host', 'localhost')
             ip = c.info.get('Ip')
             priority = c.cfg.get('priority', '')

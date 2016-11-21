@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Flake8
 * Add default file shaddock.yml
 * Abandon less API calls as no change in result
 * Reduce api calls

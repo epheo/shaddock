@@ -3,9 +3,51 @@ var_002: plopplopvar002
 
 servicelist: ['plop', 'plp2', 'plop3']
 
-servicei_yml_list: 
+service_yml_list: 
   - plop
   - plp2
   - plop3
 
-
+largeservicelist:
+  - auto-generated001
+  - auto-generated002
+  - auto-generated003
+  - auto-generated004
+  - auto-generated005
+  - auto-generated006
+  - auto-generated007
+  - auto-generated008
+  - auto-generated009
+  - auto-generated010
+  - auto-generated011
+  - auto-generated012
+  - auto-generated013
+  - auto-generated014
+  - auto-generated015
+  - auto-generated016
+  - auto-generated017
+  - auto-generated018
+  - auto-generated019
+  - auto-generated020
+  - auto-generated021
+  - auto-generated022
+  - auto-generated023
+  - auto-generated024
+  - auto-generated025
+  - auto-generated026
+  - auto-generated027
+  - auto-generated028
+  - auto-generated029
+  - auto-generated030
+  - auto-generated031
+  - auto-generated032
+  - auto-generated033
+  - auto-generated034
+  - auto-generated035
+  - auto-generated036
+  - auto-generated037
+  - auto-generated038
+  - auto-generated039
+  - auto-generated040
+  - auto-generated041
+  - auto-generated042

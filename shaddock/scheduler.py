@@ -43,25 +43,28 @@ class Scheduler(object):
     def build(self):
         if self.name is None:
             for svc in self.services_list:
-                image = Image(svc['name'], self.model)
+                image = Image(svc['name'])
                 image.build()
         else:
-            image = Image(self.name, self.model)
+            image = Image(self.name)
             image.build()
 
     def create(self):
         if self.name is None:
             for svc in self.services_list:
-                container = Container(svc['name'], self.model)
+                svc_cfg = self.model.get_service(svc['name'])
+                container = Container(svc['name'], svc_cfg)
                 container.create()
         else:
-            container = Container(self.name, self.model)
+            svc_cfg = self.model.get_service(self.name)
+            container = Container(self.name, svc_cfg)
             container.create()
 
     def start(self):
         if self.name is None:
             for svc in self.services_list:
-                container = Container(svc['name'], self.model)
+                container = Container(svc['name'],
+                                      self.model.get_service(svc['name']))
                 checks = svc.get('depends-on', [])
                 if len(checks) > 0:
                     print("Running checks before "
@@ -70,34 +73,41 @@ class Scheduler(object):
                         self.do_check(check)
                 container.start()
         else:
-            container = Container(self.name, self.model)
+            container = Container(self.name,
+                                  self.model.get_service(self.name))
             container.start()
 
     def remove(self):
         if self.name is None:
             for svc in reversed(self.services_list):
-                container = Container(svc['name'], self.model)
+                svc_cfg = self.model.get_service(svc['name'])
+                print(svc_cfg)
+                container = Container(svc['name'], svc_cfg)
                 container.remove()
         else:
-            container = Container(self.name, self.model)
+            svc_cfg = self.model.get_service(self.name)
+            container = Container(self.name, svc_cfg)
             container.remove()
 
     def pull(self):
         if self.name is None:
             for svc in self.services_list:
-                image = Image(svc['name'], self.model)
+                image = Image(svc['name'])
                 image.pull()
         else:
-            image = Image(self.name, self.model)
+            image = Image(self.name)
             image.pull()
 
     def stop(self):
         if self.name is None:
             for svc in reversed(self.services_list):
-                container = Container(svc['name'], self.model)
+                self.model.get_service(svc['name'])
+                container = Container(svc['name'],
+                                      self.model.get_service(svc['name']))
                 container.stop()
         else:
-            container = Container(self.name, self.model)
+            container = Container(self.name,
+                                  self.model.get_service(self.name))
             container.stop()
 
     def restart(self):

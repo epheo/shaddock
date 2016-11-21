@@ -12,7 +12,7 @@ clusters:
       !include site01/test-variables01.yml
     images: images/testdir
     services: |
-      {% for service in servicei_yml_list %}
+      {% for service in servicelist %}
       - name: {{service}}
         image: testuser/arch_base:latest
         priority: 401
@@ -23,16 +23,17 @@ clusters:
 
   - name: vars-cluster2
     vars: 
-      - !include 'site01/test-variables01.yml'
-      - !include 'site01/test-variables02.yml'
+      !include 'site01/test-variables01.yml'
     images: images/testdir
-    services:
-      - name: out-of-jinja2
+    services: |
+      {% for service in largeservicelist %}
+      - name: {{service}}
         image: testuser/arch_base:latest
         priority: 401
         env:
-          VAR001: '{{ var_001 }}'
+          VAR001: {{var_001}}
         command: env
+      {% endfor %}
 
   - name: vars-cluster3
     images: images/testdir
