@@ -13,25 +13,25 @@ clusters:
         image: testuser/arch_base:latest
         priority: 200
 
-  - name: host-cluster1
-    images: images/testdir/
-    hosts: !include site01/hosts_dc01.yml
-    services:
-      - name: service202
-        image: testuser/arch_base:latest
-        priority: 210
-
-      - name: service203
-        image: testuser/arch_base:latest
-        host: node001-socket
-        priority: 211
-
-      - name: service204
-        image: testuser/arch_base:latest
-        host: node002-tcp
-        priority: 212
-
-      - name: service205
-        image: testuser/arch_base:latest
-        host: node003-tls
-        priority: 213
+#  - name: host-cluster1
+#    images: images/testdir/
+#    hosts: !include site01/hosts_dc01.yml
+#    services:
+#      - name: service202
+#        image: testuser/arch_base:latest
+#        priority: 210
+#
+#      - name: service203
+#        image: testuser/arch_base:latest
+#        host: node001-socket
+#        priority: 211
+#
+#      - name: service204
+#        image: testuser/arch_base:latest
+#        host: node002-tcp
+#        priority: 212
+#
+#      - name: service205
+#        image: testuser/arch_base:latest
+#        host: node003-tls
+#        priority: 213

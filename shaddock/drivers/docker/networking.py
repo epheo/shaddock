@@ -46,6 +46,7 @@ class Network(object):
 
     def create(self):
         """Returns (dict): The created network reference object
+
         """
         print('Creating network: {}'.format(self.name))
         create = self.docker_client.create_network(

@@ -17,6 +17,7 @@
 
 import json
 from shaddock.drivers.docker.api import DockerApi
+import sys
 
 
 class Image(object):

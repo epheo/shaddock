@@ -80,6 +80,7 @@ class ModelDefinition(object):
 
     def _get_services_list_from_clu(self, cluster):
         """Return a list of services
+
         """
 
         services_list = []
@@ -105,6 +106,7 @@ class ModelDefinition(object):
 
     def get_services_list(self):
         """This method returns a service as a dict.
+
         """
         if self.cluster_name is None:
             cluster_list = self._get_clusters_list()
@@ -119,6 +121,7 @@ class ModelDefinition(object):
 
     def get_service(self, name):
         """This method returns a service as a dict.
+
         """
         services_list = self.get_services_list()
 
