@@ -62,10 +62,11 @@ class Checks(object):
         # starting).
         if self.param['name'] is not None:
             try:
-                c = Container(self.param['name'], self.model)
-                self.param['host'] = c.ip
+                svc_cfg = self.model.get_service(self.param['name'])
+                c = Container(self.param['name'], svc_cfg)
+                self.param['host'] = c.info.get('Ip')
                 self.param['useproxy'] = False
-                if c.ip is None:
+                if c.info.get('Ip') is None:
                     return False
             except Exception:
                 return False

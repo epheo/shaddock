@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Docker1.6 compatibility
+* fix key error and sched tests
 * pep8
 * Optimize performances to 0.7sec per 100services
 * Broken, too many recursions

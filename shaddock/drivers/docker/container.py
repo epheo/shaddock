@@ -168,8 +168,10 @@ class Container(object):
             try:
                 info['State']
             except KeyError:
-                inspect = self.docker_client.inspect_container(info['Id'])
-                info['Ip'] = inspect['NetworkSettings']['Bridge']['IPAddress']
+                docker_api = DockerApi(self.cfg['api_cfg'])
+                docker_client = docker_api.connect()
+                inspect = docker_client.inspect_container(info['Id'])
+                info['Ip'] = inspect['NetworkSettings'].get('IPAddress')
                 info['State'] = info.get('Status')
                 if not info['State']:
                     if info.get('Created'):
