@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* pep8
+* Optimize performances to 0.7sec per 100services
 * Broken, too many recursions
 * Fix scheduling mono service
 * -2 Unworking but devided ps time by 2
