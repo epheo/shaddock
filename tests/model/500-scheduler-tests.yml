@@ -52,7 +52,7 @@ clusters:
     images: images/testdir
     services:     
       - name: test006
-        image: testuser/arch_base:latest
+        image: testuser/netcat:latest
         priority: 550
         ports:
             1234: 1234

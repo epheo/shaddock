@@ -204,7 +204,7 @@ class List(Lister):
             priority = c.cfg.get('priority', '')
             tag = c.cfg.get('image')
             cluster = c.cfg['cluster']['name']
-            state = c.info['State']
+            state = c.info.get('State')
 
             line = (priority, cluster, svc['name'], state, host, ip, tag)
             l = l + (line, )
