@@ -168,7 +168,8 @@ class Container(object):
             try:
                 info['State']
             except KeyError:
-                info['Ip'] = 'Unsupported'
+                inspect = self.docker_client.inspect_container(info['Id'])
+                info['Ip'] = inspect['NetworkSettings']['Bridge']['IPAddress']
                 info['State'] = info.get('Status')
                 if not info['State']:
                     if info.get('Created'):
