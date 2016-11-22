@@ -149,7 +149,7 @@ class List(Lister):
        refer to the list fct of dockerchecks and we would need to give
        to the DockerApi class a list of all Docker Hosts, interate on
        them and return a list of all images on all hosts.
-       We should implement that on multihosts
+       We should implement that on multihosts.
 
        Same for Container infos:
        We need to retrieve the container info list only once per host
@@ -162,7 +162,34 @@ class List(Lister):
 
     def take_action(self, parsed_args):
 
+        hl = []
         model = ModelDefinition(self.app_args)
+        for cluster in model._get_clusters_list():
+            if cluster.get('hosts') is not None:
+                for host in cluster.get('hosts'):
+                    hl.append(host)
+
+        # Dicts dedup (kind of set of dicts):
+        #
+        # The strategy is to convert the list of dictionaries to a list of
+        # tuples where the tuples contain the items of the dictionary. Since
+        # the tuples can be hashed, you can remove duplicates using set and,
+        # after that, re-create the dictionaries from tuples with dict.
+        #
+        # hl is the original list
+        # d is one of the dictionaries in the list
+        # t is one of the tuples created from a dictionary
+
+        hl = [dict(t) for t in set([tuple(d.items()) for d in hl])]
+
+        infos = []
+        print(hl)
+        for host in hl:
+            docker_api = DockerApi(host)
+            docker_client = docker_api.connect()
+            host_info = docker_client.containers(all=True)
+            for info in host_info:
+                infos.append(info)
 
         columns = ('#', 'Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
         l = ()
@@ -199,12 +226,12 @@ def get_service_info(self, parsed_args):
     columns = ()
     if name is None:
         for svc in model.get_services_list():
-            c = Container(svc['name'], model)
+            c = Container(svc['name'], model.get_service(svc['name']))
             columns = columns + (svc['name'], )
             status = c.info.get('Status')
             data = data + (status, )
     else:
-        container = Container(name, model)
+        container = Container(name, model.get_service(name))
         columns = ('Name',
                    'Created',
                    'Started',

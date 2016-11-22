@@ -57,8 +57,7 @@ class ModelDefinition(object):
     def _get_cluster(self, name):
         cluster_list = self._read_from_yaml()
         try:
-            cluster = [clu for clu in cluster_list if
-                       clu['name'] == name]
+            cluster = [clu for clu in cluster_list if clu['name'] == name]
             if len(cluster) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"
@@ -74,8 +73,8 @@ class ModelDefinition(object):
                 "is missing the name property")
         return cluster
 
-    def _get_services_list_from_clu(self, cluster):
-        """Return a list of services
+    def _get_cluster_services(self, cluster):
+        """Return a list of services from a cluster name
 
         """
 
@@ -102,18 +101,18 @@ class ModelDefinition(object):
         return services_list
 
     def get_services_list(self):
-        """This method returns a service as a dict.
+        """This method returns a service list as a dict list.
 
         """
         if self.cluster_name is None:
             cluster_list = self._read_from_yaml()
             svc_list = []
             for clu in cluster_list:
-                clu_svc_list = self._get_services_list_from_clu(clu)
+                clu_svc_list = self._get_cluster_services(clu)
                 svc_list = svc_list + clu_svc_list
         else:
             cluster = self._get_cluster(self.cluster_name)
-            svc_list = self._get_services_list_from_clu(cluster)
+            svc_list = self._get_cluster_services(cluster)
         return svc_list
 
     def get_service(self, name):
@@ -123,8 +122,7 @@ class ModelDefinition(object):
         services_list = self.get_services_list()
 
         try:
-            service = [svc for svc in services_list if
-                       svc['name'] == name]
+            service = [svc for svc in services_list if svc['name'] == name]
             if len(service) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"

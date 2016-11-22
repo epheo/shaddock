@@ -1,0 +1,27 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+# Jinja2 rendering testing
+
+---
+
+clusters: 
+  - name: load-50-clu1
+    vars: !include site01/50-services-list.yml
+    images: images/testdir
+    services: |
+      {% for service in services %}
+        - name: clu1-{{service}}
+          image: testuser/arch_base:latest
+          priority: 601
+      {% endfor %}
+
+  - name: load-50-clu2
+    vars: !include site01/50-services-list.yml
+    images: images/testdir
+    services: | 
+      {% for service in services %}
+        - name: clu2-{{service}}
+          image: testuser/arch_base:latest
+          priority: 602
+      {% endfor %}

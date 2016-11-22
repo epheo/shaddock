@@ -54,7 +54,10 @@ class Scheduler(object):
             for svc in self.services_list:
                 svc_cfg = self.model.get_service(svc['name'])
                 container = Container(svc['name'], svc_cfg)
-                container.create()
+                try:
+                    container.create()
+                except Exception:
+                    pass
         else:
             svc_cfg = self.model.get_service(self.name)
             container = Container(self.name, svc_cfg)
@@ -63,8 +66,8 @@ class Scheduler(object):
     def start(self):
         if self.name is None:
             for svc in self.services_list:
-                container = Container(svc['name'],
-                                      self.model.get_service(svc['name']))
+                svc_cfg = self.model.get_service(svc['name'])
+                container = Container(svc['name'], svc_cfg)
                 checks = svc.get('depends-on', [])
                 if len(checks) > 0:
                     print("Running checks before "

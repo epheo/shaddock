@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* -2 Unworking but devided ps time by 2
 * Flake8
 * Add default file shaddock.yml
 * Abandon less API calls as no change in result

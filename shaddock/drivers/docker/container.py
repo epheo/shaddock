@@ -38,7 +38,6 @@ class Container(object):
             docker_api = DockerApi(self.cfg['api_cfg'])
             self.docker_client = docker_api.connect()
         self.info = self._get_info(infos)
-        self.info = {}
 
     def create(self):
         """Returns (dict):
@@ -121,7 +120,7 @@ class Container(object):
     def stop(self):
         if self.info.get('Id') is not None:
             print('Stopping container: {}'.format(self.name))
-            self.docker_client.stop(self.info['Id'])
+            return self.docker_client.stop(self.info['Id'])
 
     def remove(self):
         self.stop()

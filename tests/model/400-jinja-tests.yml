@@ -8,31 +8,29 @@
 clusters: 
 
   - name: vars-cluster1
-    vars: 
-      !include site01/test-variables01.yml
+    vars: !include site01/test-variables01.yml
     images: images/testdir
     services: |
       {% for service in servicelist %}
-      - name: {{service}}
-        image: testuser/arch_base:latest
-        priority: 401
-        env:
-          VAR001: {{var_001}}
-        command: env
+        - name: {{service}}
+          image: testuser/arch_base:latest
+          priority: 401
+          env:
+            VAR001: {{var_001}}
+          command: env
       {% endfor %}
 
   - name: vars-cluster2
-    vars: 
-      !include 'site01/test-variables01.yml'
+    vars: !include 'site01/test-variables01.yml'
     images: images/testdir
     services: |
       {% for service in largeservicelist %}
-      - name: {{service}}
-        image: testuser/arch_base:latest
-        priority: 401
-        env:
-          VAR001: {{var_001}}
-        command: env
+        - name: {{service}}
+          image: testuser/arch_base:latest
+          priority: 401
+          env:
+            VAR001: {{var_001}}
+          command: env
       {% endfor %}
 
   - name: vars-cluster3
