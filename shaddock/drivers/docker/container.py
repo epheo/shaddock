@@ -96,7 +96,7 @@ class Container(object):
         start = self.docker_client.start(
             container=self.info['Id'],
             binds=self.cfg.get('binds'),
-            port_bindings=self.cfg.get('ports_bindings'),
+            port_bindings=self.cfg.get('port_bindings'),
             privileged=self.cfg.get('privileged'),
             network_mode=self.cfg.get('network_mode', 'bridge'),
             lxc_conf=self.cfg.get('lxc_conf'),
