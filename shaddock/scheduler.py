@@ -43,10 +43,12 @@ class Scheduler(object):
     def build(self):
         if self.name is None:
             for svc in self.services_list:
-                image = Image(svc['name'])
+                svc_cfg = self.model.get_service(svc['name'])
+                image = Image(svc['name'], svc_cfg)
                 image.build()
         else:
-            image = Image(self.name)
+            svc_cfg = self.model.get_service(svc['name'])
+            image = Image(self.name, svc_cfg)
             image.build()
 
     def create(self):
@@ -84,7 +86,6 @@ class Scheduler(object):
         if self.name is None:
             for svc in reversed(self.services_list):
                 svc_cfg = self.model.get_service(svc['name'])
-                print(svc_cfg)
                 container = Container(svc['name'], svc_cfg)
                 container.remove()
         else:
@@ -95,10 +96,12 @@ class Scheduler(object):
     def pull(self):
         if self.name is None:
             for svc in self.services_list:
-                image = Image(svc['name'])
+                svc_cfg = self.model.get_service(svc['name'])
+                image = Image(svc['name'], svc_cfg)
                 image.pull()
         else:
-            image = Image(self.name)
+            svc_cfg = self.model.get_service(svc['name'])
+            image = Image(self.name, svc_cfg)
             image.pull()
 
     def stop(self):

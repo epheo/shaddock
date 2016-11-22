@@ -26,12 +26,10 @@ clusters:
       - name: test001
         image: testuser/arch_base:latest
         priority: 500
-        command: '{{ toto }}'
       
       - name: test002
         image: testuser/arch_base:latest
         priority: 510
-        command: "sleep 100"
 
       - name: test003
         image: testuser/arch_base:latest
@@ -43,13 +41,12 @@ clusters:
       - name: test004
         image: testuser/arch_base:latest
         priority: 530
-        command: "sleep 100"
 
       - name: test005
         image: testuser/arch_base:latest
         priority: 540
         depends-on:
-          - {name: test004, status: stopped, sleep: 20}
+          - {name: test004, status: stopped, sleep: 5}
 
   - name: sched-cluster1
     images: images/testdir
@@ -57,6 +54,8 @@ clusters:
       - name: test006
         image: testuser/arch_base:latest
         priority: 550
+        ports:
+            1234: 1234
         command: "nc -l 1234"
 
       - name: test007

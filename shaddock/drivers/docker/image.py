@@ -22,9 +22,10 @@ import sys
 
 class Image(object):
 
-    def __init__(self, name):
+    def __init__(self, name, cfg):
         self.name = name
-        docker_api = DockerApi(self.cfg['api_cfg'])
+        self.cfg = cfg
+        docker_api = DockerApi(cfg['api_cfg'])
         self.docker_client = docker_api.connect()
 
     def build(self, nocache=None):

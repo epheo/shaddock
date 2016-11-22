@@ -102,7 +102,6 @@ class Checks(object):
     def http_check(self):
         url = (self.param['type'] + "://" + self.param['host'] +
                ":" + str(self.param['port']) + self.param['get'])
-        print(url)
         try:
             if self.param['useproxy']:
                 answ = requests.head(url, timeout=5)

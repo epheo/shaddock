@@ -164,7 +164,17 @@ class Container(object):
                     if ("/" + self.name == str(
                         item['Names'][0]))][0]
 
-            info['Ip'] = None
+            # Crapy dirty hack for older versions of Docker (exple 1.6)
+            try:
+                info['State']
+            except KeyError:
+                info['Ip'] = 'Unsupported'
+                info['State'] = info.get('Status')
+                if not info['State']:
+                    if info.get('Created'):
+                        info['State'] = 'Created'
+                        info['Status'] = 'Created'
+
         except IndexError:
             # Container is not running
             info = {}

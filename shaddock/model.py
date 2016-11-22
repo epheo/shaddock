@@ -36,7 +36,6 @@ class ModelDefinition(object):
         self.cluster_name = app_args.shdk_cluster
         self.cluster_list = []
 
-        print('I AM FUCKING READING THIS FILE AGAIN')
         Loader.add_constructor('!include', Loader.include)
         # Services are first imported as single string
         # They are then re loaded from yaml after jinja2.
@@ -47,12 +46,10 @@ class ModelDefinition(object):
         if model.get('projects') is not None:
             for project in model['projects']:
                 for cluster in project['clusters']:
-                    cluster['services'] = str(cluster['services'])
                     self.cluster_list.append(cluster)
 
         if model.get('clusters') is not None:
             for cluster in model['clusters']:
-                cluster['services'] = str(cluster['services'])
                 self.cluster_list.append(cluster)
 
     def _get_cluster(self, name):
@@ -78,29 +75,24 @@ class ModelDefinition(object):
         """Return a list of services from a cluster name
 
         """
-        print(cluster)
         services_list = []
-        if 'vars' in cluster:
-            try:
-                print('###############')
-                j2 = Template(cluster['services'])
-                services_yaml = j2.render(cluster['vars'])
-                services = yaml.load(services_yaml)
-            except ValueError:
-                for l in cluster['vars']:
+        if ('vars' in cluster):
+            if isinstance(cluster['services'], str):
+                try:
                     j2 = Template(cluster['services'])
-                    services_yaml = j2.render(l)
+                    services_yaml = j2.render(cluster['vars'])
                     services = yaml.load(services_yaml)
-            except KeyError:
-                pass
-        else:
-            services = yaml.load(cluster['services'])
-        cluster['services'] = services
+                except ValueError:
+                    for l in cluster['vars']:
+                        j2 = Template(cluster['services'])
+                        services_yaml = j2.render(l)
+                        services = yaml.load(services_yaml)
+                cluster['services'] = services
 
         for service in cluster['services']:
-            service['cluster_name'] = cluster['name']
             service['cluster'] = {}
             service['cluster']['images'] = cluster['images']
+            service['cluster']['name'] = cluster['name']
             service['cluster']['hosts'] = cluster.get('hosts')
             service['cluster']['vars'] = cluster.get('vars')
             services_list.append(service)
@@ -218,6 +210,8 @@ class ModelDefinition(object):
                 raise TemplateFileError(
                     "There is no Docker Host definition containing"
                     " 'name: {}' in your model.".format(service['host']))
+            except TypeError:
+                pass
         service['api_cfg'] = api_cfg
         return service
 

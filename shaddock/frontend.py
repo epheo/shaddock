@@ -19,10 +19,10 @@
 from cliff.command import Command
 from cliff.lister import Lister
 from cliff.show import ShowOne
+from shaddock.drivers.docker.api import DockerApi
 from shaddock.drivers.docker.container import Container
 from shaddock.model import ModelDefinition
 from shaddock.scheduler import Scheduler
-from shaddock.drivers.docker.api import DockerApi
 
 
 class Create(ShowOne):
@@ -180,9 +180,8 @@ class List(Lister):
         # hl is the original list
         # d is one of the dictionaries in the list
         # t is one of the tuples created from a dictionary
-
+        hl = [{}]
         hl = [dict(t) for t in set([tuple(d.items()) for d in hl])]
-
         infos = []
         for host in hl:
             try:
@@ -205,7 +204,8 @@ class List(Lister):
             priority = c.cfg.get('priority', '')
             tag = c.cfg.get('image')
             cluster = c.cfg['cluster']['name']
-            state = c.info.get('State')
+            state = c.info['State']
+
             line = (priority, cluster, svc['name'], state, host, ip, tag)
             l = l + (line, )
         return columns, l
