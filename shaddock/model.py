@@ -28,16 +28,19 @@ class ModelDefinition(object):
     """
 
     def __init__(self, app_args):
-        self.app_args = app_args
-        self.cluster_name = app_args.shdk_cluster
-
-    def _read_from_yaml(self):
         """Return a cluster list from the model.
 
         This method  return the differents clusters as a list of dicts.
         """
-        cluster_list = []
+        self.app_args = app_args
+        self.cluster_name = app_args.shdk_cluster
+        self.cluster_list = []
+
+        print('I AM FUCKING READING THIS FILE AGAIN')
         Loader.add_constructor('!include', Loader.include)
+        # Services are first imported as single string
+        # They are then re loaded from yaml after jinja2.
+        # Loader.add_constructor('services:', Loader.import_str)
         with open(self.app_args.shdk_model) as f:
             model = yaml.load(f, Loader)
 
@@ -45,24 +48,22 @@ class ModelDefinition(object):
             for project in model['projects']:
                 for cluster in project['clusters']:
                     cluster['services'] = str(cluster['services'])
-                    cluster_list.append(cluster)
+                    self.cluster_list.append(cluster)
 
         if model.get('clusters') is not None:
             for cluster in model['clusters']:
                 cluster['services'] = str(cluster['services'])
-                cluster_list.append(cluster)
-
-        return cluster_list
+                self.cluster_list.append(cluster)
 
     def _get_cluster(self, name):
-        cluster_list = self._read_from_yaml()
         try:
-            cluster = [clu for clu in cluster_list if clu['name'] == name]
+            cluster = [clu for clu in self.cluster_list if clu['name'] == name]
             if len(cluster) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"
                     " 'name: {}' in your model".format(name))
             cluster = cluster[0]
+            print(cluster)
         except IndexError:
             raise TemplateFileError(
                 "There is no cluster definition containing"
@@ -77,10 +78,11 @@ class ModelDefinition(object):
         """Return a list of services from a cluster name
 
         """
-
+        print(cluster)
         services_list = []
         if 'vars' in cluster:
             try:
+                print('###############')
                 j2 = Template(cluster['services'])
                 services_yaml = j2.render(cluster['vars'])
                 services = yaml.load(services_yaml)
@@ -89,14 +91,18 @@ class ModelDefinition(object):
                     j2 = Template(cluster['services'])
                     services_yaml = j2.render(l)
                     services = yaml.load(services_yaml)
+            except KeyError:
+                pass
         else:
             services = yaml.load(cluster['services'])
         cluster['services'] = services
 
         for service in cluster['services']:
             service['cluster_name'] = cluster['name']
-            service['cluster'] = cluster
-            service['cluster']['services'] = {}
+            service['cluster'] = {}
+            service['cluster']['images'] = cluster['images']
+            service['cluster']['hosts'] = cluster.get('hosts')
+            service['cluster']['vars'] = cluster.get('vars')
             services_list.append(service)
         return services_list
 
@@ -105,9 +111,8 @@ class ModelDefinition(object):
 
         """
         if self.cluster_name is None:
-            cluster_list = self._read_from_yaml()
             svc_list = []
-            for clu in cluster_list:
+            for clu in self.cluster_list:
                 clu_svc_list = self._get_cluster_services(clu)
                 svc_list = svc_list + clu_svc_list
         else:
@@ -119,7 +124,15 @@ class ModelDefinition(object):
         """This method returns a service as a dict.
 
         """
-        services_list = self.get_services_list()
+        if self.cluster_name is None:
+            svc_list = []
+            for clu in self.cluster_list:
+                clu_svc_list = self._get_cluster_services(clu)
+                svc_list = svc_list + clu_svc_list
+        else:
+            cluster = self._get_cluster(self.cluster_name)
+            svc_list = self._get_cluster_services(cluster)
+        services_list = svc_list
 
         try:
             service = [svc for svc in services_list if svc['name'] == name]
@@ -232,3 +245,6 @@ class Loader(yaml.Loader):
             raise TemplateFileError(
                 "The file {} you're trying to include doesn't"
                 "exist.".format(filename))
+
+    def import_str(self, node):
+        return str(self.construct_scalar(node))
