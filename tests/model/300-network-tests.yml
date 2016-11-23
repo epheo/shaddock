@@ -6,26 +6,30 @@
 
 clusters: 
 
-  - name: svc-cluster0
+  - name: net-cluster0
     images: images/testdir
     services:
       - name: bind-ports-test
         image: testuser/arch_base:latest
         priority: 300
         ports:
-            1111: [('172.17.0.2', 1234),('172.17.0.1', 1234)]
-            2222: [('172.17.0.1', 4321),('172.17.0.1', 1234)]
+          - 0.0.0.0:2222:2323
+          - 0.0.0.0:2323:2222
 
       - name: bind-ports-test02
         image: testuser/arch_base:latest
         priority: 300
         ports:
-            '1111/udp': 4567
-            2222: None
+          - 0.0.0.0:2323
       
       - name: bind-ports-test03
         image: testuser/arch_base:latest
         priority: 300
         ports:
-            1111: [1234, 4567]
-            4333: None
+          - 2323:2323
+
+      - name: bind-ports-test04
+        image: testuser/arch_base:latest
+        priority: 300
+        ports:
+          - 2323

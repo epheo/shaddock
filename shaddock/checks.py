@@ -80,7 +80,7 @@ class Checks(object):
                                     "{}".format(str(definition)))
 
     def docker_check(self):
-        model = ModelDefinition(self.app_args)
+        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
         cfg = model.get_service(self.param['name'])
         api_cfg = cfg['api_cfg']
         return dockerchecks.check(self.param, api_cfg)

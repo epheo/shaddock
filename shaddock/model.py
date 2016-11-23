@@ -27,22 +27,27 @@ class ModelDefinition(object):
     different methods to read from it more easily.
     """
 
-    def __init__(self, app_args):
+    def __init__(self, model=None, app_args=None, cluster_name=None):
         """Return a cluster list from the model.
 
         This method  return the differents clusters as a list of dicts.
         """
+        self.model = 'shaddock.yml'
+        if model:
+            self.model = model
         self.app_args = app_args
-        self.cluster_name = app_args.shdk_cluster
-        self.cluster_list = []
+        self.cluster_name = cluster_name
+        if app_args and app_args.shdk_cluster:
+            self.cluster_name = app_args.shdk_cluster
 
         Loader.add_constructor('!include', Loader.include)
         # Services are first imported as single string
         # They are then re loaded from yaml after jinja2.
         # Loader.add_constructor('services:', Loader.import_str)
-        with open(self.app_args.shdk_model) as f:
+        with open(self.model) as f:
             model = yaml.load(f, Loader)
 
+        self.cluster_list = []
         if model.get('projects') is not None:
             for project in model['projects']:
                 for cluster in project['clusters']:
@@ -60,7 +65,6 @@ class ModelDefinition(object):
                     "There is more than one definition matching"
                     " 'name: {}' in your model".format(name))
             cluster = cluster[0]
-            print(cluster)
         except IndexError:
             raise TemplateFileError(
                 "There is no cluster definition containing"
@@ -144,12 +148,12 @@ class ModelDefinition(object):
 
         # Image dir definition:
         #
-        if self.app_args.shdk_imgdir is not None:
+        if self.app_args and self.app_args.shdk_imgdir:
             service['images_dir'] = self.app_args.shdk_imgdir
         else:
             try:
                 service['images_dir'] = os.path.join(
-                    os.path.dirname(self.app_args.shdk_model),
+                    os.path.dirname(self.model),
                     service['cluster']['images'])
             except TypeError:
                 raise TemplateFileError(
@@ -170,11 +174,19 @@ class ModelDefinition(object):
 
         # Networking definition:
         #
+        # if service.get('ports'):
+        #     for i in service['ports']:
+        #         service['port_bindings'][p for p in service.get('ports')]
+        #     service['ports'] = [p for p in service.get('ports').keys()]
 
-        port_bindings = service.get('ports')
-        if port_bindings is not None:
-            service['ports'] = [item for item in port_bindings.keys()]
-            service['port_bindings'] = port_bindings
+        service['port_bindings'] = {}
+        for p in service['ports']:
+            l = p.split(':')
+            key = l.pop()
+            if key in l:
+                l.remove(key)
+            service['port_bindings'][key] = tuple(l)
+        service['ports'] = [p for p in service['port_bindings'].keys()]
 
         # Volume definition:
         #
@@ -186,7 +198,7 @@ class ModelDefinition(object):
         # Host API Definition:
         #
         api_cfg = {}
-        if self.app_args.docker_url is not None:
+        if self.app_args and self.app_args.docker_url:
             api_cfg['url'] = self.app_args.docker_url
             api_cfg['version'] = self.app_args.docker_version
             api_cfg['cert_path'] = self.app_args.docker_cert_path

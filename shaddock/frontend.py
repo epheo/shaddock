@@ -139,7 +139,9 @@ class Logs(Command):
 
     def take_action(self, parsed_args):
         name = parsed_args.name
-        container = Container(name, self.app_args)
+        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
+        svc_cfg = model.get_service(name)
+        container = Container(name, svc_cfg)
         container.return_logs()
 
 
@@ -164,7 +166,7 @@ class List(Lister):
     def take_action(self, parsed_args):
 
         hl = []
-        model = ModelDefinition(self.app_args)
+        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
         for cluster in model.cluster_list:
             if cluster.get('hosts') is not None:
                 for host in cluster.get('hosts'):
@@ -225,7 +227,7 @@ class Show(ShowOne):
 
 def get_service_info(self, parsed_args):
     name = parsed_args.name
-    model = ModelDefinition(self.app_args)
+    model = ModelDefinition(self.app_args.shdk_model, self.app_args)
     data = ()
     columns = ()
     if name is None:

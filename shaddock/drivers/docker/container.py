@@ -164,11 +164,11 @@ class Container(object):
                     if ("/" + self.name == str(
                         item['Names'][0]))][0]
 
-            net = info['NetworkSettings']['Networks'].get('bridge')
-            info['Ip'] = net.get('IPAddress')
             # Crapy dirty hack for older versions of Docker (exple 1.6)
             try:
-                info['State']
+                net = info['NetworkSettings']['Networks'].get('bridge')
+                if net:
+                    info['Ip'] = net.get('IPAddress')
             except KeyError:
                 docker_api = DockerApi(self.cfg['api_cfg'])
                 docker_client = docker_api.connect()

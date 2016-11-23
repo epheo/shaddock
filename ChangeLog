@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* fix port bindings
+* Add new API Ip def
+* IP for docker v1.6
 * Docker1.6 compatibility
 * fix key error and sched tests
 * pep8

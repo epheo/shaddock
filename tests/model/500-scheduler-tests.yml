@@ -55,7 +55,7 @@ clusters:
         image: testuser/netcat:latest
         priority: 550
         ports:
-            1234: 1234
+            1234: None
         command: "nc -l 1234"
 
       - name: test007

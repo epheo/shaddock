@@ -26,7 +26,7 @@ import time
 
 class Scheduler(object):
     def __init__(self, app_args, name=None):
-        self.model = ModelDefinition(app_args)
+        self.model = ModelDefinition(app_args.shdk_model, app_args)
         self.services_list = self.model.get_services_list()
         self.name = name
         if name is None:
