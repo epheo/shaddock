@@ -174,26 +174,36 @@ class ModelDefinition(object):
 
         # Networking definition:
         #
-        # if service.get('ports'):
-        #     for i in service['ports']:
-        #         service['port_bindings'][p for p in service.get('ports')]
-        #     service['ports'] = [p for p in service.get('ports').keys()]
+        # As we can't match the port bindings struct in Yaml (tuple)
+        # We use a different representation in the model that we are
+        # converting back here.
+        #
+        if service.get('ports'):
+            service['port_bindings'] = {}
+            for p in service['ports']:
+                if ':' in str(p):
+                    l = p.split(':')
+                    key = l.pop()
+                    if '.' in l[0]:
+                        service['port_bindings'][key] = tuple(l)
+                    else:
+                        service['port_bindings'][key] = l[0]
+                else:
+                    service['port_bindings'][p] = p
 
-        service['port_bindings'] = {}
-        for p in service['ports']:
-            l = p.split(':')
-            key = l.pop()
-            if key in l:
-                l.remove(key)
-            service['port_bindings'][key] = tuple(l)
-        service['ports'] = [p for p in service['port_bindings'].keys()]
+            service['ports'] = [p for p in service['port_bindings'].keys()]
 
         # Volume definition:
         #
-        binds = service.get('volumes')
-        if binds is not None:
-            service['volumes'] = [item for item in binds.keys()]
-            service['binds'] = binds
+        service['binds'] = service.get('volumes')
+        if service.get('volumes'):
+            volumes = []
+            for v in service.get('volumes'):
+                if ':' in v:
+                    v = v.split(':')
+                    v = v[1]
+                volumes.append(v)
+            service['volumes'] = volumes
 
         # Host API Definition:
         #

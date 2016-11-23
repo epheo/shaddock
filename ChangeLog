@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix ports binding
 * fix port bindings
 * Add new API Ip def
 * IP for docker v1.6

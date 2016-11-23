@@ -12,7 +12,7 @@ clusters:
     images: images/testdir
     services: |
       {% for service in servicelist %}
-        - name: {{service}}
+        - name: clu1-{{service}}
           image: testuser/arch_base:latest
           priority: 401
           env:
@@ -25,7 +25,7 @@ clusters:
     images: images/testdir
     services: |
       {% for service in largeservicelist %}
-        - name: {{service}}
+        - name: clu2-{{service}}
           image: testuser/arch_base:latest
           priority: 401
           env:
