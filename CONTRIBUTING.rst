@@ -13,4 +13,4 @@ Automated Testing
 ~~~~~~~~~~~~~~~~~~
 The project have it's own CI system and use Jenkins to test and merge automaticaly.
 
-You can also contact us on freenode in the #shaddock channel.
+You can contact us on freenode in the #shaddock channel.

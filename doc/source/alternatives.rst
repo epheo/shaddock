@@ -4,9 +4,11 @@ Alternative configuration and other systems
 
 Docker Machine and OS X support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Please use `--boot2docker`
+Please use the ``--boot2docker`` option and Shaddock will source the
+environement variables set by Docker machine.
 
-You may want to eval `$(sudo docker-machine env machine_name)"` first.
+In order to set those variables you may want to 
+``$(sudo docker-machine env machine_name)"`` first.
 
 
 Run the shaddock shell from a container
