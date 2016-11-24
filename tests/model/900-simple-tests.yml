@@ -5,8 +5,8 @@
 
 ---
 clusters: 
-  - name: complete-service
+  - name: simple-service
     images: images/testdir
     services:
-      - name: test900
+      - name: simpleservice
         image: testuser/arch_base:latest
