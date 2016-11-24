@@ -6,6 +6,8 @@
 
 .. include:: usage.rst
 
+.. include:: ../../examples/README.rst
+
 .. include:: alternatives.rst
 
 .. include:: contributing.rst
