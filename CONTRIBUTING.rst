@@ -1,17 +1,18 @@
-If you would like to contribute to the development of OpenStack, you must
-follow the steps in this page:
+Contributing
+--------------
 
-   http://docs.openstack.org/infra/manual/developers.html
+Please use Github for any isse reporting or pull request.
 
-If you already have a good understanding of how the system works and your
-OpenStack accounts are set up, you can skip to the development workflow
-section of this documentation to learn how changes to OpenStack should be
-submitted for review via the Gerrit tool:
+Running tests
+~~~~~~~~~~~~~~~~
 
-   http://docs.openstack.org/infra/manual/developers.html#development-workflow
+You can run the tests using tox::
 
-Pull requests submitted through GitHub will be ignored.
+    pip install -r test-requirements.txt
+    tox
 
-Bugs should be filed on Launchpad, not GitHub:
+Automated Testing
+~~~~~~~~~~~~~~~~~~
+The project have it's own CI system and use Jenkins to test and merge automaticaly.
 
-   https://bugs.launchpad.net/shaddock
+You can also contact us on freenode in the #shaddock channel.

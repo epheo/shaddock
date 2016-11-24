@@ -1,16 +1,11 @@
-FROM shaddock/seed:latest
+FROM shaddock/archlinux:latest
 MAINTAINER Thibaut Lapierre <root@epheo.eu>
 
-## Run exple:
-# docker run --rm -i -v /path/to/your/config/:/var/lib/shaddock \
-# --env DOCKER_HOST="https://172.42.42.42::2376" -t shaddock/shaddock
+RUN pacman -Sy --noconfirm python-pip git
 
-RUN \
-     git clone https://github.com/epheo/shaddock &&\
-     git clone https://github.com/epheo/shaddock-openstack \
-     /var/lib/shaddock/ &&\
-     cd shaddock && python setup.py install
+ENV SHDK_MODEL /shaddock/tests/model/shaddock.yml
 
-VOLUME /var/lib/shaddock
+ADD . /shaddock
+RUN cd /shaddock && pip install .
 
-CMD ["shaddock"]
+CMD ["shdk"]

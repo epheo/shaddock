@@ -1,10 +1,7 @@
 
-# Functional Testing definition model for Shaddock.
-# =================================================
-# Jinja2 rendering testing
+# Load testing to troubleshoot performance issues
 
 ---
-
 clusters: 
   - name: load-50-clu1
     vars: !include site01/50-services-list.yml
