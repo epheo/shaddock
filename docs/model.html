@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Shaddock Definiton Model &#8212; shaddock  documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="shaddock  documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-shaddock-definiton-model">
+<h1>The Shaddock Definiton Model<a class="headerlink" href="#the-shaddock-definiton-model" title="Permalink to this headline">¶</a></h1>
+<p>Your model consist in a set of files that describe your general architecture,
+It can be a simple Yaml few lines, a more complete Jinja2 templated multi
+files hierarchy or an integrated Python module that you interface with
+the rest of your infratsructure.</p>
+<div class="section" id="defining-a-service">
+<h2>Defining a <strong>service</strong><a class="headerlink" href="#defining-a-service" title="Permalink to this headline">¶</a></h2>
+<p>The following examples resume how you can describe a service in a cluster:</p>
+<p>You will need at least the following options:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">complete-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test900</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+</pre></div>
+</div>
+<p>The following options are currenlty implemented:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">complete-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">hosts</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/hosts_dc01.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">vars</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/test-variables01.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test900</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">900</span>
+        <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node001-socket</span>
+        <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.0.0.0:4321:4322</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.0.0.0:4325</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">4326:4327</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">4329</span>
+        <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span> 
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/home/user1/:/mnt/vol2:rw</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/www:/mnt/vol1:ro</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/ww:/mnt/vol3</span>
+        <span class="l l-Scalar l-Scalar-Plain">env</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">VAR001</span><span class="p p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">var_001</span><span class="nv"> </span><span class="s">}}&#39;</span>
+        <span class="l l-Scalar l-Scalar-Plain">depends-on</span><span class="p p-Indicator">:</span>
+          <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">host</span><span class="p p-Indicator">:</span> <span class="nv">127.0.0.1</span><span class="p p-Indicator">,</span> <span class="nv">type</span><span class="p p-Indicator">:</span> <span class="nv">http</span><span class="p p-Indicator">,</span> <span class="nv">get</span><span class="p p-Indicator">:</span> <span class="s">&#39;/&#39;</span><span class="p p-Indicator">,</span> <span class="nv">code</span><span class="p p-Indicator">:</span> <span class="nv">200</span><span class="p p-Indicator">,</span> <span class="nv">useproxy</span><span class="p p-Indicator">:</span> <span class="nv">False</span><span class="p p-Indicator">}</span>
+        <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$VAR001&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="including-other-files">
+<h2>Including other files<a class="headerlink" href="#including-other-files" title="Permalink to this headline">¶</a></h2>
+<p>Shaddock allow you to split your definition model into multiple yaml files
+using the !include notation.</p>
+<p>This, conbined with the templating allow you to design very complex
+architectures without repetitions or loosing in readabality of your model.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">include-test</span>
+    <span class="l l-Scalar l-Scalar-Plain">vars</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/test-variables01.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test120</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">120</span>
+        <span class="l l-Scalar l-Scalar-Plain">env</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">VAR001</span><span class="p p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">var_001</span><span class="nv"> </span><span class="s">}}&#39;</span>
+        <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$VAR001&quot;</span>
+
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">command-test</span>
+    <span class="l l-Scalar l-Scalar-Plain">vars</span><span class="p p-Indicator">:</span> 
+        <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test121</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">121</span>
+        <span class="l l-Scalar l-Scalar-Plain">env</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">FOO_BAR</span><span class="p p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">foo</span><span class="nv"> </span><span class="s">}}&#39;</span>
+        <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$VAR001&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-scheduler">
+<h2>Using the <strong>scheduler</strong><a class="headerlink" href="#using-the-scheduler" title="Permalink to this headline">¶</a></h2>
+<p>The Shaddock scheduler will ensure that all the requirements you provide are
+matched before starting a new service.</p>
+<p>You can check:
+- A container status
+- If a port is open (tcp or udp)
+- The return code of a http GET</p>
+<p>You can also specify the number of retry, the time to wait before 2 checks, and
+if the check should use the system proxy vars or not.</p>
+<div class="code yaml highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">stopped</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="mi">8774</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">tcp</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="mi">8774</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">down</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">tcp</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">host</span><span class="p">:</span> <span class="n">google</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="mi">8774</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">down</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">tcp</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">http</span><span class="p">,</span> <span class="n">get</span><span class="p">:</span> <span class="s1">&#39;/v2.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">host</span><span class="p">:</span> <span class="n">google</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">http</span><span class="p">,</span> <span class="n">get</span><span class="p">:</span> <span class="s1">&#39;/v2.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">host</span><span class="p">:</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">http</span><span class="p">,</span> <span class="n">get</span><span class="p">:</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">useproxy</span><span class="p">:</span> <span class="kc">False</span> <span class="p">}</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="n">sleep</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span> <span class="c1"># defaults to 10</span>
+<span class="o">-</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">nova</span><span class="p">,</span> <span class="n">retry</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span> <span class="c1"># defaults to 5</span>
+</pre></div>
+</div>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">scheduler-tests</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test500</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">500</span>
+      
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test501</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">510</span>
+
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test503</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">520</span>
+        <span class="l l-Scalar l-Scalar-Plain">depends-on</span><span class="p p-Indicator">:</span>
+          <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">:</span> <span class="nv">test001</span><span class="p p-Indicator">,</span> <span class="nv">status</span><span class="p p-Indicator">:</span> <span class="nv">stopped</span><span class="p p-Indicator">}</span>
+          <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">:</span> <span class="nv">test002</span><span class="p p-Indicator">,</span> <span class="nv">status</span><span class="p p-Indicator">:</span> <span class="nv">stopped</span><span class="p p-Indicator">,</span> <span class="nv">retry</span><span class="p p-Indicator">:</span> <span class="nv">10</span><span class="p p-Indicator">,</span> <span class="nv">sleep</span><span class="p p-Indicator">:</span> <span class="nv">10</span><span class="p p-Indicator">}</span>
+
+
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">scheduler-tcp-tests</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>     
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test504</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/netcat:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">550</span>
+        <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">1234:1234</span>
+        <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&quot;nc</span><span class="nv"> </span><span class="s">-l</span><span class="nv"> </span><span class="s">1234&quot;</span>
+
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test520</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">560</span>
+        <span class="l l-Scalar l-Scalar-Plain">depends-on</span><span class="p p-Indicator">:</span>
+          <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">:</span> <span class="nv">test006</span><span class="p p-Indicator">,</span> <span class="nv">port</span><span class="p p-Indicator">:</span> <span class="nv">1234</span><span class="p p-Indicator">,</span> <span class="nv">type</span><span class="p p-Indicator">:</span> <span class="nv">tcp</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="managing-multiple-hosts">
+<h2>Managing multiple hosts<a class="headerlink" href="#managing-multiple-hosts" title="Permalink to this headline">¶</a></h2>
+<p>Shaddock is able to schedule your services on different hosts accros your
+datacenter.
+The only prerequirements for a host to be part of a Shaddock cluster is toi
+have the Docker API installed and listening on a port.
+You can then configure your hosts in your cluster defintion.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node001-socket</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unix://var/run/docker.sock</span>
+
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node002-tcp</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tcp://127.0.0.1:2376</span>
+  <span class="l l-Scalar l-Scalar-Plain">verion</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.12</span>
+
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node003-tls</span>
+  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tcp://127.0.0.1:2376</span>
+  <span class="l l-Scalar l-Scalar-Plain">tls</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
+  <span class="l l-Scalar l-Scalar-Plain">cert_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="l l-Scalar l-Scalar-Plain">key_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="l l-Scalar l-Scalar-Plain">cacert_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="l l-Scalar l-Scalar-Plain">tls_verify</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
+</pre></div>
+</div>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">host-cluster1</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir/</span>
+    <span class="l l-Scalar l-Scalar-Plain">hosts</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/hosts_dc01.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service202</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">210</span>
+
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service203</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node001-socket</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">211</span>
+
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">host-cluster2</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir/</span>
+    <span class="l l-Scalar l-Scalar-Plain">hosts</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/hosts_dc02.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service204</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node002-tcp</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">212</span>
+
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service205</span>
+        <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
+        <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">node003-tls</span>
+        <span class="l l-Scalar l-Scalar-Plain">priority</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">213</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-templating-functionalities">
+<h2>Using the templating functionalities<a class="headerlink" href="#using-the-templating-functionalities" title="Permalink to this headline">¶</a></h2>
+<p>The model definition variables {{ your_var }} are templated using Jinja2
+before being interpreted by Shaddock.
+You can define any variables value in the <strong>vars:</strong> section of a cluster
+definiton.</p>
+<p>refs: <a class="reference external" href="http://jinja.pocoo.org/">http://jinja.pocoo.org/</a></p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jinja2-tests01</span>
+    <span class="l l-Scalar l-Scalar-Plain">vars</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="l l-Scalar l-Scalar-Plain">site01/test-variables01.yml</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">{% for service in servicelist %}</span>
+        <span class="no">- name: clu1-{{service}}</span>
+          <span class="no">image: testuser/arch_base:latest</span>
+          <span class="no">priority: 401</span>
+          <span class="no">env:</span>
+            <span class="no">VAR001: {{var_001}}</span>
+          <span class="no">command: env</span>
+      <span class="no">{% endfor %}</span>
+
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jinja2-tests02</span>
+    <span class="l l-Scalar l-Scalar-Plain">vars</span><span class="p p-Indicator">:</span> <span class="kt">!include</span> <span class="s">&#39;site01/test-variables01.yml&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
+    <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">{% for service in largeservicelist %}</span>
+        <span class="no">- name: clu2-{{service}}</span>
+          <span class="no">image: testuser/arch_base:latest</span>
+          <span class="no">priority: 401</span>
+          <span class="no">env:</span>
+            <span class="no">VAR001: {{var_001}}</span>
+          <span class="no">command: env</span>
+      <span class="no">{% endfor %}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">The Shaddock Definiton Model</a><ul>
+<li><a class="reference internal" href="#defining-a-service">Defining a <strong>service</strong></a></li>
+<li><a class="reference internal" href="#including-other-files">Including other files</a></li>
+<li><a class="reference internal" href="#using-the-scheduler">Using the <strong>scheduler</strong></a></li>
+<li><a class="reference internal" href="#managing-multiple-hosts">Managing multiple hosts</a></li>
+<li><a class="reference internal" href="#using-the-templating-functionalities">Using the templating functionalities</a></li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/model.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">shaddock  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Thibaut Lapierre.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+    </div>
+
+  </body>
+</html>

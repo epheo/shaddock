@@ -1,14 +1,12 @@
 
 # Functional Testing definition model for Shaddock.
 # =================================================
-# Simple test
+#
 
 ---
-
 clusters: 
-  - name: simple-clu
+  - name: complete-service
     images: images/testdir
     services:
-      - name: env-test900
+      - name: test900
         image: testuser/arch_base:latest
-        priority: 900

@@ -1,0 +1,30 @@
+
+# Functional Testing definition model for Shaddock.
+# =================================================
+#
+
+---
+clusters: 
+  - name: complete-service
+    images: images/testdir
+    hosts: !include site01/hosts_dc01.yml
+    vars: !include site01/test-variables01.yml
+    services:
+      - name: test900
+        image: testuser/arch_base:latest
+        priority: 900
+        host: node001-socket
+        ports:
+          - 0.0.0.0:4321:4322
+          - 0.0.0.0:4325
+          - 4326:4327
+          - 4329
+        volumes: 
+          - /home/user1/:/mnt/vol2:rw
+          - /var/www:/mnt/vol1:ro
+          - /var/ww:/mnt/vol3
+        env:
+          VAR001: '{{ var_001 }}'
+        depends-on:
+          - {host: 127.0.0.1, type: http, get: '/', code: 200, useproxy: False}
+        command: "echo $VAR001"

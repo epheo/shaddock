@@ -1,20 +1,30 @@
 
 # Functional Testing definition model for Shaddock.
 # =================================================
-# CMD and ENRYPOINT testing
 
 ---
 
 clusters: 
 
-  - name: svc-cluster1
+  - name: include-test
     vars: !include site01/test-variables01.yml
     images: images/testdir
-
     services:
-      - name: env-test
+      - name: test120
         image: testuser/arch_base:latest
         priority: 120
         env:
           VAR001: '{{ var_001 }}'
+        command: "echo $VAR001"
+
+  - name: command-test
+    vars: 
+        foo: bar
+    images: images/testdir
+    services:
+      - name: test121
+        image: testuser/arch_base:latest
+        priority: 121
+        env:
+          FOO_BAR: '{{ foo }}'
         command: "echo $VAR001"

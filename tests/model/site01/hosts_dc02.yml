@@ -1,0 +1,16 @@
+
+---
+- name: node001-socket
+  url: unix://var/run/docker.sock
+
+- name: node002-tcp
+  url: tcp://127.0.0.1:2376
+  verion: 1.12
+
+- name: node003-tls
+  url: tcp://127.0.0.1:2376
+  tls: False
+  cert_path: None
+  key_path: None
+  cacert_path: None
+  tls_verify: False
