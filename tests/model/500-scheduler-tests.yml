@@ -26,9 +26,8 @@ clusters:
         image: testuser/arch_base:latest
         priority: 520
         depends-on:
-          - {name: test001, status: stopped}
-          - {name: test002, status: stopped, retry: 10, sleep: 10}
-
+          - {name: test500, status: stopped}
+          - {name: test501, status: stopped, retry: 10, sleep: 10}
 
   - name: scheduler-tcp-tests
     images: images/testdir
@@ -44,4 +43,4 @@ clusters:
         image: testuser/arch_base:latest
         priority: 560
         depends-on:
-          - {name: test006, port: 1234, type: tcp}
+          - {name: test504, port: 1234, type: tcp}

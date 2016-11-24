@@ -49,10 +49,10 @@ the rest of your infratsructure.</p>
 <p>The following examples resume how you can describe a service in a cluster:</p>
 <p>You will need at least the following options:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">clusters</span><span class="p p-Indicator">:</span> 
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">complete-service</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">simple-service</span>
     <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>
     <span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test900</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">simpleservice</span>
         <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">testuser/arch_base:latest</span>
 </pre></div>
 </div>
@@ -156,7 +156,6 @@ if the check should use the system proxy vars or not.</p>
         <span class="l l-Scalar l-Scalar-Plain">depends-on</span><span class="p p-Indicator">:</span>
           <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">:</span> <span class="nv">test001</span><span class="p p-Indicator">,</span> <span class="nv">status</span><span class="p p-Indicator">:</span> <span class="nv">stopped</span><span class="p p-Indicator">}</span>
           <span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">:</span> <span class="nv">test002</span><span class="p p-Indicator">,</span> <span class="nv">status</span><span class="p p-Indicator">:</span> <span class="nv">stopped</span><span class="p p-Indicator">,</span> <span class="nv">retry</span><span class="p p-Indicator">:</span> <span class="nv">10</span><span class="p p-Indicator">,</span> <span class="nv">sleep</span><span class="p p-Indicator">:</span> <span class="nv">10</span><span class="p p-Indicator">}</span>
-
 
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">scheduler-tcp-tests</span>
     <span class="l l-Scalar l-Scalar-Plain">images</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">images/testdir</span>

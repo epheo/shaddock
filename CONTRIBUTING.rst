@@ -1,5 +1,3 @@
-Contributing
---------------
 
 Please use Github for any isse reporting or pull request.
 

@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix tests
 * Configure Sphinx and document
 * Change notation of IPs and Volumes to match Docker CLI
 * Fix ports binding
