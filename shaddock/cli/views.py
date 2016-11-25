@@ -141,7 +141,7 @@ class Logs(Command):
         name = parsed_args.name
         model = ModelDefinition(self.app_args.shdk_model, self.app_args)
         svc_cfg = model.get_service(name)
-        container = Container(name, svc_cfg)
+        container = Container(svc_cfg)
         container.return_logs()
 
 
@@ -199,8 +199,8 @@ class List(Lister):
         columns = ('#', 'Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
         l = ()
         for svc in model.get_services_list():
-            svc_cfg = model.get_service(svc['name'])
-            c = Container(svc['name'], svc_cfg, infos)
+            svc_cfg = model.build_service_dict(svc)
+            c = Container(svc_cfg, infos)
             host = c.cfg.get('host', 'localhost')
             ip = c.info.get('Ip')
             priority = c.cfg.get('priority', '')
@@ -232,12 +232,12 @@ def get_service_info(self, parsed_args):
     columns = ()
     if name is None:
         for svc in model.get_services_list():
-            c = Container(svc['name'], model.get_service(svc['name']))
+            c = Container(model.get_service(svc['name']))
             columns = columns + (svc['name'], )
             status = c.info.get('Status')
             data = data + (status, )
     else:
-        container = Container(name, model.get_service(name))
+        container = Container(model.get_service(name))
         columns = ('Name',
                    'Created',
                    'Started',

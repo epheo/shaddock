@@ -16,6 +16,7 @@
 #    under the License.
 
 from shaddock.drivers.docker.api import DockerApi
+import sys
 
 
 class Container(object):
@@ -31,9 +32,9 @@ class Container(object):
     databases. THe containers are retrieve from their names.
     """
 
-    def __init__(self, name, svc_cfg, infos=None):
-        self.name = name
+    def __init__(self, svc_cfg, infos=None):
         self.cfg = svc_cfg
+        self.docker_client = None
         if infos is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
             self.docker_client = docker_api.connect()
@@ -44,14 +45,14 @@ class Container(object):
 
         A dictionary with an image 'Id' key and a 'Warnings' key.
         """
-        print('Creating container: {}'.format(self.name))
+        print('Creating container: {}'.format(self.cfg['name']))
         create = self.docker_client.create_container(
             image=self.cfg['image'],
-            name=self.name,
+            name=self.cfg['service_name'],
             ports=self.cfg.get('ports'),
             environment=self.cfg.get('env'),
             volumes=self.cfg.get('volumes'),
-            hostname=self.name,
+            hostname=self.cfg['name'],
             command=self.cfg.get('command'),
             detach=self.cfg.get('detach', False),
             stdin_open=self.cfg.get('stdin_open', False),
@@ -92,7 +93,7 @@ class Container(object):
         """
         if self.info.get('Id') is None:
             self.info['Id'] = self.create()
-        print('Starting container: {}'.format(self.name))
+        print('Starting container: {}'.format(self.cfg['name']))
         start = self.docker_client.start(
             container=self.info['Id'],
             binds=self.cfg.get('binds'),
@@ -119,40 +120,44 @@ class Container(object):
 
     def stop(self):
         if self.info.get('Id') is not None:
-            print('Stopping container: {}'.format(self.name))
+            print('Stopping container: {}'.format(self.cfg['name']))
             return self.docker_client.stop(self.info['Id'])
 
     def remove(self):
         self.stop()
         if self.info.get('Id') is not None:
-            print('Removing container: {}'.format(self.name))
+            print('Removing container: {}'.format(self.cfg['name']))
             self.docker_client.remove_container(self.info['Id'])
 
     def restart(self):
         self.docker_client.restart(self.info['Id'])
 
     def return_logs(self):
+        if not self.docker_client:
+            docker_api = DockerApi(self.cfg['api_cfg'])
+            self.docker_client = docker_api.connect()
+
         if self.cfg['image'] is not None:
 
             # "Fix" in order to not use the stream generator in Python2
-            # if sys.version_info > (3, 0):
-            #     try:
-            #         for line in self.docker_api.logs(
-            #             container=self.id,
-            #             stderr=True,
-            #             stdout=True,
-            #             timestamps=False,
-            #             stream=True
-            #             ):
-            #             print(line.decode('utf-8').rstrip())
-            #     except (KeyboardInterrupt, SystemExit):
-            #         return True
-            # else:
-                line = self.docker_api.logs(container=self.id,
-                                            stderr=True,
-                                            stdout=True,
-                                            timestamps=False,
-                                            stream=False)
+            if sys.version_info > (3, 0):
+                try:
+                    for line in self.docker_client.logs(
+                        container=self.info['Id'],
+                        stderr=True,
+                        stdout=True,
+                        timestamps=False,
+                        stream=True
+                        ):
+                        print(line.decode('utf-8').rstrip())
+                except (KeyboardInterrupt, SystemExit):
+                    return True
+            else:
+                line = self.docker_client.logs(container=self.info['Id'],
+                                               stderr=True,
+                                               stdout=True,
+                                               timestamps=False,
+                                               stream=False)
                 print(line)
 
     def _get_info(self, containers_info=None):
@@ -161,10 +166,10 @@ class Container(object):
         try:
             # One item contains "Names": ["/realname"]
             info = [item for item in containers_info
-                    if ("/" + self.name == str(
+                    if ("/" + self.cfg['service_name'] == str(
                         item['Names'][0]))][0]
 
-            # Crapy dirty hack for older versions of Docker (exple 1.6)
+            # Crapy dirty hack for older versions of Docker-py (exple 1.6)
             try:
                 net = info['NetworkSettings']['Networks'].get('bridge')
                 if net:

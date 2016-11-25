@@ -25,6 +25,11 @@ class ModelDefinition(object):
 
     This class is loading the model from the yaml files and provides
     different methods to read from it more easily.
+
+    We can pass it a set of yaml files or directly a Python dictionary.
+    It can contain 'projects', 'clusters' and 'services'
+
+    It takes and return only dictionaries.
     """
 
     def __init__(self, model=None, app_args=None, cluster_name=None):
@@ -57,7 +62,10 @@ class ModelDefinition(object):
             for cluster in model['clusters']:
                 self.cluster_list.append(cluster)
 
-    def _get_cluster(self, name):
+    def get_cluster(self, name):
+        """Return a cluster object by its name
+
+        """
         try:
             cluster = [clu for clu in self.cluster_list if clu['name'] == name]
             if len(cluster) > 1:
@@ -81,17 +89,16 @@ class ModelDefinition(object):
         """
         services_list = []
         if ('vars' in cluster):
-            if isinstance(cluster['services'], str):
-                try:
-                    j2 = Template(cluster['services'])
-                    services_yaml = j2.render(cluster['vars'])
+            try:
+                j2 = Template(str(cluster['services']))
+                services_yaml = j2.render(cluster['vars'])
+                services = yaml.load(services_yaml)
+            except ValueError:
+                for l in cluster['vars']:
+                    j2 = Template(str(cluster['services']))
+                    services_yaml = j2.render(l)
                     services = yaml.load(services_yaml)
-                except ValueError:
-                    for l in cluster['vars']:
-                        j2 = Template(cluster['services'])
-                        services_yaml = j2.render(l)
-                        services = yaml.load(services_yaml)
-                cluster['services'] = services
+            cluster['services'] = services
 
         for service in cluster['services']:
             service['cluster'] = {}
@@ -112,30 +119,24 @@ class ModelDefinition(object):
                 clu_svc_list = self._get_cluster_services(clu)
                 svc_list = svc_list + clu_svc_list
         else:
-            cluster = self._get_cluster(self.cluster_name)
+            cluster = self.get_cluster(self.cluster_name)
             svc_list = self._get_cluster_services(cluster)
         return svc_list
 
     def get_service(self, name):
         """This method returns a service as a dict.
 
+        It can only return a service from a specific cluster.
+        A service name is allowed only once per cluster.
         """
-        if self.cluster_name is None:
-            svc_list = []
-            for clu in self.cluster_list:
-                clu_svc_list = self._get_cluster_services(clu)
-                svc_list = svc_list + clu_svc_list
-        else:
-            cluster = self._get_cluster(self.cluster_name)
-            svc_list = self._get_cluster_services(cluster)
-        services_list = svc_list
+        services_list = self.get_services_list()
 
         try:
             service = [svc for svc in services_list if svc['name'] == name]
             if len(service) > 1:
                 raise TemplateFileError(
                     "There is more than one definition matching"
-                    " 'name: {}' in your model".format(name))
+                    " 'name: {}' in this cluster".format(name))
             service = service[0]
         except IndexError:
             raise TemplateFileError(
@@ -146,6 +147,13 @@ class ModelDefinition(object):
                 "At least one container definition in your model"
                 " is missing the name property")
 
+        service = self.build_service_dict(service)
+        return service
+
+    def build_service_dict(self, service):
+        """Build a service dictionary
+
+        """
         # Image dir definition:
         #
         if self.app_args and self.app_args.shdk_imgdir:
@@ -167,10 +175,13 @@ class ModelDefinition(object):
         except KeyError:
             raise TemplateFileError(
                 "Container definition of: '{}' in your model is"
-                " missing the image property".format(name))
+                " missing the image property".format(service['name']))
 
         service['path'] = '{}/{}'.format(service['images_dir'],
                                          service['image'].split(":")[0])
+
+        clu_name = service['cluster']['name']
+        service['service_name'] = clu_name + '_' + service['name']
 
         # Networking definition:
         #
@@ -224,7 +235,7 @@ class ModelDefinition(object):
                 if len(api_cfg) > 1:
                     raise TemplateFileError(
                         "There is more than one definition matching"
-                        " 'name: {}' in your model".format(name))
+                        " 'name: {}' in your model".format(service['name']))
                 api_cfg = api_cfg[0]
             except KeyError:
                 pass
@@ -254,13 +265,13 @@ class Loader(yaml.Loader):
 
     def include(self, node):
         filename = os.path.join(self._root, self.construct_scalar(node))
-        try:
-            with open(filename, 'r') as f:
-                return yaml.load(f, Loader)
-        except Exception:
-            raise TemplateFileError(
-                "The file {} you're trying to include doesn't"
-                "exist.".format(filename))
+        # try:
+        with open(filename, 'r') as f:
+            return yaml.load(f, Loader)
+        # except Exception:
+        #     raise TemplateFileError(
+        #         "The file {} you're trying to include doesn't"
+        #         "exist.".format(filename))
 
     def import_str(self, node):
         return str(self.construct_scalar(node))

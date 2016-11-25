@@ -22,8 +22,7 @@ import sys
 
 class Image(object):
 
-    def __init__(self, name, cfg):
-        self.name = name
+    def __init__(self, cfg):
         self.cfg = cfg
         docker_api = DockerApi(cfg['api_cfg'])
         self.docker_client = docker_api.connect()
@@ -63,7 +62,7 @@ class Image(object):
                 print(stream.rstrip())
 
     def pull(self):
-        sys.stdout.write("Pulling image %s:" % self.cfg['tag']),
+        sys.stdout.write("Pulling image %s:" % self.cfg['image']),
         sys.stdout.flush()
         for line in self.docker_client.pull(self.cfg['image'], stream=True):
             tick = '*'

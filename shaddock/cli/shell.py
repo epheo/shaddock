@@ -20,7 +20,7 @@ from cliff.commandmanager import CommandManager
 from cliff.help import HelpAction
 import logging
 import os
-import shaddock.frontend
+import shaddock.cli.views
 import sys
 
 
@@ -31,7 +31,7 @@ class ShaddockShell(App):
     def __init__(self):
         super(ShaddockShell, self).__init__(
             description='Shaddock shell',
-            version='0.6.0',
+            version=shaddock.__version__,
             command_manager=CommandManager('shaddock.cli'))
         self._set_shell_commands(self._get_commands())
 
@@ -214,16 +214,16 @@ class ShaddockShell(App):
     @staticmethod
     def _get_commands():
         return {
-            'build': shaddock.frontend.Build,
-            'create': shaddock.frontend.Create,
-            'start': shaddock.frontend.Start,
-            'logs': shaddock.frontend.Logs,
-            'stop': shaddock.frontend.Stop,
-            'restart': shaddock.frontend.Restart,
-            'rm': shaddock.frontend.Remove,
-            'ps': shaddock.frontend.List,
-            'show': shaddock.frontend.Show,
-            'pull': shaddock.frontend.Pull
+            'build': shaddock.cli.views.Build,
+            'create': shaddock.cli.views.Create,
+            'start': shaddock.cli.views.Start,
+            'logs': shaddock.cli.views.Logs,
+            'stop': shaddock.cli.views.Stop,
+            'restart': shaddock.cli.views.Restart,
+            'rm': shaddock.cli.views.Remove,
+            'ps': shaddock.cli.views.List,
+            'show': shaddock.cli.views.Show,
+            'pull': shaddock.cli.views.Pull
         }
 
     def _clear_shell_commands(self):

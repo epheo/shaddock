@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+* Documenting and Sphinx conf
+
+0.6.0
+-----
+
 * Documenting
 * Fix tests and document
 * Configure Sphinx and document

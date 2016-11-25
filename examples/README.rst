@@ -7,12 +7,11 @@ projects. The tests also serve as SHDK docs.
 
 Please look in the tests folder for examples of how to define yaml files for use
 with SHDK. Most of the test examples are snippets of yaml, for a more complete
-example look at the tests in the 'tests/yamlparser' folder.
+example look at the tests in the 'tests/model' folder.
 
 
 OpenStack
 ~~~~~~~~~~
-
 https://github.com/epheo/shaddock-openstack.git is a yml definition model
-exemple you can use with Shaddock to build, deploy and manage the lifecycle of
+example you can use with Shaddock to build, deploy and manage the lifecycle of
 an OpenStack platform from the upstream git sources.

@@ -12,4 +12,6 @@
 
 .. include:: contributing.rst
 
+.. include:: ../../HACKING.rst
+
 .. include:: infos.rst

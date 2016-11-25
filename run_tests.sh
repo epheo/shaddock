@@ -1,6 +1,7 @@
 #!/bin/bash
 
 shaddock -f tests/model/010-img-tests.yml build
+shaddock -f tests/model/shaddock.yml ps
 
 for test_scenario in 010-img-tests.yml \
                      130-volume-tests.yml \
