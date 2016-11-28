@@ -42,5 +42,5 @@ clusters:
       - name: test520
         image: testuser/arch_base:latest
         priority: 560
-        depends-on:
-          - {name: test504, port: 1234, type: tcp}
+        # depends-on:
+        #   - {name: test504, port: 1234, type: tcp}
