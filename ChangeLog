@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Documentation and tests
+* Fix multiple services with the same name, enhance clusters handeling and various bufixes
 * Documenting and Sphinx conf
 
 0.6.0

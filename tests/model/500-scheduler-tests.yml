@@ -21,13 +21,14 @@ clusters:
       - name: test501
         image: testuser/arch_base:latest
         priority: 510
+        command: 'sleep 100'
 
       - name: test503
         image: testuser/arch_base:latest
         priority: 520
         depends-on:
-          - {name: test500, status: stopped}
-          - {name: test501, status: stopped, retry: 10, sleep: 10}
+          - {name: test500, status: stopped, retry: 10, sleep: 10}
+          - {name: test501, status: running}
 
   - name: scheduler-tcp-tests
     images: images/testdir

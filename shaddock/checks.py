@@ -16,16 +16,14 @@
 #    under the License.
 
 import requests
-from shaddock.drivers.docker import checks as dockerchecks
 from shaddock.drivers.docker.container import Container
-from shaddock.model import ModelDefinition
 from shaddock.model import TemplateFileError
 import socket
 
 
 class Checks(object):
-    def __init__(self, app_args):
-        self.app_args = app_args
+    def __init__(self, model):
+        self.model = model
 
     def run(self, definition):
         self.param = {}
@@ -79,25 +77,24 @@ class Checks(object):
                                     "{}".format(str(definition)))
 
     def docker_check(self):
-        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
-        cfg = model.get_service(self.param['name'])
-        api_cfg = cfg['api_cfg']
-        return dockerchecks.check(self.param, api_cfg)
+        is_up = False
+        container = Container(self.model.get_service(self.param['name']))
+        if 'Up' in container.info.get('State'):
+            is_up = True
+        if self.param['status'] in ['running', 'up'] and is_up is True:
+            return True
+        if self.param['status'] in ['stopped', 'down'] and is_up is False:
+            return True
+        return False
 
     def port_check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         status = sock.connect_ex((self.param['host'], self.param['port']))
-        if self.param['state'] == 'up':
-            if status == 0:
-                ret = True
-            else:
-                ret = False
-        elif self.param['state'] == 'down':
-            if status == 0:
-                ret = False
-            else:
-                ret = True
-        return ret
+        if self.param['state'] == 'up' and status == 0:
+            return True
+        if self.param['state'] == 'down' and not status == 0:
+            return True
+        return False
 
     def http_check(self):
         url = (self.param['type'] + "://" + self.param['host'] +
@@ -109,9 +106,8 @@ class Checks(object):
                 answ = requests.head(url, timeout=5,
                                      proxies={"http": "", "https": ""})
             if answ.status_code == self.param['code']:
-                ret = True
+                return True
             else:
-                ret = False
+                return False
         except Exception:
-            ret = False
-        return ret
+            return False

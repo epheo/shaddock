@@ -16,7 +16,7 @@
 #    under the License.
 
 from operator import itemgetter
-from shaddock import checks
+from shaddock.checks import Checks
 from shaddock.drivers.docker.container import Container
 from shaddock.drivers.docker.image import Image
 from shaddock.model import ModelDefinition
@@ -38,7 +38,7 @@ class Scheduler(object):
                     "services from your model needs to have the priority "
                     "argument defined. At least one of your services does "
                     "not have this argument set.")
-            self.checker = checks.Checks(app_args)
+            self.checker = Checks(self.model)
 
     def build(self):
         if self.name is None:
