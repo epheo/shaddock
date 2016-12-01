@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix dockercheck
 * Documentation and tests
 * Fix multiple services with the same name, enhance clusters handeling and various bufixes
 * Documenting and Sphinx conf

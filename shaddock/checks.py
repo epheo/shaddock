@@ -79,7 +79,7 @@ class Checks(object):
     def docker_check(self):
         is_up = False
         container = Container(self.model.get_service(self.param['name']))
-        if 'Up' in container.info.get('State'):
+        if 'Up' or 'running' in container.info.get('State'):
             is_up = True
         if self.param['status'] in ['running', 'up'] and is_up is True:
             return True
