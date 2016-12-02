@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix docker check for new docker api result
 * Fix dockercheck
 * Documentation and tests
 * Fix multiple services with the same name, enhance clusters handeling and various bufixes
