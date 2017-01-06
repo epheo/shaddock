@@ -1,7 +1,7 @@
 **Shaddock**
 ============
 Shaddock is a container based orchestration and deployment tool that rely on
-a yaml definition model to describe and manage a distributed multi-service
+a definition model to describe and manage a distributed multi-service
 infrastructure.
 
 **Documentation:** http://shaddock.epheo.eu

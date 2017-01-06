@@ -121,85 +121,12 @@ class ShaddockShell(App):
             help='Template file to use.'
         )
         parser.add_argument(
-            '-d', '--images-dir',
-            action='store',
-            dest='shdk_imgdir',
-            default=self.env('SHDK_IMGDIR',
-                             default=None),
-            help='Directory to build Docker images from.'
-        )
-        parser.add_argument(
             '-c', '--cluster',
             action='store',
             dest='shdk_cluster',
             default=self.env('SHDK_CLUSTER',
                              default=None),
             help='The cluster to use (No value is all by default).'
-        )
-        parser.add_argument(
-            '--docker-version',
-            action='store',
-            dest='docker_version',
-            default=self.env('DOCKER_VERSION',
-                             default='1.12'),
-            help='Docker API version number'
-        )
-        parser.add_argument(
-            '-i', '--url',
-            action='store',
-            dest='docker_url',
-            default=self.env('DOCKER_URL',
-                             default=None),
-            help="Force a specific host url API."
-        )
-        parser.add_argument(
-            '--boot2docker',
-            action='store_true',
-            dest='docker_boot2docker',
-            help='Use Boot2Docker TLS conf.'
-                 'You should first:'
-                 '\"eval $(sudo docker-machine env machine_name)\"'
-        )
-        parser.add_argument(
-            '--tls',
-            action='store_true',
-            dest='docker_tls',
-            default=self.env('DOCKER_TLS',
-                             default=False),
-            help='Use TLS; implied by tls-verify flags.'
-        )
-        parser.add_argument(
-            '--tlscert',
-            action='store',
-            dest='docker_cert_path',
-            default=self.env('DOCKER_CERT_PATH',
-                             default=None),
-            help="Path to TLS certificate file."
-        )
-        parser.add_argument(
-            '--tlskey',
-            action='store',
-            dest='docker_key_path',
-            default=self.env('DOCKER_KEY_PATH',
-                             default=None),
-            help='Path to TLS key file.'
-        )
-        parser.add_argument(
-            '--tlsverify',
-            action='store',
-            dest='docker_tls_verify',
-            default=self.env('DOCKER_TLS_VERIFY',
-                             default=False),
-            help='Use TLS and verify the remote.'
-        )
-        parser.add_argument(
-            '--tlscacert',
-            action='store',
-            dest='docker_cacert_path',
-            default=self.env('DOCKER_CACERT_PATH',
-                             default=None),
-            help='Trust only remotes providing a certificate signed by the'
-                 'CA given here.'
         )
         return parser
 

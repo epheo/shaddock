@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+0.6.1
+-----
+
+* Fix docker check for new dAPI
 * Fix docker check for new docker api result
 * Fix dockercheck
 * Documentation and tests
