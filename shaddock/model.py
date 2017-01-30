@@ -156,20 +156,17 @@ class ModelDefinition(object):
         """
         # Image dir definition:
         #
-        if self.app_args and self.app_args.shdk_imgdir:
-            service['images_dir'] = self.app_args.shdk_imgdir
-        else:
-            try:
-                service['images_dir'] = os.path.join(
-                    os.path.dirname(self.model),
-                    service['cluster']['images'])
-            except TypeError:
-                raise TemplateFileError(
-                    "Cluster definition in your model is missing the images"
-                    " key. "
-                    "If you don't want to define a static images path in "
-                    "your model you can also specify a directory to build "
-                    "in with the -d cli arg.")
+        try:
+            service['images_dir'] = os.path.join(
+                os.path.dirname(self.model),
+                service['cluster']['images'])
+        except TypeError:
+            raise TemplateFileError(
+                "Cluster definition in your model is missing the images"
+                " key. "
+                "If you don't want to define a static images path in "
+                "your model you can also specify a directory to build "
+                "in with the -d cli arg.")
         try:
             service['image']
         except KeyError:
@@ -219,32 +216,22 @@ class ModelDefinition(object):
         # Host API Definition:
         #
         api_cfg = {}
-        if self.app_args and self.app_args.docker_url:
-            api_cfg['url'] = self.app_args.docker_url
-            api_cfg['version'] = self.app_args.docker_version
-            api_cfg['cert_path'] = self.app_args.docker_cert_path
-            api_cfg['key_path'] = self.app_args.docker_key_path
-            api_cfg['cacert_path'] = self.app_args.docker_cacert_path
-            api_cfg['tls_verify'] = self.app_args.docker_tls_verify
-            api_cfg['tls'] = self.app_args.docker_tls
-            api_cfg['boot2docker'] = self.app_args.docker_boot2docker
-        else:
-            try:
-                api_cfg = [api for api in service['cluster']['hosts'] if
-                           api['name'] == service['host']]
-                if len(api_cfg) > 1:
-                    raise TemplateFileError(
-                        "There is more than one definition matching"
-                        " 'name: {}' in your model".format(service['name']))
-                api_cfg = api_cfg[0]
-            except KeyError:
-                pass
-            except IndexError:
+        try:
+            api_cfg = [api for api in service['cluster']['hosts'] if
+                       api['name'] == service['host']]
+            if len(api_cfg) > 1:
                 raise TemplateFileError(
-                    "There is no Docker Host definition containing"
-                    " 'name: {}' in your model.".format(service['host']))
-            except TypeError:
-                pass
+                    "There is more than one definition matching"
+                    " 'name: {}' in your model".format(service['name']))
+            api_cfg = api_cfg[0]
+        except KeyError:
+            pass
+        except IndexError:
+            raise TemplateFileError(
+                "There is no Docker Host definition containing"
+                " 'name: {}' in your model.".format(service['host']))
+        except TypeError:
+            pass
         service['api_cfg'] = api_cfg
         return service
 

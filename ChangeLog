@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* Add useless systemctl stuff, [to amend]
+* Clean ops
+
 0.6.1
 -----
 
