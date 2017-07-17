@@ -55,6 +55,7 @@ pygments_style = 'sphinx'
 html_theme_path = ["./theme/"]
 html_theme = 'openstack'
 html_static_path = ['static']
+html_logo = theme/shaddock_small200.jpg
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = '%sdoc' % project

@@ -44,9 +44,9 @@ The Shaddock scheduler will ensure that all the requirements you provide are
 matched before starting a new service.
 
 You can check:
-- A container status
-- If a port is open (tcp or udp)
-- The return code of a http GET
+* A container status
+* If a port is open (tcp or udp)
+* The return code of a http GET
 
 You can also specify the number of retry, the time to wait before 2 checks, and
 if the check should use the system proxy vars or not.
