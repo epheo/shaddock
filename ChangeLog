@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Fix Sphinx issue
+* Doc
 * Clean model from unused opts and upgrade tox and pbr to py36
 * Add useless systemctl stuff, [to amend]
 * Clean ops
