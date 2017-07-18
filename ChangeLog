@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Clean model from unused opts and upgrade tox and pbr to py36
 * Add useless systemctl stuff, [to amend]
 * Clean ops
 
@@ -55,7 +56,7 @@ CHANGES
 * Add jinja2 requirement
 * Flake and pepe8 refacto
 * Try catch list frontend
-* Documentation in README Commenting Fix image_dir from model and CLI
+* Documentation in README Commenting Fix image\_dir from model and CLI
 * Remove pyvenv dir
 * Correction IndentationError
 * Update Authors and requirements
@@ -70,7 +71,7 @@ CHANGES
 * adds the ability to split the infrastructure on multiple nodes
 * adds the ability to split the infrastructure on multiple nodes
 * Fix sed command to replace the right string
-* merge add_services
+* merge add\_services
 * merge
 * Document Boot2Docker tls support
 * Document Boot2Docker tls support
@@ -89,7 +90,7 @@ CHANGES
 * tgtd
 * tgtd
 * block-device
-* nova_host_ip
+* nova\_host\_ip
 * Change nova conf and add new services to .yml
 * Fixed minor readme
 * This commit replace the string infrastructure.yml by the template name supplied as an argument
@@ -136,9 +137,9 @@ CHANGES
 * Readme
 * Readme + frontend
 * Fix checks
-* Add env vars + set_ip.sh
+* Add env vars + set\_ip.sh
 * fix
-* DONE: 	- Change ENV variables places 	- Merge infrastructure and configuration.yml 	- Remove name dependencie on infratsructure.yaml 	- Add options images_dir and template_file 	- app_args propagation (is it a good thing?)
+* DONE: 	- Change ENV variables places 	- Merge infrastructure and configuration.yml 	- Remove name dependencie on infratsructure.yaml 	- Add options images\_dir and template\_file 	- app\_args propagation (is it a good thing?)
 * Update README.rst
 * Update README.rst
 * pull all done
@@ -220,7 +221,7 @@ CHANGES
 * pep8
 * Fix logs option
 * Retrieve args from root
-* replace oslo_config by oslo.config
+* replace oslo\_config by oslo.config
 * correction privileged
 * typo
 * typo
@@ -276,26 +277,26 @@ CHANGES
 * Readme
 * Readme
 * Readme
-* Fix retrieve scheduler build_all
-* Fix retrieve scheduler build_all
-* Fix retrieve scheduler build_all
-* Fix retrieve name_list()
-* Refacto build take_action
-* Refacto build take_action
+* Fix retrieve scheduler build\_all
+* Fix retrieve scheduler build\_all
+* Fix retrieve scheduler build\_all
+* Fix retrieve name\_list()
+* Refacto build take\_action
+* Refacto build take\_action
 * Fix ContainerConfig rename
 * Scheduler work
 * Rename to shaddock
 * Change name to shaddock
 * Add tox
 * Change setup.cfg
-* Commit in the middle of intégration of oslo_config
+* Commit in the middle of intégration of oslo\_config
 * add oslo-config-generator
 * Add conf.nocache
 * Refacto + opti
 * backend.start now check if Image is created before launching container. If the image is not created start method will create it first then start
 * Fix create before start
 * Begin start before create
-* Use oslo_config
+* Use oslo\_config
 * Add help to cliff
 * Fix Docker version type
 * Fix : Try oslo.config with CONF global var
@@ -330,11 +331,11 @@ CHANGES
 * add show to start cmd
 * add show to start cmd
 * fix
-* No_cache rather ok
+* No\_cache rather ok
 * Cliff command line integrated
-* Add cliff cli + Huge refactoring get_info ApiCalls / 90
+* Add cliff cli + Huge refactoring get\_info ApiCalls / 90
 * Core OpenStack services deploying fine
-* ajout network_mode
+* ajout network\_mode
 * readme
 * Change output .start +docker logs cli
 * Delete frontend.old
@@ -379,7 +380,7 @@ CHANGES
 * fix backend.Container.start
 * Fix Container.stop et Container.remove func - Split previous crapy useless hack
 * hotfox
-* Hotfix proposed for backend.Container.get_info()
+* Hotfix proposed for backend.Container.get\_info()
 * Try hotfix for start
 * fix backend.Container.start
 * fix frontend
@@ -393,9 +394,9 @@ CHANGES
 * Fix octopenstack imports
 * Frontend refactoring: 	Add lib argparse 	Front/Back isolation 	Arguments
 * fix var name
-* Moved container information get in get_info()
+* Moved container information get in get\_info()
 * add self arguments in Container class
-* fix get_info
+* fix get\_info
 * backend refacto
 * Backend changes make 2 classes: Images and Containers problem is Images and Containers lives longer than the octopenstack execution
 * New model by dictionary object: Code refactoring Dico as class instancied by containers
@@ -440,7 +441,7 @@ CHANGES
 * doc
 * first clean sh scripts
 * Delete admin-openrc.sh
-* Delete setup_defaults.sh
+* Delete setup\_defaults.sh
 * Change defaults in config files
 * doc
 * Add doc
