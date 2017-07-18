@@ -17,7 +17,7 @@ You will need at least the following options:
     :language: yaml
     :start-after: ---
 
-The following options are currenlty implemented:
+The following possibilities are currently implemented:
 
 .. literalinclude:: ../../tests/model/800-service-tests.yml
     :language: yaml
