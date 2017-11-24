@@ -1,8 +1,13 @@
 CHANGES
 =======
 
+* Import new API version
 * Changelog
 * Clean option and opti
+
+0.6.2
+-----
+
 * Fix Sphinx issue
 * Doc
 * Clean model from unused opts and upgrade tox and pbr to py36

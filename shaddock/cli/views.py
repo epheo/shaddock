@@ -184,23 +184,23 @@ class List(Lister):
         # t is one of the tuples created from a dictionary
         hl = [{}]
         hl = [dict(t) for t in set([tuple(d.items()) for d in hl])]
-        infos = []
+        containers_all = []
         for host in hl:
-            try:
-                docker_api = DockerApi(host)
-                docker_client = docker_api.connect()
-                host_info = docker_client.containers(all=True)
-                for info in host_info:
-                    infos.append(info)
-            except Exception:
-                print("Failed to establish a new connection to"
-                      " {} at {}.".format(host.get('name'), host.get('url')))
+            # try:
+            docker_api = DockerApi(host)
+            docker_client = docker_api.connect()
+            containers = docker_client.containers.list(all=True)
+            for c in containers:
+                containers_all.append(c)
+            # except Exception:
+            #     print("Failed to establish a new connection to"
+            #           " {} at {}.".format(host.get('name'), host.get('url')))
 
         columns = ('#', 'Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
         l = ()
         for svc in model.get_services_list():
             svc_cfg = model.build_service_dict(svc)
-            c = Container(svc_cfg, infos)
+            c = Container(svc_cfg, containers_all)
             host = c.cfg.get('host', 'localhost')
             ip = c.info.get('Ip')
             priority = c.cfg.get('priority', '')

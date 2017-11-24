@@ -15,7 +15,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
 from shaddock.drivers.docker.api import DockerApi
 import sys
 
@@ -28,7 +27,8 @@ class Image(object):
         self.docker_client = docker_api.connect()
 
     def build(self, nocache=None):
-        for line in self.docker_client.build(
+        print("Building image %s" % self.cfg['image']),
+        image = self.docker_client.images.build(
             path=self.cfg['path'],
             tag=self.cfg['image'],
             quiet=False,
@@ -46,20 +46,15 @@ class Image(object):
             decode=False,
             buildargs=None,
             gzip=False,
-            # shmsize=None,
-            # labels=None
-            ):
-
-            try:
-                jsonstream = json.loads(line.decode())
-            except UnicodeDecodeError:
-                pass
-            stream = jsonstream.get('stream')
-            error = jsonstream.get('error')
-            if error is not None:
-                print(error.rstrip())
-            if stream is not None:
-                print(stream.rstrip())
+            shmsize=None,
+            labels=None,
+            cache_from=None,
+            target=None,
+            network_mode=None,
+            # squash=False,
+            # extra_hosts=None,
+            )
+        return image
 
     def pull(self):
         sys.stdout.write("Pulling image %s:" % self.cfg['image']),

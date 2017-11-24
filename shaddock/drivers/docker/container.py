@@ -32,14 +32,14 @@ class Container(object):
     databases. THe containers are retrieve from their names.
     """
 
-    def __init__(self, svc_cfg, infos=None):
+    def __init__(self, svc_cfg, containers_all=None):
         self.cfg = svc_cfg
         self.docker_client = None
-        if infos is None:
+        if containers_all is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
             self.docker_client = docker_api.connect()
             self.docker_client = self.docker_client.containers
-        self.info = self._get_info(infos)
+        self.info = self._get_info(containers_all)
 
     def create(self):
         """Returns (dict):
@@ -84,8 +84,7 @@ class Container(object):
             # networking_config=self.cfg.get('networking_config'),
             # healthcheck=self.cfg.get('healthcheck')
             )
-        create = create['id']
-        return create
+        return create['id']
 
     def start(self):
         """Returns (dict):
@@ -94,11 +93,18 @@ class Container(object):
         """
         print('Starting container: {}'.format(self.cfg['name']))
         start = self.docker_client.run(
-            container=self.info['Id'],
-            binds=self.cfg.get('binds'),
-            port_bindings=self.cfg.get('port_bindings'),
+            name=self.cfg['name'],
+            image=self.cfg['image'],
+            command=self.cfg.get('command'),
+            cap_add=self.cfg.get('cap_drop'),
+            cap_drop=self.cfg.get('cap_add'),
+            cpu_count=self.cfg.get('cpu_count'),
+            cpu_percent=self.cfg.get('cpu_percent'),
+            devices=self.cfg.get('devices'),
             privileged=self.cfg.get('privileged'),
             network_mode=self.cfg.get('network_mode', 'bridge'),
+            network=self.cfg.get('network'),
+            ports=self.cfg.get('ports'),
             lxc_conf=self.cfg.get('lxc_conf'),
             publish_all_ports=self.cfg.get('publish_all_ports'),
             links=self.cfg.get('links'),
@@ -106,15 +112,14 @@ class Container(object):
             dns_search=self.cfg.get('dns_search'),
             volumes_from=self.cfg.get('volumes_from'),
             restart_policy=self.cfg.get('restart_policy'),
-            cap_add=self.cfg.get('cap_add'),
-            cap_drop=self.cfg.get('cap_drop'),
-            devices=self.cfg.get('devices'),
             extra_hosts=self.cfg.get('extra_hosts'),
             read_only=self.cfg.get('read_only'),
             pid_mode=self.cfg.get('pid_mode'),
             ipc_mode=self.cfg.get('ipc_mode'),
             security_opt=self.cfg.get('security_opt'),
-            ulimits=self.cfg.get('ulimits'))
+            ulimits=self.cfg.get('ulimits'),
+            working_dir=self.cfg.get('working_dir'),
+            )
         return start
 
     def stop(self):
@@ -159,30 +164,16 @@ class Container(object):
                                                stream=False)
                 print(line)
 
-    def _get_info(self, containers_info=None):
-        if containers_info is None:
-            containers_info = self.docker_client.containers(all=True)
+    def _get_info(self, containers_all=None):
+        info = {}
+        if containers_all is None:
+            containers_all = self.docker_client.list(all=True)
         try:
-            # One item contains "Names": ["/realname"]
-            info = [item for item in containers_info
-                    if ("/" + self.cfg['service_name'] == str(
-                        item['Names'][0]))][0]
-
-            # Crapy dirty hack for older versions of Docker-py (exple 1.6)
-            try:
-                net = info['NetworkSettings']['Networks'].get('bridge')
-                if net:
-                    info['Ip'] = net.get('IPAddress')
-            except KeyError:
-                docker_api = DockerApi(self.cfg['api_cfg'])
-                docker_client = docker_api.connect()
-                inspect = docker_client.inspect_container(info['Id'])
-                info['Ip'] = inspect['NetworkSettings'].get('IPAddress')
-                info['State'] = info.get('Status')
-                if not info['State']:
-                    if info.get('Created'):
-                        info['State'] = 'Created'
-                        info['Status'] = 'Created'
+            container = [c for c in containers_all
+                         if (c.name in self.cfg['service_name'])][0]
+            info['Id'] = container.id
+            info['Ip'] = 'Not implemented'
+            info['State'] = container.status
 
         except IndexError:
             # Container is not running
