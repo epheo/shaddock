@@ -15,7 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from docker.client import Client
+from docker import DockerClient as Client
 from docker.tls import TLSConfig
 from docker.utils import kwargs_from_env
 
@@ -33,7 +33,7 @@ class DockerApi(object):
 
     def connect(self):
         url = self.api_cfg.get('url', 'unix://var/run/docker.sock')
-        version = self.api_cfg.get('version', '1.12')
+        version = self.api_cfg.get('version', '1.30')
         boot2docker = self.api_cfg.get('boot2docker')
 
         tls_config = self._construct_tlsconfig()

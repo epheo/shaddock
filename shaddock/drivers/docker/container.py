@@ -38,6 +38,7 @@ class Container(object):
         if infos is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
             self.docker_client = docker_api.connect()
+            self.docker_client = self.docker_client.containers
         self.info = self._get_info(infos)
 
     def create(self):
@@ -46,7 +47,7 @@ class Container(object):
         A dictionary with an image 'Id' key and a 'Warnings' key.
         """
         print('Creating container: {}'.format(self.cfg['name']))
-        create = self.docker_client.create_container(
+        create = self.docker_client.create(
             image=self.cfg['image'],
             name=self.cfg['service_name'],
             ports=self.cfg.get('ports'),
@@ -83,7 +84,7 @@ class Container(object):
             # networking_config=self.cfg.get('networking_config'),
             # healthcheck=self.cfg.get('healthcheck')
             )
-        create = create['Id']
+        create = create['id']
         return create
 
     def start(self):
@@ -91,10 +92,8 @@ class Container(object):
 
         A dictionary with an image 'Id' key and a 'Warnings' key.
         """
-        if self.info.get('Id') is None:
-            self.info['Id'] = self.create()
         print('Starting container: {}'.format(self.cfg['name']))
-        start = self.docker_client.start(
+        start = self.docker_client.run(
             container=self.info['Id'],
             binds=self.cfg.get('binds'),
             port_bindings=self.cfg.get('port_bindings'),
