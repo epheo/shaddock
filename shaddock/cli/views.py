@@ -197,7 +197,7 @@ class List(Lister):
             #           " {} at {}.".format(host.get('name'), host.get('url')))
 
         columns = ('#', 'Cluster', 'Name', 'State', 'Host', 'IP', 'Image')
-        l = ()
+        lines = ()
         for svc in model.get_services_list():
             svc_cfg = model.build_service_dict(svc)
             c = Container(svc_cfg, containers_all)
@@ -209,8 +209,8 @@ class List(Lister):
             state = c.info.get('State')
 
             line = (priority, cluster, svc['name'], state, host, ip, tag)
-            l = l + (line, )
-        return columns, l
+            lines = lines + (line, )
+        return columns, lines
 
 
 class Show(ShowOne):
