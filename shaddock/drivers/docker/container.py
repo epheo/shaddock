@@ -150,31 +150,24 @@ class Container(object):
         self.docker_client.restart(self.info['Id'])
 
     def return_logs(self):
-        if not self.docker_client:
-            docker_api = DockerApi(self.cfg['api_cfg'])
-            self.docker_client = docker_api.connect()
-
         if self.cfg['image'] is not None:
-
             # "Fix" in order to not use the stream generator in Python2
+            c = self.info.get('Container')
             if sys.version_info > (3, 0):
                 try:
-                    for line in self.docker_client.logs(
-                        container=self.info['Id'],
-                        stderr=True,
-                        stdout=True,
-                        timestamps=False,
-                        stream=True
-                        ):
+                    for line in c.logs(stderr=True,
+                                       stdout=True,
+                                       timestamps=True,
+                                       stream=True,
+                                       ):
                         print(line.decode('utf-8').rstrip())
                 except (KeyboardInterrupt, SystemExit):
                     return True
             else:
-                line = self.docker_client.logs(container=self.info['Id'],
-                                               stderr=True,
-                                               stdout=True,
-                                               timestamps=False,
-                                               stream=False)
+                line = c.logs(stderr=True,
+                              stdout=True,
+                              timestamps=False,
+                              stream=False)
                 print(line)
 
     def _get_info(self, containers_all=None):

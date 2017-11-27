@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Migrate to docker-py 2.4
 * Migration ongoing
 * Import new API version
 * Changelog
