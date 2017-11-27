@@ -89,6 +89,8 @@ class Checks(object):
         return False
 
     def port_check(self):
+        print('Running checks on host:')
+        print(self.param['host'])
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         status = sock.connect_ex((self.param['host'], self.param['port']))
         if self.param['state'] == 'up' and status == 0:

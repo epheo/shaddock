@@ -16,6 +16,7 @@
 #    under the License.
 
 from shaddock.drivers.docker.api import DockerApi
+from docker import errors as docker_errors
 import sys
 
 
@@ -37,8 +38,8 @@ class Container(object):
         self.docker_client = None
         if containers_all is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
-            self.docker_client = docker_api.connect()
-            self.docker_client = self.docker_client.containers
+            self.docker_api = docker_api.connect()
+            self.docker_client = self.docker_api.containers
         self.info = self._get_info(containers_all)
 
     def create(self):
@@ -55,7 +56,7 @@ class Container(object):
             volumes=self.cfg.get('volumes'),
             hostname=self.cfg['name'],
             command=self.cfg.get('command'),
-            detach=self.cfg.get('detach', False),
+            detach=self.cfg.get('detach', True),
             stdin_open=self.cfg.get('stdin_open', False),
             tty=self.cfg.get('tty', False),
             mem_limit=self.cfg.get('mem_limit'),
@@ -91,47 +92,59 @@ class Container(object):
 
         A dictionary with an image 'Id' key and a 'Warnings' key.
         """
-        print('Starting container: {}'.format(self.cfg['name']))
-        start = self.docker_client.run(
-            name=self.cfg['name'],
-            image=self.cfg['image'],
-            command=self.cfg.get('command'),
-            cap_add=self.cfg.get('cap_drop'),
-            cap_drop=self.cfg.get('cap_add'),
-            cpu_count=self.cfg.get('cpu_count'),
-            cpu_percent=self.cfg.get('cpu_percent'),
-            devices=self.cfg.get('devices'),
-            privileged=self.cfg.get('privileged'),
-            network_mode=self.cfg.get('network_mode', 'bridge'),
-            network=self.cfg.get('network'),
-            ports=self.cfg.get('ports'),
-            lxc_conf=self.cfg.get('lxc_conf'),
-            publish_all_ports=self.cfg.get('publish_all_ports'),
-            links=self.cfg.get('links'),
-            dns=self.cfg.get('dns'),
-            dns_search=self.cfg.get('dns_search'),
-            volumes_from=self.cfg.get('volumes_from'),
-            restart_policy=self.cfg.get('restart_policy'),
-            extra_hosts=self.cfg.get('extra_hosts'),
-            read_only=self.cfg.get('read_only'),
-            pid_mode=self.cfg.get('pid_mode'),
-            ipc_mode=self.cfg.get('ipc_mode'),
-            security_opt=self.cfg.get('security_opt'),
-            ulimits=self.cfg.get('ulimits'),
-            working_dir=self.cfg.get('working_dir'),
-            )
+        try:
+            print('Starting container: {}'.format(self.cfg['name']))
+            start = self.docker_client.run(
+                name=self.cfg['name'],
+                image=self.cfg['image'],
+                command=self.cfg.get('command'),
+                cap_add=self.cfg.get('cap_drop'),
+                cap_drop=self.cfg.get('cap_add'),
+                cpu_count=self.cfg.get('cpu_count'),
+                cpu_percent=self.cfg.get('cpu_percent'),
+                detach=self.cfg.get('detach', True),
+                devices=self.cfg.get('devices'),
+                privileged=self.cfg.get('privileged'),
+                network_mode=self.cfg.get('network_mode', 'bridge'),
+                network=self.cfg.get('network'),
+                ports=self.cfg.get('ports'),
+                lxc_conf=self.cfg.get('lxc_conf'),
+                publish_all_ports=self.cfg.get('publish_all_ports'),
+                links=self.cfg.get('links'),
+                dns=self.cfg.get('dns'),
+                dns_search=self.cfg.get('dns_search'),
+                volumes_from=self.cfg.get('volumes_from'),
+                restart_policy=self.cfg.get('restart_policy'),
+                extra_hosts=self.cfg.get('extra_hosts'),
+                read_only=self.cfg.get('read_only'),
+                pid_mode=self.cfg.get('pid_mode'),
+                ipc_mode=self.cfg.get('ipc_mode'),
+                security_opt=self.cfg.get('security_opt'),
+                ulimits=self.cfg.get('ulimits'),
+                working_dir=self.cfg.get('working_dir'),
+                )
+        except docker_errors.APIError:
+            print('Container {} is already running'.format(self.cfg['name']))
+            return self.cfg['name']
+
         return start
 
     def stop(self):
-        if self.info.get('Id') is not None:
+        c = self.info.get('Container')
+        if c is not None:
             print('Stopping container: {}'.format(self.cfg['name']))
-            return self.docker_client.stop(self.info['Id'])
+            return c.stop()
 
     def remove(self):
         self.stop()
-        if self.info.get('Id') is not None:
+        c = self.info.get('Container')
+        if c is not None:
             print('Removing container: {}'.format(self.cfg['name']))
-            self.docker_client.remove_container(self.info['Id'])
+            try:
+                c.remove()
+            except docker_errors.NotFound:
+                print('Container {} does not exist'.format(self.cfg['name']))
+                return True
 
     def restart(self):
         self.docker_client.restart(self.info['Id'])
@@ -171,8 +184,14 @@ class Container(object):
         try:
             container = [c for c in containers_all
                          if (c.name in self.cfg['service_name'])][0]
+
+            api = DockerApi(self.cfg['api_cfg'], 'lowlevelapi')
+            api = api.connect()
+            infos = api.inspect_container(container.id)
+
+            info['Container'] = container
             info['Id'] = container.id
-            info['Ip'] = 'Not implemented'
+            info['Ip'] = infos['NetworkSettings']['IPAddress']
             info['State'] = container.status
 
         except IndexError:

@@ -15,14 +15,13 @@ clusters:
         priority: 900
         host: node001-socket
         ports:
-          - 0.0.0.0:4321:4322
-          - 0.0.0.0:4325
-          - 4326:4327
-          - 4329
+          '4321/tcp': ('0.0.0.0', 4322)
+          '4325/tcp': ('0.0.0.0', 4325)
+          '4326/tcp': 4327
+          '4329/tcp': 4329
         volumes: 
-          - /home/user1/:/mnt/vol2:rw
-          - /var/www:/mnt/vol1:ro
-          - /var/ww:/mnt/vol3
+          '/home/user1/': {'bind': '/mnt/vol2', 'mode': 'rw'}
+          '/var/www': {'bind': '/mnt/vol1', 'mode': 'ro'} 
         env:
           VAR001: '{{ var_001 }}'
         depends-on:

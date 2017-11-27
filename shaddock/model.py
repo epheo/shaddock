@@ -180,39 +180,6 @@ class ModelDefinition(object):
         clu_name = service['cluster']['name']
         service['service_name'] = clu_name + '_' + service['name']
 
-        # Networking definition:
-        #
-        # As we can't match the port bindings struct in Yaml (tuple)
-        # We use a different representation in the model that we are
-        # converting back here.
-        #
-        if service.get('ports'):
-            service['port_bindings'] = {}
-            for p in service['ports']:
-                if ':' in str(p):
-                    l = p.split(':')
-                    key = l.pop()
-                    if '.' in l[0]:
-                        service['port_bindings'][key] = tuple(l)
-                    else:
-                        service['port_bindings'][key] = l[0]
-                else:
-                    service['port_bindings'][p] = p
-
-            service['ports'] = [p for p in service['port_bindings'].keys()]
-
-        # Volume definition:
-        #
-        service['binds'] = service.get('volumes')
-        if service.get('volumes'):
-            volumes = []
-            for v in service.get('volumes'):
-                if ':' in v:
-                    v = v.split(':')
-                    v = v[1]
-                volumes.append(v)
-            service['volumes'] = volumes
-
         # Host API Definition:
         #
         api_cfg = {}

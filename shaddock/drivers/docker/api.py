@@ -15,7 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from docker import DockerClient as Client
+from docker import DockerClient as DockerClient
+from docker import APIClient as LowLevelAPI
 from docker.tls import TLSConfig
 from docker.utils import kwargs_from_env
 
@@ -28,8 +29,16 @@ class DockerApi(object):
 
      """
 
-    def __init__(self, api_cfg):
+    def __init__(self, api_cfg, api=None):
         self.api_cfg = api_cfg
+        if api == 'lowlevelapi':
+            self.api = LowLevelAPI
+        elif api == 'dockerclient':
+            self.api = DockerClient
+        elif api is None:
+            self.api = DockerClient
+        else:
+            return 1
 
     def connect(self):
         url = self.api_cfg.get('url', 'unix://var/run/docker.sock')
@@ -40,12 +49,12 @@ class DockerApi(object):
         if boot2docker is True:
             kwargs = kwargs_from_env()
             kwargs['tls'].assert_hostname = False
-            client = Client(**kwargs)
+            client = self.api(**kwargs)
         else:
-            client = Client(base_url=url,
-                            version=str(version),
-                            tls=tls_config,
-                            timeout=50)
+            client = self.api(base_url=url,
+                              version=str(version),
+                              tls=tls_config,
+                              timeout=50)
         return client
 
     def _construct_tlsconfig(self):
