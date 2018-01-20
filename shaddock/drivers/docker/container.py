@@ -15,6 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from copy import copy
 from shaddock.drivers.docker.api import DockerApi
 from docker import errors as docker_errors
 import sys
@@ -35,6 +36,19 @@ class Container(object):
 
     def __init__(self, svc_cfg, containers_all=None):
         self.cfg = svc_cfg
+        self.env = dict(self.cfg)
+        # we may want to use func.__code__.co_varnames here to gather all
+        # possible arguments of the docker api and compare them with cfg
+        # and delete the crapy hack of the next 8 lines.
+        args_to_delete = ['priority', 'depends-on', 'detach', 'api_cfg',
+                          'cluster', 'images_dir', 'path', 'service_name',
+                          'host']
+        for arg in args_to_delete:
+            try:
+                del self.env[arg]
+            except KeyError:
+                 pass
+        self.env['detach'] = self.cfg.get('detach', True)
         self.docker_client = None
         if containers_all is None:
             docker_api = DockerApi(self.cfg['api_cfg'])
@@ -42,88 +56,22 @@ class Container(object):
             self.docker_client = self.docker_api.containers
         self.info = self._get_info(containers_all)
 
-    def create(self):
-        """Returns (dict):
+    def gather_api_methods(self, func):
+        return func.__code__.co_varnames
 
-        A dictionary with an image 'Id' key and a 'Warnings' key.
-        """
+    def create(self):
+        """Returns a Container object"""
         print('Creating container: {}'.format(self.cfg['name']))
-        create = self.docker_client.create(
-            image=self.cfg['image'],
-            name=self.cfg['service_name'],
-            ports=self.cfg.get('ports'),
-            environment=self.cfg.get('env'),
-            volumes=self.cfg.get('volumes'),
-            hostname=self.cfg['name'],
-            command=self.cfg.get('command'),
-            detach=self.cfg.get('detach', True),
-            stdin_open=self.cfg.get('stdin_open', False),
-            tty=self.cfg.get('tty', False),
-            mem_limit=self.cfg.get('mem_limit'),
-            dns=self.cfg.get('dns'),
-            volumes_from=self.cfg.get('volumes_from'),
-            network_disabled=self.cfg.get('network_disabled', False),
-            entrypoint=self.cfg.get('entrypoint'),
-            user=self.cfg.get('user'),
-            cpu_shares=self.cfg.get('cpu_shares'),
-            working_dir=self.cfg.get('working_dir'),
-            domainname=self.cfg.get('domainname'),
-            memswap_limit=self.cfg.get('memswap_limit'),
-            cpuset=self.cfg.get('cpuset'),
-            host_config=self.cfg.get('host_config'),
-            mac_address=self.cfg.get('mac_address'),
-            labels=self.cfg.get('labels'),
-            volume_driver=self.cfg.get('volume_driver'),
-            stop_signal=self.cfg.get('stop_signal'),
-            networking_config=self.cfg.get('networking_config')
-            # For future release of Docker-py:
-            #
-            # mac_address=self.cfg.get('mac_address'),
-            # labels=self.cfg.get('labels'),
-            # volume_driver=self.cfg.get('volume_driver'),
-            # stop_signal=self.cfg.get('stop_signal'),
-            # networking_config=self.cfg.get('networking_config'),
-            # healthcheck=self.cfg.get('healthcheck')
-            )
+        create = self.docker_client.create(**self.env)
         return create['id']
 
     def start(self):
-        """Returns (dict):
-
-        A dictionary with an image 'Id' key and a 'Warnings' key.
-        """
+        """Returns a Container object"""
         try:
             print('Starting container: {}'.format(self.cfg['name']))
-            start = self.docker_client.run(
-                name=self.cfg['name'],
-                image=self.cfg['image'],
-                command=self.cfg.get('command'),
-                cap_add=self.cfg.get('cap_drop'),
-                cap_drop=self.cfg.get('cap_add'),
-                cpu_count=self.cfg.get('cpu_count'),
-                cpu_percent=self.cfg.get('cpu_percent'),
-                detach=self.cfg.get('detach', True),
-                devices=self.cfg.get('devices'),
-                privileged=self.cfg.get('privileged'),
-                network_mode=self.cfg.get('network_mode', 'bridge'),
-                network=self.cfg.get('network'),
-                ports=self.cfg.get('ports'),
-                lxc_conf=self.cfg.get('lxc_conf'),
-                publish_all_ports=self.cfg.get('publish_all_ports'),
-                links=self.cfg.get('links'),
-                dns=self.cfg.get('dns'),
-                dns_search=self.cfg.get('dns_search'),
-                volumes_from=self.cfg.get('volumes_from'),
-                restart_policy=self.cfg.get('restart_policy'),
-                extra_hosts=self.cfg.get('extra_hosts'),
-                read_only=self.cfg.get('read_only'),
-                pid_mode=self.cfg.get('pid_mode'),
-                ipc_mode=self.cfg.get('ipc_mode'),
-                security_opt=self.cfg.get('security_opt'),
-                ulimits=self.cfg.get('ulimits'),
-                working_dir=self.cfg.get('working_dir'),
-                )
-        except docker_errors.APIError:
+            start = self.docker_client.run(**self.env)
+        except docker_errors.APIError as error:
+            print(error)
             print('Container {} is already running'.format(self.cfg['name']))
             return self.cfg['name']
 

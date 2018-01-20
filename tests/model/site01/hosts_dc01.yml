@@ -1,7 +1,14 @@
 
 ---
 - name: node001-socket
-  url: unix://var/run/docker.sock
+  api:
+    base_url: unix://var/run/docker.sock
+    version: 1.30
+    timeout: 10
+    tls: True
+  network:
+    name: net1
+    driver: 
 
 - name: node002-tcp
   url: tcp://127.0.0.1:2376

@@ -14,7 +14,7 @@ clusters:
         - name: clu1-{{service}}
           image: testuser/arch_base:latest
           priority: 401
-          env:
+          environment:
             VAR001: {{var_001}}
           command: env
       {% endfor %}
@@ -27,7 +27,7 @@ clusters:
         - name: clu2-{{service}}
           image: testuser/arch_base:latest
           priority: 401
-          env:
+          environment:
             VAR001: {{var_001}}
           command: env
       {% endfor %}

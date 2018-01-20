@@ -13,9 +13,9 @@ clusters:
       - name: test120
         image: testuser/arch_base:latest
         priority: 120
-        env:
+        environment:
           VAR001: '{{ var_001 }}'
-        command: "echo $VAR001"
+        command: "env |grep VAR001"
 
   - name: command-test
     vars: 
@@ -25,6 +25,6 @@ clusters:
       - name: test121
         image: testuser/arch_base:latest
         priority: 121
-        env:
+        environment:
           FOO_BAR: '{{ foo }}'
-        command: "echo $VAR001"
+        command: "env |grep FOO_BAR"
