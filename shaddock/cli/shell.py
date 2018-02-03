@@ -143,6 +143,7 @@ class ShaddockShell(App):
         return {
             'build': shaddock.cli.views.Build,
             'create': shaddock.cli.views.Create,
+            'cycle': shaddock.cli.views.Cycle,
             'start': shaddock.cli.views.Start,
             'logs': shaddock.cli.views.Logs,
             'stop': shaddock.cli.views.Stop,

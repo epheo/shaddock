@@ -39,6 +39,27 @@ class Create(ShowOne):
         return get_service_info(self, parsed_args)
 
 
+class Cycle(Command):
+    """Power-cycle a container
+    Mainly use for dev and debug purposes, ir rebuild
+    and restart a container from his new image.
+    """
+
+    def get_parser(self, prog_name):
+        parser = super(Cycle, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        schedul = Scheduler(self.app_args, parsed_args.name)
+        schedul.cycle()
+        name = parsed_args.name
+        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
+        svc_cfg = model.get_service(parsed_args.name)
+        container = Container(svc_cfg)
+        container.return_logs()
+
+
 class Start(ShowOne):
     """Start a new container"""
 

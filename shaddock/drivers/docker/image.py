@@ -35,7 +35,6 @@ class Image(object):
             fileobj=None,
             nocache=nocache,
             rm=False,
-            stream=False,
             timeout=None,
             custom_context=False,
             encoding=None,

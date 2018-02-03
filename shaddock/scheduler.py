@@ -61,6 +61,21 @@ class Scheduler(object):
             container = Container(self.model.get_service(self.name))
             container.create()
 
+    def cycle(self):
+        if self.name is None:
+            for svc in reversed(self.services_list):
+                container = Container(self.model.build_service_dict(svc))
+                image = Image(self.model.build_service_dict(svc))
+                image.build()
+                container.remove()
+                container.start()
+        else:
+            image = Image(self.model.get_service(self.name))
+            container = Container(self.model.get_service(self.name))
+            image.build()
+            container.remove()
+            container.start()
+
     def start(self):
         if self.name is None:
             for svc in self.services_list:
