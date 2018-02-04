@@ -20,8 +20,8 @@ clusters:
           '4326/tcp': 4327
           '4329/tcp': 4329
         volumes: 
-          '/home/user1/': {'bind': '/mnt/vol2', 'mode': 'rw'}
-          '/var/www': {'bind': '/mnt/vol1', 'mode': 'ro'} 
+          - '/home/user1/:/mnt/vol2:rw'}
+          -  '/var/www:/mnt/vol1:ro'} 
         environment:
           VAR001: '{{ var_001 }}'
         depends-on:
