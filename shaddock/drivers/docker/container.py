@@ -97,6 +97,28 @@ class Container(object):
     def restart(self):
         self.docker_client.restart(self.info['Id'])
 
+    def return_shell(self, cmd):
+        if self.cfg['image'] is not None:
+            # "Fix" in order to not use the stream generator in Python2
+            c = self.info.get('Container')
+            if sys.version_info > (3, 0):
+                try:
+                    ret = c.exec_run(cmd,
+                                     stderr=True,
+                                     stdout=True,
+                                     stream=True,
+                                     )
+                    for line in ret[1]:
+                        print(line.decode('utf-8').rstrip())
+                except (KeyboardInterrupt, SystemExit):
+                    return True
+            else:
+                line = c.exec_run(cmd,
+                                  stderr=True,
+                                  stdout=True,
+                                  stream=False)
+                print(line[1])
+
     def return_logs(self):
         if self.cfg['image'] is not None:
             # "Fix" in order to not use the stream generator in Python2

@@ -60,6 +60,24 @@ class Cycle(Command):
         container.return_logs()
 
 
+class Debug(Command):
+    """Debug a container
+    Open an interactive shell in a similar container
+    """
+
+    def get_parser(self, prog_name):
+        parser = super(Debug, self).get_parser(prog_name)
+        parser.add_argument('name', nargs='?', default=None)
+        parser.add_argument('command', nargs='?', default=None)
+        return parser
+
+    def take_action(self, parsed_args):
+        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
+        svc_cfg = model.get_service(parsed_args.name)
+        container = Container(svc_cfg)
+        container.return_shell(parsed_args.command)
+
+
 class Start(ShowOne):
     """Start a new container"""
 

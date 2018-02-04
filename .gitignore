@@ -59,3 +59,10 @@ docs/_build/
 
 # PyBuilder
 target/
+.venv
+venv
+
+lib64
+pyvenv.cfg
+pip-selfcheck.json
+
