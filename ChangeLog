@@ -1,6 +1,17 @@
 CHANGES
 =======
 
+0.7
+---
+
+* Exclude new venv folders from plake8
+* Fix tests multi-hosts
+* Fix tests
+* Implement Debug comand
+* Add new Container Cycle function
+* Improve docker api arguments handling
+* weird flake8 to pass the gate
+* pep8 to pass the gate
 * Migrate to docker-py 2.4
 * Migration ongoing
 * Import new API version
