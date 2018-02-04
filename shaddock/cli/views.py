@@ -53,7 +53,6 @@ class Cycle(Command):
     def take_action(self, parsed_args):
         schedul = Scheduler(self.app_args, parsed_args.name)
         schedul.cycle()
-        name = parsed_args.name
         model = ModelDefinition(self.app_args.shdk_model, self.app_args)
         svc_cfg = model.get_service(parsed_args.name)
         container = Container(svc_cfg)

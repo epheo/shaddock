@@ -15,7 +15,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from copy import copy
 from shaddock.drivers.docker.api import DockerApi
 from docker import errors as docker_errors
 import sys
@@ -47,7 +46,7 @@ class Container(object):
             try:
                 del self.env[arg]
             except KeyError:
-                 pass
+                pass
         self.env['detach'] = self.cfg.get('detach', True)
         self.docker_client = None
         if containers_all is None:
