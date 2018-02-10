@@ -126,7 +126,7 @@ class Container(object):
                 try:
                     for line in c.logs(stderr=True,
                                        stdout=True,
-                                       timestamps=True,
+                                       timestamps=False,
                                        stream=True,
                                        ):
                         print(line.decode('utf-8').rstrip())

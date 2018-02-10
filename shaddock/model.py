@@ -163,7 +163,7 @@ class ModelDefinition(object):
         except TypeError:
             raise TemplateFileError(
                 "Cluster definition in your model is missing the images"
-                " key. ")
+                " key.")
         try:
             service['image']
         except KeyError:
