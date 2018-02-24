@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'cliff.sphinxext',
     ]
 
 # autodoc generation is a bit aggressive and a nuisance when doing heavy
@@ -47,6 +48,8 @@ add_module_names = True
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+
+autoprogram_cliff_application = 'shaddock'
 
 # -- Options for HTML output --------------------------------------------------
 

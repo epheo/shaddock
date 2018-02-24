@@ -20,14 +20,20 @@ from shaddock.checks import Checks
 from shaddock.drivers.docker.container import Container
 from shaddock.drivers.docker.image import Image
 from shaddock.model import ModelDefinition
-from shaddock.model import TemplateFileError
+from shaddock.exceptions import TemplateFileError
+from shaddock.exceptions import CheckError
 import time
 
 
 class Scheduler(object):
-    def __init__(self, app_args, name=None):
-        self.model = ModelDefinition(app_args.shdk_model, app_args)
-        self.services_list = self.model.get_services_list()
+
+    def __init__(self, db_path, name):
+        # Define if name is a :
+        # - group name
+        # - servive name
+        # - list of service names
+        # - list of groups
+        # And self a list of services anyway
         self.name = name
         if name is None:
             try:
@@ -137,6 +143,3 @@ class Scheduler(object):
             time.sleep(check.get('sleep', 10))
             self.do_check(check, retry)
 
-
-class CheckError(Exception):
-        pass

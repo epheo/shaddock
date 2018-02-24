@@ -1,0 +1,55 @@
+
+version: '2'
+
+service-groups:
+
+  - name: foobar-group_01
+    auto_remove: True
+    restart_policy: on-failure
+    priority: 20
+    depends-on: {name: plop, port: 123}
+    devices:
+      - /dev/urandom:/dev/uurandom
+    mem_limit: 256m
+    read_only: True
+    connect:
+      - test
+    groups:
+      - foobar-group_02
+    services:
+      - foo
+      - bar_
+      - foo_
+      - bar
+
+  - name: foobar_group_02
+    devices:
+      - '/dev/null:/dev/nulll'
+    mem_limit: 512m
+    read_only: False
+    services:
+      - foobar
+      - foobar_
+
+
+services:
+
+  - name: foobar
+    priority: 31
+    command: 'echo 1 |tee /dev/nulll'
+
+  - name: foobar_
+    read_only: True
+    command: 'echo 2 |tee /dev/nulll'
+
+  - name: foo
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: bar
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: foo_
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: bar_
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'

@@ -18,6 +18,7 @@
 from jinja2 import Template
 import os.path
 import yaml
+from shaddock.exceptions import TemplateFileError
 
 
 class ModelDefinition(object):
@@ -198,10 +199,6 @@ class ModelDefinition(object):
             pass
         service['api_cfg'] = api_cfg
         return service
-
-
-class TemplateFileError(Exception):
-    pass
 
 
 class Loader(yaml.Loader):

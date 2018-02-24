@@ -5,6 +5,9 @@ Usage
 Using the command line interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. autoprogram-cliff:: shaddock.cli.shell.ShaddockShell
+   :application: shaddock
+
 .. code:: raw
     
     usage: shdk [--version] [-v] [--log-file LOG_FILE] [-q] [-h] [--debug]

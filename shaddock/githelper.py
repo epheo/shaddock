@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-#    Copyright (C) 2014 Thibaut Lapierre <git@epheo.eu>. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -15,14 +13,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import os
+import git
 
-class Handler(object):
-    """
 
-    """
+class GitHelper(object):
 
-    def __init__(self):
+    def __init__(self, model_path):
+        self.model_path = model_path
+
+    def commit_append(self, model_path):
         pass
 
-    def return_service_details():
+    def check_commit_status(self, model_path):
         pass

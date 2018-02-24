@@ -30,7 +30,8 @@ class DockerApi(object):
      """
 
     def __init__(self, api_cfg, api=None):
-        self.api_cfg = api_cfg
+        self.cfg = api_cfg
+        self.cfg_api = self.cfg['api']
         if api == 'lowlevelapi':
             self.api = LowLevelAPI
         elif api == 'dockerclient':
@@ -41,20 +42,8 @@ class DockerApi(object):
             return 1
 
     def connect(self):
-        url = self.api_cfg.get('url', 'unix://var/run/docker.sock')
-        version = self.api_cfg.get('version', '1.30')
-        boot2docker = self.api_cfg.get('boot2docker')
-
-        tls_config = self._construct_tlsconfig()
-        if boot2docker is True:
-            kwargs = kwargs_from_env()
-            kwargs['tls'].assert_hostname = False
-            client = self.api(**kwargs)
-        else:
-            client = self.api(base_url=url,
-                              version=str(version),
-                              tls=tls_config,
-                              timeout=50)
+        self.cfg_api['version'] = str(self.cfg_api.get('version', '1.30'))
+        client = self.api(**self.cfg_api)
         return client
 
     def _construct_tlsconfig(self):

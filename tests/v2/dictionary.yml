@@ -1,0 +1,10 @@
+---
+
+variables_dictionary:
+  
+  key: value
+  foo: bar
+  bar_: foo_
+  foobar:
+    - foo
+    - bar

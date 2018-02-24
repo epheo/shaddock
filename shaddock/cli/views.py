@@ -24,39 +24,93 @@ from shaddock.drivers.docker.container import Container
 from shaddock.model import ModelDefinition
 from shaddock.scheduler import Scheduler
 
+from shaddock.configprocessor import ConfigProcessor
+from shaddock.githelper import GitHelper
+from shaddock.exceptions import TemplateFileError
 
-class Create(ShowOne):
-    """Create a new container"""
+
+class Process(Command):
+    """Model Config Processor
+    is used to read and parse the input model and update the json db
+    accordingly.
+    """
 
     def get_parser(self, prog_name):
-        parser = super(Create, self).get_parser(prog_name)
-        parser.add_argument('name', nargs='?', default=None)
+        parser = super(Cycle, self).get_parser(prog_name)
+        parser.add_argument(
+            '-a', '--append',
+            action='store_true',
+            dest='git_append',
+            default='False',
+            help='Auto append your last git commit'
+        )
+        parser.add_argument(
+            '-m', '--model',
+            action='store',
+            dest='model_path',
+            default='shaddock.yml',
+            help='Path to model file'
+        )
+        parser.add_argument(
+            '-d', '--dictionary',
+            action='store',
+            dest='dictionary_path',
+            default=self.env('SHDK_DICTIONARY',
+                             default='dictionary.yml'),
+            help='Path to variables dictionary file'
+        )
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.create()
-        return get_service_info(self, parsed_args)
+        db_path = self.app_args.db_path
+        model_path = parsed_args.model_path
+        variables_dictionary = parsed_args.variables_directory
+        git_append = parsed_args.shdk_model
+
+        git_helper = GitHelper(model_path)
+        if git_append is True:
+            git_helper.commit_append()
+        else:
+            is_commited = git_helper.check_commit_status()
+            if is_commited is True:
+                config_processor = ConfigProcessor(db_path, model_path,
+                                                   variables_dictionary)
+                config_processor.update_database()
+            else:
+                raise TemplateFileError(
+                    "All remaining changes need to be commited before running "
+                    "the config-processor, please commit your changes or add "
+                    " [-a] to automatically append your last git commit."
+                    )
 
 
 class Cycle(Command):
-    """Power-cycle a container
-    Mainly use for dev and debug purposes, ir rebuild
-    and restart a container from his new image.
+    """Power-cycle a service or group of service.
+    Mainly use for dev and debug purposes, it rebuild
+    remove and restart a service.
+    It accept a name or group_name as argument.
     """
 
     def get_parser(self, prog_name):
         parser = super(Cycle, self).get_parser(prog_name)
         parser.add_argument('name', nargs='?', default=None)
+        parser.add_argument(
+            '-l', '--display-logs',
+            action='store_true',
+            dest='with_logs',
+            default='False',
+            help="Display the logs of the service after the power-cycle "
+                 "This option is silently ignored if a group is specified"
+        )
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.cycle()
-        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
-        svc_cfg = model.get_service(parsed_args.name)
-        container = Container(svc_cfg)
-        container.return_logs()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.cycle()
+
+        if parsed_args.with_logs is True:
+            scheduler.return_logs()
 
 
 class Debug(Command):
@@ -71,10 +125,9 @@ class Debug(Command):
         return parser
 
     def take_action(self, parsed_args):
-        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
-        svc_cfg = model.get_service(parsed_args.name)
-        container = Container(svc_cfg)
-        container.return_shell(parsed_args.command)
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.return_shell()
 
 
 class Start(ShowOne):
@@ -86,8 +139,9 @@ class Start(ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.start()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.start()
         return get_service_info(self, parsed_args)
 
 
@@ -100,8 +154,9 @@ class Stop(ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.stop()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.stop()
         return get_service_info(self, parsed_args)
 
 
@@ -114,8 +169,9 @@ class Restart(ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.restart()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.restart()
         return get_service_info(self, parsed_args)
 
 
@@ -128,8 +184,9 @@ class Remove(ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.remove()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.remove()
         return get_service_info(self, parsed_args)
 
 
@@ -149,8 +206,9 @@ class Build(Command):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.build()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.build()
         return True
 
 
@@ -163,8 +221,9 @@ class Pull(Command):
         return parser
 
     def take_action(self, parsed_args):
-        schedul = Scheduler(self.app_args, parsed_args.name)
-        schedul.pull()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.pull()
 
 
 class Logs(Command):
@@ -176,11 +235,9 @@ class Logs(Command):
         return parser
 
     def take_action(self, parsed_args):
-        name = parsed_args.name
-        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
-        svc_cfg = model.get_service(name)
-        container = Container(svc_cfg)
-        container.return_logs()
+        db_path = self.app_args.db_path
+        scheduler = Scheduler(db_path, parsed_args.name)
+        scheduler.return_logs()
 
 
 class List(Lister):
@@ -199,26 +256,8 @@ class List(Lister):
 
     def get_parser(self, prog_name):
         parser = super(List, self).get_parser(prog_name)
-        return parser
+        parser.add_argument('name', nargs='?', default=None)
 
-    def take_action(self, parsed_args):
-
-        hl = []
-        model = ModelDefinition(self.app_args.shdk_model, self.app_args)
-        for cluster in model.cluster_list:
-            if cluster.get('hosts') is not None:
-                for host in cluster.get('hosts'):
-                    hl.append(host)
-
-        # Dicts dedup (kind of set of dicts):
-        #
-        # The strategy is to convert the list of dictionaries to a list of
-        # tuples where the tuples contain the items of the dictionary. Since
-        # the tuples can be hashed, you can remove duplicates using set and,
-        # after that, re-create the dictionaries from tuples with dict.
-        #
-        # hl is the original list
-        # d is one of the dictionaries in the list
         # t is one of the tuples created from a dictionary
         hl = [{}]
         hl = [dict(t) for t in set([tuple(d.items()) for d in hl])]

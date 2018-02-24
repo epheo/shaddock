@@ -113,20 +113,12 @@ class ShaddockShell(App):
             help='Show tracebacks on errors.',
         )
         parser.add_argument(
-            '-f', '--file',
+            '--db', '--database-path',
             action='store',
-            dest='shdk_model',
-            default=self.env('SHDK_MODEL',
-                             default='shaddock.yml'),
-            help='Template file to use.'
-        )
-        parser.add_argument(
-            '-c', '--cluster',
-            action='store',
-            dest='shdk_cluster',
-            default=self.env('SHDK_CLUSTER',
-                             default=None),
-            help='The cluster to use (No value is all by default).'
+            dest='db_path',
+            default=self.env('SHDK_DB_PATH',
+                             default='db/db.json'),
+            help='Database to use, it usually match your project name'
         )
         return parser
 
@@ -141,6 +133,7 @@ class ShaddockShell(App):
     @staticmethod
     def _get_commands():
         return {
+            'process': shaddock.cli.views.Process,
             'build': shaddock.cli.views.Build,
             'create': shaddock.cli.views.Create,
             'cycle': shaddock.cli.views.Cycle,
