@@ -133,7 +133,7 @@ class Scheduler(object):
             retry = check.get('retry', 15)
         elif retry == 0:
             raise CheckError("The following check ran it's maximum amount of"
-                             " retry and is still returning "
+                             " retry and is still returning"
                              " False:".format(str(check)))
         print("Running check: {}".format(str(check)))
         if self.checker.run(check):
@@ -142,4 +142,3 @@ class Scheduler(object):
             retry -= 1
             time.sleep(check.get('sleep', 10))
             self.do_check(check, retry)
-

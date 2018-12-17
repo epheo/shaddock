@@ -98,7 +98,7 @@ class Container(object):
 
     def return_shell(self, cmd):
         if self.cfg['image'] is not None:
-            # "Fix" in order to not use the stream generator in Python2
+            # "Fix" in order not to use the stream generator in Python2
             c = self.info.get('Container')
             if sys.version_info > (3, 0):
                 try:

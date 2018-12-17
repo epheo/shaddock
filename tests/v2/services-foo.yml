@@ -1,0 +1,15 @@
+
+
+services:
+
+  - name: foo
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: bar
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: foo_
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
+
+  - name: bar_
+    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'

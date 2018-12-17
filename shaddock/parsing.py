@@ -17,47 +17,7 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 import os.path
 from shaddock.exceptions import TemplateFileError
-from tinydictdb import TinyDictDb
 import yaml
-
-vardict = 'tests/v2/dictionary.yml'
-model = 'tests/v2/'
-
-def update_database(dictionary, vardict, model):
-    db = TinyDictDb(dictionary)    
-    db = TinyDictDb()
-    services = parse_services(vardict, model)
-    db.addEntries(services)
-
-def parse_hosts(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'hosts'
-    groups_key = 'host-groups'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
-
-def parse_networks(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'ports'
-    groups_key = 'networks'
-    return model_3
-
-def parse_vports(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'ports'
-    groups_key = 'networks'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
-
-def parse_services(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'services'
-    groups_key = 'service-groups'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
 
 
 def merge_similar_keys(y, z):
@@ -82,6 +42,7 @@ def get_by_name(name, dict_list):
     """ Return the element with a matching name from
     a list of dictionaries
     """
+    
     for d in dict_list:
         if d.get('name') == name:
             return d
@@ -90,9 +51,9 @@ def get_by_name(name, dict_list):
 def stage1(vardict, model):
     """ Stage 1
 
-    - read all files
-    - jinja2 templating
-    - merge of all similar keys into a single dictionary
+    read all files
+    jinja2 templating
+    merge of all similar keys into a single dictionary
     """
 
     with open(vardict, 'r') as stream:
@@ -155,4 +116,3 @@ def stage3(m, objects_key, groups_key):
                         pass
                     object_list.append(obj_result)
     return object_list
-

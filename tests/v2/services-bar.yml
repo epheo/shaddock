@@ -1,0 +1,10 @@
+
+services:
+
+  - name: foobar
+    priority: 31
+    command: 'echo 1 |tee /dev/nulll'
+
+  - name: foobar_
+    read_only: True
+    command: 'echo 2 |tee /dev/nulll'

@@ -135,7 +135,6 @@ class ShaddockShell(App):
         return {
             'process': shaddock.cli.views.Process,
             'build': shaddock.cli.views.Build,
-            'create': shaddock.cli.views.Create,
             'cycle': shaddock.cli.views.Cycle,
             'debug': shaddock.cli.views.Debug,
             'start': shaddock.cli.views.Start,

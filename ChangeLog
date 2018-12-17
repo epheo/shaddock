@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* wip, config processor refactoring, tinydictdb
 * Start work on config processor
 * All gate passed, this is Shaddock 0.7
 

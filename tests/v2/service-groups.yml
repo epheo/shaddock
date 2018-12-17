@@ -14,7 +14,7 @@ service-groups:
     read_only: True
     connect:
       - test
-    groups:
+    service-groups:
       - foobar-group_02
     services:
       - foo
@@ -22,7 +22,7 @@ service-groups:
       - foo_
       - bar
 
-  - name: foobar_group_02
+  - name: foobar-group_02
     devices:
       - '/dev/null:/dev/nulll'
     mem_limit: 512m
@@ -30,26 +30,3 @@ service-groups:
     services:
       - foobar
       - foobar_
-
-
-services:
-
-  - name: foobar
-    priority: 31
-    command: 'echo 1 |tee /dev/nulll'
-
-  - name: foobar_
-    read_only: True
-    command: 'echo 2 |tee /dev/nulll'
-
-  - name: foo
-    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
-
-  - name: bar
-    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
-
-  - name: foo_
-    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'
-
-  - name: bar_
-    command: 'tr -dc A-Za-z0-9_ < /dev/uurandom |head -c 16 |xargs'

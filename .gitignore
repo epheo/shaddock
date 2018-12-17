@@ -5,6 +5,7 @@ __pycache__/
 shaddock_rsa_key*
 *.swp
 .idea/
+.vscode/
 
 # C extensions
 *.so
@@ -20,6 +21,7 @@ eggs/
 .eggs/
 lib/
 local/
+share/
 bin/
 include/
 lib64/
@@ -57,6 +59,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+doc/build
 
 # PyBuilder
 target/
