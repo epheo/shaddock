@@ -27,6 +27,8 @@ from shaddock.configprocessor import ConfigProcessor
 from shaddock.githelper import GitHelper
 from shaddock.exceptions import TemplateFileError
 
+import os
+
 # from tinydictdb import TinyDictDb
 
 
@@ -36,8 +38,19 @@ class Process(Command):
     accordingly.
     """
 
+    def env(self, *args, **kwargs):
+        """Returns the first environment variable set.
+
+        If all are empty, defaults to '' or keyword arg `default`.
+        """
+        for arg in args:
+            value = os.environ.get(arg)
+            if value:
+                return value
+        return kwargs.get('default', '')
+
     def get_parser(self, prog_name):
-        parser = super(Cycle, self).get_parser(prog_name)
+        parser = super(Process, self).get_parser(prog_name)
         parser.add_argument(
             '-a', '--append',
             action='store_true',
@@ -65,7 +78,7 @@ class Process(Command):
     def take_action(self, parsed_args):
         db_path = self.app_args.db_path
         model_path = parsed_args.model_path
-        variables_dictionary = parsed_args.variables_directory
+        dictionary_path = parsed_args.directory_path
         git_append = parsed_args.shdk_model
 
         git_helper = GitHelper(model_path)
@@ -74,9 +87,7 @@ class Process(Command):
         else:
             is_commited = git_helper.check_commit_status()
             if is_commited is True:
-                config_processor = ConfigProcessor(db_path, model_path,
-                                                   variables_dictionary)
-                config_processor.update_database()
+                configprocessor.update_database(dictionary, vardict, model)
             else:
                 raise TemplateFileError(
                     "All remaining changes need to be commited before running "

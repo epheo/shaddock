@@ -15,51 +15,54 @@
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-import os.path
+from os import path
 from shaddock.exceptions import TemplateFileError
 from tinydictdb import TinyDictDb
 import yaml
 
-vardict = 'tests/v2/dictionary.yml'
-model = 'tests/v2/'
+class ConfigProcessor(object):
 
-def update_database(dictionary, vardict, model):
-    db = TinyDictDb(dictionary)    
-    db = TinyDictDb()
-    services = parse_services(vardict, model)
-    db.addEntries(services)
-
-def parse_hosts(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'hosts'
-    groups_key = 'host-groups'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
-
-def parse_networks(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'ports'
-    groups_key = 'networks'
-    return model_3
-
-def parse_vports(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'ports'
-    groups_key = 'networks'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
-
-def parse_services(vardict, model):
-    model_1 = stage1(vardict, model)
-    objects_key = 'services'
-    groups_key = 'service-groups'
-    model_2 = stage2(model_1, objects_key, groups_key)
-    model_3 = stage3(model_2, objects_key, groups_key)
-    return model_3
-
-
+    vardict = 'tests/v2/dictionary.yml'
+    model = 'tests/v2/'
+    
+    def update_database(self, db, dictionary, model):
+        db = path.join(db, object_key)
+        db = TinyDictDb(path=db, wMode='append')
+        services = self.parse_services(self.vardict, model)
+        db.addEntries(services)
+    
+    def parse_hosts(self, vardict, model):
+        model_1 = self.stage1(vardict, model)
+        objects_key = 'hosts'
+        groups_key = 'host-groups'
+        model_2 = self.stage2(model_1, objects_key, groups_key)
+        model_3 = self.stage3(model_2, objects_key, groups_key)
+        return model_3
+    
+    def parse_networks(self, vardict, model):
+        model_1 = self.stage1(vardict, model)
+        objects_key = 'ports'
+        groups_key = 'networks'
+        model_2 = self.stage2(model_1, objects_key, groups_key)
+        model_3 = self.stage3(model_2, objects_key, groups_key)
+        return model_3
+    
+    def parse_vports(self, vardict, model):
+        model_1 = self.stage1(vardict, model)
+        objects_key = 'ports'
+        groups_key = 'networks'
+        model_2 = self.stage2(model_1, objects_key, groups_key)
+        model_3 = self.stage3(model_2, objects_key, groups_key)
+        return model_3
+    
+    def parse_services(self, vardict, model):
+        model_1 = self.stage1(vardict, model)
+        objects_key = 'services'
+        groups_key = 'service-groups'
+        model_2 = stage2(model_1, objects_key, groups_key)
+        model_3 = stage3(model_2, objects_key, groups_key)
+        return model_3
+    
 def merge_similar_keys(y, z):
     """ y and z are two dictionaries
 

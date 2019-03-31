@@ -14,7 +14,7 @@
 #    under the License.
 
 import os
-import git
+# import git
 
 
 class GitHelper(object):
@@ -26,4 +26,4 @@ class GitHelper(object):
         pass
 
     def check_commit_status(self, model_path):
-        pass
+        return True
